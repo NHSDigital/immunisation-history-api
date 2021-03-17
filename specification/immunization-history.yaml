@@ -9,8 +9,8 @@ info:
     url: 'https://digital.nhs.uk/developer/help-and-support'
     email: api.management@nhs.net
 tags:
-  - name: Immunization
   - name: FHIR
+  - name: Immunization
 servers:
   - url: http://petstore.swagger.io
 paths:
