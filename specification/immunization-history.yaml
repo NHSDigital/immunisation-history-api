@@ -8,8 +8,11 @@ info:
     name: Immunization History FHIR API Support
     url: 'https://digital.nhs.uk/developer/help-and-support'
     email: api.management@nhs.net
+tags:
+  - name: Immunization
+  - name: FHIR
 servers:
-  - url: http://petstore.swagger.io/
+  - url: http://petstore.swagger.io
 paths:
   /pets:
     get:
