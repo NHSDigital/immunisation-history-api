@@ -1,4 +1,5 @@
 openapi: "3.0.0"
+x-nhs-api-spec-guid: 1b22efff-7b41-4fa0-9146-dc87686a7b5c
 info:
   version: 1.0.0
   title: Immunization History
