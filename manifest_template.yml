@@ -1,6 +1,6 @@
 SERVICE_NAME: immunization-history
 PRODUCT_DISPLAY_NAME: Immunization History
-DESCRIPTION: 
+DESCRIPTION: ''
 APIGEE_ENVIRONMENTS:
   - name: internal-dev
     display_name: Internal Development
