@@ -1,0 +1,7 @@
+variables:
+  service_name: immunization-history
+  short_service_name: ih
+  service_base_path: immunization-history
+  product_display_name: Immunization History
+  product_description: 
+  spec_file: immunization-history.json
