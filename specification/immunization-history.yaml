@@ -1,12 +1,5 @@
 openapi: "3.0.0"
 x-nhs-api-spec-guid: 1b22efff-7b41-4fa0-9146-dc87686a7b5c
-meta:
-  service_name: immunization-history
-  short_service_name: ih
-  product_display_name: Immunization History
-  service_base_path: immunization-history
-  product_description: ''
-  pipeline_name_prefix: Immunization-History
 info:
   version: 1.0.0
   title: Immunization History
