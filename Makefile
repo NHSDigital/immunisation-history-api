@@ -1,14 +1,13 @@
 SHELL=/bin/bash -euo pipefail
 
-# install: install-node install-python install-hooks
-install: install-python install-hooks
+install: install-node install-python install-hooks
 
 install-python:
 	poetry install
 
-# install-node:
-# 	npm install
-# 	cd sandbox && npm install
+install-node:
+	npm install
+	cd sandbox && npm install
 
 install-hooks:
 	cp scripts/pre-commit .git/hooks/pre-commit
@@ -26,6 +25,7 @@ publish: clean
 	npm run publish 2> /dev/null
 
 serve:
+	echo nope
 	npm run serve
 
 check-licenses:

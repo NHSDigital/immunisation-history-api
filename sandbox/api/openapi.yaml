@@ -1,99 +1,100 @@
-openapi: "3.0.0"
-x-nhs-api-spec-guid: 1b22efff-7b41-4fa0-9146-dc87686a7b5c
+openapi: 3.0.0
 info:
-  version: 1.0.0
   title: Immunization History
   license:
     name: MIT
-  contact:
-    name: Immunization History FHIR API Support
-    url: 'https://digital.nhs.uk/developer/help-and-support'
-    email: api.management@nhs.net
-tags:
-  - name: FHIR
-  - name: Immunization
+  version: 1.0.0
 servers:
-  - url: http://petstore.swagger.io
+- url: http://petstore.swagger.io/
 paths:
   /pets:
     get:
+      tags:
+      - pets
       summary: List all pets
       operationId: listPets
-      tags:
-        - pets
       parameters:
-        - name: limit
-          in: query
-          description: How many items to return at one time (max 100)
-          required: false
-          schema:
-            type: integer
-            format: int32
+      - name: limit
+        in: query
+        description: How many items to return at one time (max 100)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
       responses:
-        '200':
+        "200":
           description: A paged array of pets
           headers:
             x-next:
               description: A link to the next page of responses
+              style: simple
+              explode: false
               schema:
                 type: string
           content:
-            application/json:   
+            application/json:
               schema:
-                $ref: "#/components/schemas/Pets"
+                $ref: '#/components/schemas/Pets'
         default:
           description: unexpected error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Pets
     post:
+      tags:
+      - pets
       summary: Create a pet
       operationId: createPets
-      tags:
-        - pets
       responses:
-        '201':
+        "201":
           description: Null response
         default:
           description: unexpected error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Pets
   /pets/{petId}:
     get:
+      tags:
+      - pets
       summary: Info for a specific pet
       operationId: showPetById
-      tags:
-        - pets
       parameters:
-        - name: petId
-          in: path
-          required: true
-          description: The id of the pet to retrieve
-          schema:
-            type: string
+      - name: petId
+        in: path
+        description: The id of the pet to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
       responses:
-        '200':
+        "200":
           description: Expected response to a valid request
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Pet"
+                $ref: '#/components/schemas/Pet'
         default:
           description: unexpected error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Pets
 components:
   schemas:
     Pet:
-      type: object
       required:
-        - id
-        - name
+      - id
+      - name
+      type: object
       properties:
         id:
           type: integer
@@ -102,18 +103,23 @@ components:
           type: string
         tag:
           type: string
+      example:
+        name: name
+        id: 0
+        tag: tag
     Pets:
       type: array
       items:
-        $ref: "#/components/schemas/Pet"
+        $ref: '#/components/schemas/Pet'
     Error:
-      type: object
       required:
-        - code
-        - message
+      - code
+      - message
+      type: object
       properties:
         code:
           type: integer
           format: int32
         message:
           type: string
+x-nhs-api-spec-guid: 1b22efff-7b41-4fa0-9146-dc87686a7b5c
