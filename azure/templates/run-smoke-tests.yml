@@ -4,9 +4,11 @@ steps:
     displayName: Setup pytests
 
   - bash: |
+      export RELEASE_RELEASEID=$(Build.BuildId)
+      export SOURCE_COMMIT_ID=$(Build.SourceVersion)
       export APIGEE_ENVIRONMENT="$(ENVIRONMENT)"
       export SERVICE_BASE_PATH="$(SERVICE_BASE_PATH)"
-      poetry run pytest -v --junitxml=test-report.xml -m smoketest
+      poetry run pytest -v --junitxml=test-report.xml -s -m smoketest
     workingDirectory: $(Pipeline.Workspace)/s/$(SERVICE_NAME)/$(SERVICE_ARTIFACT_NAME)/tests
     displayName: run smoketests
 
