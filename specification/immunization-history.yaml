@@ -17,20 +17,59 @@ info:
     TBC
     
     # Who can use this API
-    TBC
+    This API can only be used where there is a legal basis to do so. Make sure you have a valid use case before you go too far with your development.
+    To do this, [contact us](https://digital.nhs.uk/developer/help-and-support).
+
+    You must do this before you can go live (see ‘Onboarding’ below).
     
     # API status and roadmap    
-    TBC
+    
+    ## Status
+    This API in alpha, meaning:
+    - it is available for testing but not yet for production use
+    - we might make breaking changes
+    
+    If you would like to be involved in our beta programme, [contact us](https://digital.nhs.uk/developer/help-and-support).
+    
+    ## Roadmap
+    To see our roadmap, or to suggest, comment or vote on features for this API, see our [interactive product backlog](https://nhs-digital-api-management.featureupvote.com/?tag=immunisation-history-api).
+
+    If you have any other queries, please [contact us](https://digital.nhs.uk/developer/help-and-support).
     
     # Technology
-    TBC
+    This API is [RESTful](https://digital.nhs.uk/developer/guides-and-documentation/api-technologies-at-nhs-digital#basic-rest).
+
+    It also conforms to the [FHIR](https://digital.nhs.uk/developer/guides-and-documentation/api-technologies-at-nhs-digital#fhir) global standard for health care data exchange.
+    Specifically, it is aligned with [FHIR UK Core](https://digital.nhs.uk/services/fhir-uk-core), which is built on FHIR Release 4.
+
+    You don’t need to know much about FHIR to use this API - FHIR APIs are just RESTful APIs that follow specific rules.
+    In particular:
+    - resource names are capitalised and singular, and use US spellings, for example `/Immunization` not `/immunisations`
+    - array names are singular, for example `entry` not `entries` for address lines
+    - data items that are country-specific and thus not included in the FHIR global base resources are usually wrapped in an `extension` object
+
+    There are [libraries and SDKs available](https://digital.nhs.uk/developer/guides-and-documentation/api-technologies-at-nhs-digital#fhir-libraries-and-sdks) to help with FHIR API integration.
     
     # Network access
-    TBC
+    This API is available on the internet and, indirectly, on the [Health and Social Care Network (HSCN)](https://digital.nhs.uk/services/health-and-social-care-network).
+
+    To use this API with NHS smartcards you do need an HSCN connection, although internet-facing alternatives are available.
+    
+    For more details see [Network access for APIs](https://digital.nhs.uk/developer/guides-and-documentation/network-access-for-apis).
     
     # Security and authorisation
-    TBC
+    This API is currently [application-restricted](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation#application-restricted-apis),
+    meaning we authenticate the calling application but not the end user.
     
+    Specifically, it uses the following security pattern:
+    - [Application-restricted RESTful API - signed JWT authentication](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation/application-restricted-restful-apis-signed-jwt-authentication)
+
+    Note that:
+    - the end user must be a citizen
+    - the calling application must strongly authenticate the end user using NHS login
+    - specifically, the end user must have their identity verified to 'high' (P9) level
+    - the calling application must pass the user's NHS login identity token in the `NHSD-User-Identity` header when calling the API
+
     # Environments and testing
     TBC
     
