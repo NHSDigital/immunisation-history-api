@@ -13,7 +13,7 @@
         <LoadBalancer>
             <Server name="immunisation-history"/>
         </LoadBalancer>
-        <Path>/healthcheck</Path>
+        <Path>/get</Path>
     </HTTPTargetConnection>
     <Timeout>20000</Timeout>
 </ServiceCallout>

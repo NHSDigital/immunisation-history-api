@@ -1,42 +1,25 @@
 [project]
 python = "^3.8"
 
-
 [tool.poetry]
 name = "immunisation-history"
 version = "0.0.1-alpha"
-description = "TODO"
-
-license = "MIT"
-
-authors = [
-    #TODO add authors
-]
-
+description = ""
+authors = ["Matthew Mercer <matt.mercer@nhs.net>"]
 readme = 'README.md'
-
+license = "MIT"
 repository = "https://github.com/NHSDigital/immunisation-history-api"
 homepage = ""
-
-keywords = ["healthcare", "uk", "nhs"] #TODO add additional keywords
-
+keywords = ["healthcare", "uk", "nhs"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-pyyaml = "^5.2"
-docopt = "^0.6.2"
-jsonpath-rw = "^1.4.0"
-semver = "^2.9.0"
-gitpython = "^3.0.5"
-api-test-utils = {url = "https://github.com/NHSDigital/apim-test-utils/releases/download/v1.0.86-alpha/api_test_utils-1.0.86a0-py3-none-any.whl"}
-requests = "^2.25.1"
-
 
 [tool.poetry.dev-dependencies]
-flake8 = "^3.7.9"
-black = "^19.10b0"
-pip-licenses = "^2.0.1"
-jinja2 = "^2.11.1"
-
+pytest = "^6.1.2"
+aiohttp = "^3.7.3"
+pytest-asyncio = "^0.14.0"
+coverage = "^5.3"
+api-test-utils = {url = "https://github.com/NHSDigital/apim-test-utils/releases/download/v1.0.86-alpha/api_test_utils-1.0.86a0-py3-none-any.whl"}
 
 [tool.poetry.scripts]
