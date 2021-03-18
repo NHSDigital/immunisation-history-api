@@ -18,6 +18,12 @@ async def _is_deployed(resp: ClientResponse, api_test_config: APITestSessionConf
 
 @pytest.mark.e2e
 @pytest.mark.smoketest
+def test_output_test_config(api_test_config: APITestSessionConfig):
+    print(api_test_config)
+
+
+@pytest.mark.e2e
+@pytest.mark.smoketest
 @pytest.mark.asyncio
 async def test_wait_for_ping(api_client: APISessionClient, api_test_config: APITestSessionConfig):
 
