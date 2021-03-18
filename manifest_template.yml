@@ -1,15 +1,15 @@
 SERVICE_NAME: immunisation-history
 PRODUCT_DISPLAY_NAME: Immunisation History
-DESCRIPTION: Immunisation history
+DESCRIPTION: Immunisation history API
 APIGEE_ENVIRONMENTS:
   - name: internal-dev
     display_name: Internal Development
-  # - name: internal-dev-sandbox
-  #   display_name: Internal Development Sandbox
-  # - name: internal-qa
-  #   display_name: Internal QA
-  # - name: internal-qa-sandbox
-  #   display_name: Internal QA Sandbox
+  - name: internal-dev-sandbox
+    display_name: Internal Development Sandbox
+  - name: internal-qa
+    display_name: Internal QA
+  - name: internal-qa-sandbox
+    display_name: Internal QA Sandbox
   # - name: ref
   #   display_name: Reference
   # - name: sandbox
