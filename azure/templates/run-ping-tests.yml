@@ -6,11 +6,12 @@ steps:
   - bash: |
       export APIGEE_ENVIRONMENT="$(ENVIRONMENT)"
       export SERVICE_BASE_PATH="$(SERVICE_BASE_PATH)"
-      poetry run pytest -v --junitxml=test-report.xml -m ping
+      poetry run pytest -v --junitxml=test-report.xml -m smoketest
     workingDirectory: $(Pipeline.Workspace)/s/$(SERVICE_NAME)/$(SERVICE_ARTIFACT_NAME)/tests
-    displayName: run ping pytests
+    displayName: run smoketests
+
   - task: PublishTestResults@2
-    displayName: 'Publish ping pytest results'
+    displayName: 'Publish smoketest results'
     condition: always()
     inputs:
       testResultsFiles: '$(Pipeline.Workspace)/s/$(SERVICE_NAME)/$(SERVICE_ARTIFACT_NAME)/tests/test-report.xml'
