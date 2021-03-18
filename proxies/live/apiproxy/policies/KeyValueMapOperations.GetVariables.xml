@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<KeyValueMapOperations async="false" continueOnError="false" enabled="true" name="KeyValueMapOperations.GetVariables" mapIdentifier="ih-variables">
-  <!-- UNUSED POLICY
-  Leaving this in because I'm sure there will be a future need for unencrypted configuration variables for this API Proxy -->
+<KeyValueMapOperations async="false" continueOnError="false" enabled="true" name="KeyValueMapOperations.GetVariables" mapIdentifier="clear-caribou">
+  <Get assignTo="proxy.vars_raw">
+    <Key>
+      <Parameter>immunization_history</Parameter>
+    </Key>
+  </Get>
 </KeyValueMapOperations>
