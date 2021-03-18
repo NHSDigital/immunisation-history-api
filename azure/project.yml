@@ -1,7 +1,7 @@
 variables:
-  service_name: immunization-history
-  short_service_name: ih
-  service_base_path: immunization-history
-  product_display_name: Immunization History
-  product_description: 
-  spec_file: immunization-history.json
+  service_name: {{ config['x-meta'].service_name }}
+  short_service_name: {{ config['x-meta'].short_service_name }}
+  service_base_path: {{ config['x-meta'].service_base_path }}
+  product_display_name: {{ config['x-meta'].product_display_name }}
+  product_description: {{ config['x-meta'].product_description }}
+  spec_file: {{ config['x-meta'].service_name }}.json 

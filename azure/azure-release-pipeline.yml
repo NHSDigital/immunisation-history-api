@@ -12,7 +12,7 @@ resources:
       endpoint: NHSDigital
   pipelines:
   - pipeline: build_pipeline
-    source: "Immunization-History-Build"
+    source: "{{ config['x-meta'].pipeline_name_prefix }}-Build"
     trigger:
       branches:
         include:
@@ -33,21 +33,32 @@ extends:
     product_display_name: ${{ variables.product_display_name }}
     product_description: ${{ variables.product_description }}
     spec_file: ${{ variables.spec_file }}
+
     apigee_deployments:
       - environment: internal-dev
         make_spec_visible: true  # Off by default. Turn on to allow expose API developers can subscribe their Apps to
-      # - environment: internal-qa
-      #   make_spec_visible: true
-      # - environment: internal-qa-sandbox
-      #   proxy_path: sandbox
-      #   make_spec_visible: true
+        post_deploy:
+          - template: ./templates/run-ping-tests.yml
+      - environment: internal-qa
+        make_spec_visible: true
+        post_deploy:
+          - template: ./templates/run-ping-tests.yml
+      - environment: internal-qa-sandbox
+        proxy_path: sandbox
+        make_spec_visible: true
+        post_deploy:
+          - template: ./templates/run-ping-tests.yml
     # make_spec_visible is false for sandbox environment
     # (App subscription make sense for most sandbox implementations)
-      # - environment: sandbox
-      #   proxy_path: sandbox
+      - environment: sandbox
+        proxy_path: sandbox
+        post_deploy:
+          - template: ./templates/run-ping-tests.yml
     # Enable int environment when ready by uncommenting:
     #   - environment: int
     #     make_spec_visible: true
     #     depends_on:
     #       - internal_qa
     #       - internal_qa_sandbox
+    #     post_deploy:
+    #       - template: ./templates/run-ping-tests.yml

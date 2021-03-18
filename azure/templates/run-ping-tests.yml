@@ -1,0 +1,17 @@
+steps:
+  - bash: poetry install
+    workingDirectory: $(Pipeline.Workspace)/s/$(SERVICE_NAME)/$(SERVICE_ARTIFACT_NAME)/tests
+    displayName: Setup pytests
+
+  - bash: |
+      export APIGEE_ENVIRONMENT="$(ENVIRONMENT)"
+      export SERVICE_BASE_PATH="$(SERVICE_BASE_PATH)"
+      poetry run pytest -v --junitxml=test-report.xml -m ping
+    workingDirectory: $(Pipeline.Workspace)/s/$(SERVICE_NAME)/$(SERVICE_ARTIFACT_NAME)/tests
+    displayName: run ping pytests
+  - task: PublishTestResults@2
+    displayName: 'Publish ping pytest results'
+    condition: always()
+    inputs:
+      testResultsFiles: '$(Pipeline.Workspace)/s/$(SERVICE_NAME)/$(SERVICE_ARTIFACT_NAME)/tests/test-report.xml'
+      failTaskOnFailedTests: true
