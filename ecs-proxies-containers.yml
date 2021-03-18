@@ -1,4 +1,4 @@
 docker_containers:
-  - name: ih-sandbox
+  - name: sandbox
     dockerfile: "sandbox/Dockerfile"
     path: "sandbox"
