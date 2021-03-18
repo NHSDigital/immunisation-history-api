@@ -1,8 +1,9 @@
 SHELL=/bin/bash -euo pipefail
 
-install: install-node install-python install-hooks
+tests/.venv/bin/python:
+	cd tests; make install
 
-install-python:
+install-python: tests/.venv/bin/python
 	poetry install
 
 install-node:
@@ -11,6 +12,8 @@ install-node:
 
 install-hooks:
 	cp scripts/pre-commit .git/hooks/pre-commit
+
+install: install-node install-python install-hooks
 
 lint:
 	npm run lint
@@ -48,5 +51,8 @@ release: clean publish build-proxy
 	cp ecs-proxies-deploy.yml dist/ecs-deploy-sandbox.yml
 	cp ecs-proxies-deploy.yml dist/ecs-deploy-internal-qa-sandbox.yml
 	cp ecs-proxies-deploy.yml dist/ecs-deploy-internal-dev-sandbox.yml
+
+dist: release
+
 test:
 	poetry run pytest -v
