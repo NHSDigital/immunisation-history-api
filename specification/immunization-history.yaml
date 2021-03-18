@@ -1,19 +1,48 @@
+# This is an OpenAPI Specification (https://swagger.io/specification/)
+# for the Innunisation History API
+# owned by NHS Digital (https://digital.nhs.uk/)
 openapi: "3.0.0"
 x-nhs-api-spec-guid: 1b22efff-7b41-4fa0-9146-dc87686a7b5c
 info:
   version: 1.0.0
-  title: Immunization History
+  title: Immunisation History - FHIR API
   license:
     name: MIT
   contact:
-    name: Immunization History FHIR API Support
+    name: NHS Digital API Management
     url: 'https://digital.nhs.uk/developer/help-and-support'
     email: api.management@nhs.net
-tags:
-  - name: FHIR
-  - name: Immunization
+  description:
+    # Overview
+    TBC
+    
+    # Who can use this API
+    TBC
+    
+    # API status and roadmap    
+    TBC
+    
+    # Technology
+    TBC
+    
+    # Network access
+    TBC
+    
+    # Security and authorisation
+    TBC
+    
+    # Environments and testing
+    TBC
+    
+    # Onboarding
+    TBC
 servers:
-  - url: http://petstore.swagger.io
+  - url: 'https://sandbox.api.service.nhs.uk/immunisation-history/FHIR/R4'
+    description: Sandbox environment.
+  - url: 'https://int.api.service.nhs.uk/immunisation-history/FHIR/R4'
+    description: Integration test environment.
+  - url: 'https://api.service.nhs.uk/immunisation-history/FHIR/R4'
+    description: Production environment.
 paths:
   /pets:
     get:
