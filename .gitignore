@@ -11,3 +11,4 @@ newman/
 __pycache__/
 .envrc
 .idea/
+.venv/
