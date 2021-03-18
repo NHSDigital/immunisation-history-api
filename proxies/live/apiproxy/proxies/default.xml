@@ -19,6 +19,15 @@
         </Response>
         <Condition>(proxy.pathsuffix MatchesPath "/_ping") and ((request.verb = "GET") or (request.verb = "HEAD"))</Condition>
       </Flow>
+<!--      <Flow name="Flow.AuthApiKey">-->
+<!--        <Request>-->
+<!--            <Step>-->
+<!--                <Name>VerifyApiKey.XApiKey</Name>-->
+<!--            </Step>-->
+<!--        </Request>-->
+<!--        <Response/>-->
+<!--        <Condition>(proxy.pathsuffix MatchesPath "/_status") and (request.verb = "GET")</Condition>-->
+<!--      </Flow>-->
       <Flow name="StatusEndpoint">
         <Description/>
         <Request>

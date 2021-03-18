@@ -55,4 +55,5 @@ release: clean publish build-proxy
 dist: release
 
 test:
-	poetry run pytest -v
+	make --no-print-directory -C sandbox test
+
