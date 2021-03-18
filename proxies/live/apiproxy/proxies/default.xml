@@ -41,16 +41,7 @@
         <Condition>(proxy.pathsuffix MatchesPath "/_status") and ((request.verb = "GET") or (request.verb = "HEAD"))</Condition>
       </Flow>
     </Flows>
-    <PreFlow>
-        <Request>
-            <Step>
-                <Name>KeyValueMapOperations.GetVariables</Name>
-            </Step>
-            <Step>
-                <Name>Javascript.UnpackVars</Name>
-            </Step>
-        </Request>
-    </PreFlow>
+    <PreFlow />
     <PostClientFlow name="PostClientFlow">
         <Response>
             <Step>
