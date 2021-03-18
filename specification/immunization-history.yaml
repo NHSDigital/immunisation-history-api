@@ -44,7 +44,7 @@ info:
     # API status and roadmap    
     
     ## Status
-    This API in alpha, meaning:
+    This API is in alpha, meaning:
     - it is available for testing but not yet for production use
     - we might make breaking changes
     
@@ -88,6 +88,7 @@ info:
     - the calling application must strongly authenticate the end user using NHS login
     - specifically, the end user must have their identity verified to 'high' (P9) level
     - the calling application must pass the user's NHS login identity token in the `NHSD-User-Identity` header when calling the API
+    - the NHS number in the identity token must match the NHS number for which data is being requested
 
     # Environments and testing
     | Environment       | Base URL                                                               |
