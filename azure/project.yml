@@ -1,7 +1,7 @@
 variables:
-  service_name: immunization-history
+  service_name: immunisation-history
   short_service_name: ih
-  service_base_path: immunization-history
-  product_display_name: Immunization History
-  product_description: 
-  spec_file: immunization-history.json
+  service_base_path: immunisation-history
+  product_display_name: Immunisation History
+  product_description: ' '
+  spec_file: immunisation-history.json

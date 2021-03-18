@@ -14,7 +14,7 @@ install-hooks:
 
 lint:
 	npm run lint
-	poetry run flake8 **/*.py
+	find . -name '*.py' | xargs poetry run flake8
 
 clean:
 	rm -rf build
@@ -35,7 +35,7 @@ check-licenses:
 format:
 	poetry run black **/*.py
 
-sandbox: update-examples
+start-sandbox: # starts a local version of the sandbox
 	cd sandbox && npm run start
 
 build-proxy:
@@ -46,4 +46,4 @@ release: clean publish build-proxy
 	cp -r build/. dist
 
 test:
-	echo "TODO: add tests"
+	poetry run pytest -v

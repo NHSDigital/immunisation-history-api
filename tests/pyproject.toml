@@ -15,7 +15,7 @@ authors = [
 
 readme = 'README.md'
 
-repository = "https://github.com/NHSDigital/immunisation-history"
+repository = "https://github.com/NHSDigital/immunisation-history-api"
 homepage = ""
 
 keywords = ["healthcare", "uk", "nhs"] #TODO add additional keywords
@@ -28,6 +28,8 @@ docopt = "^0.6.2"
 jsonpath-rw = "^1.4.0"
 semver = "^2.9.0"
 gitpython = "^3.0.5"
+api-test-utils = {url = "https://github.com/NHSDigital/apim-test-utils/releases/download/v1.0.86-alpha/api_test_utils-1.0.86a0-py3-none-any.whl"}
+requests = "^2.25.1"
 
 
 [tool.poetry.dev-dependencies]

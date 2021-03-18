@@ -1,0 +1,6 @@
+docker_service:
+  - name: sandbox
+    expose: true
+    health_check:
+      matcher: "200"
+      path: "/_status"
