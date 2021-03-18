@@ -12,7 +12,7 @@ resources:
       endpoint: NHSDigital
   pipelines:
   - pipeline: build_pipeline
-    source: "Immunization-History-Build"
+    source: "Immunisation-History-Build"
     trigger:
       branches:
         include:

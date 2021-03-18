@@ -1,4 +1,4 @@
-<TargetEndpoint name="immunization-history-target">
+<TargetEndpoint name="immunisation-history-target">
   <FaultRules>
     <FaultRule name="access_token_expired">
       <Step>

@@ -2,16 +2,16 @@ openapi: "3.0.0"
 x-nhs-api-spec-guid: 1b22efff-7b41-4fa0-9146-dc87686a7b5c
 info:
   version: 1.0.0
-  title: Immunization History
+  title: Immunisation History
   license:
     name: MIT
   contact:
-    name: Immunization History FHIR API Support
+    name: Immunisation History FHIR API Support
     url: 'https://digital.nhs.uk/developer/help-and-support'
     email: api.management@nhs.net
 tags:
   - name: FHIR
-  - name: Immunization
+  - name: Immunisation
 servers:
   - url: http://petstore.swagger.io
 paths:

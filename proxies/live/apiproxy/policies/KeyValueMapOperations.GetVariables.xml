@@ -2,7 +2,7 @@
 <KeyValueMapOperations async="false" continueOnError="false" enabled="true" name="KeyValueMapOperations.GetVariables" mapIdentifier="clear-caribou">
   <Get assignTo="proxy.vars_raw">
     <Key>
-      <Parameter>immunization_history</Parameter>
+      <Parameter>immunisation_history</Parameter>
     </Key>
   </Get>
 </KeyValueMapOperations>

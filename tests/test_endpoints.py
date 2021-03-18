@@ -41,8 +41,8 @@ class TestEndpoints:
         await app.create_new_app()
 
         await product.update_scopes([
-            "urn:nhsd:apim:app:level3:immunization-history",
-            "urn:nhsd:apim:user-nhs-id:aal3:immunization-history"
+            "urn:nhsd:apim:app:level3:immunisation-history",
+            "urn:nhsd:apim:user-nhs-id:aal3:immunisation-history"
         ])
         await app.add_api_product([product.name])
 

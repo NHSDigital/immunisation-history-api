@@ -3,7 +3,7 @@ python = "^3.8"
 
 
 [tool.poetry]
-name = "immunization-history"
+name = "immunisation-history"
 version = "0.0.1-alpha"
 description = "TODO"
 
@@ -15,7 +15,7 @@ authors = [
 
 readme = 'README.md'
 
-repository = "https://github.com/NHSDigital/immunization-history-api"
+repository = "https://github.com/NHSDigital/immunisation-history-api"
 homepage = ""
 
 keywords = ["healthcare", "uk", "nhs"] #TODO add additional keywords
