@@ -7,5 +7,3 @@ from api_test_utils.fixtures import api_client   # pylint: disable=unused-import
 def api_test_config() -> APITestSessionConfig:
 
     return APITestSessionConfig()
-
-
