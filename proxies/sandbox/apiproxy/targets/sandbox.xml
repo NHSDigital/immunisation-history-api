@@ -14,7 +14,7 @@
           </Step>
         </Response>
     </PreFlow>
-  <HostedTarget>
-        <Properties/>
-    </HostedTarget>
+    <HTTPTargetConnection>
+      {{ HOSTED_TARGET_CONNECTION }}
+    </HTTPTargetConnection>
 </TargetEndpoint>
