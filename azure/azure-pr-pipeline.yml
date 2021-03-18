@@ -12,7 +12,7 @@ resources:
       endpoint: NHSDigital
   pipelines:
   - pipeline: build_pipeline
-    source: "Immunization-History-Build"
+    source: "Immunisation-History-Build"
     trigger:
       branches:
         exclude:
@@ -35,6 +35,12 @@ extends:
     product_display_name: ${{ variables.product_display_name }}
     product_description: ${{ variables.product_description }}
     spec_file: ${{ variables.spec_file }}
-    deploy_review_sandbox: false
     apigee_deployments:
       - environment: internal-dev
+        make_spec_visible: true
+        post_deploy:
+          - template: ./templates/run-smoke-tests.yml
+      - environment: internal-dev-sandbox
+        proxy_path: sandbox
+#        post_deploy:
+#          - template: ./templates/run-smoke-tests.yml

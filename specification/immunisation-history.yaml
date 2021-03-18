@@ -63,7 +63,7 @@ info:
 
     You don’t need to know much about FHIR to use this API - FHIR APIs are just RESTful APIs that follow specific rules.
     In particular:
-    - resource names are capitalised and singular, and use US spellings, for example `/Immunization` not `/immunisations`
+    - resource names are capitalised and singular, and use US spellings, for example `/Immunisation` not `/immunisations`
     - array names are singular, for example `entry` not `entries` for address lines
     - data items that are country-specific and thus not included in the FHIR global base resources are usually wrapped in an `extension` object
 
@@ -117,7 +117,7 @@ servers:
   - url: 'https://api.service.nhs.uk/immunisation-history/FHIR/R4'
     description: Production environment.
 paths:
-  /Immunization:
+  /Immunisation:
     get:
       summary: List all pets
       operationId: listPets

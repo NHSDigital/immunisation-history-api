@@ -1,8 +1,9 @@
 SHELL=/bin/bash -euo pipefail
 
-install: install-node install-python install-hooks
+tests/.venv/bin/python:
+	cd tests; make install
 
-install-python:
+install-python: tests/.venv/bin/python
 	poetry install
 
 install-node:
@@ -12,9 +13,11 @@ install-node:
 install-hooks:
 	cp scripts/pre-commit .git/hooks/pre-commit
 
+install: install-node install-python
+
 lint:
 	npm run lint
-	poetry run flake8 **/*.py
+	find . -name '*.py' | xargs poetry run flake8
 
 clean:
 	rm -rf build
@@ -35,7 +38,7 @@ check-licenses:
 format:
 	poetry run black **/*.py
 
-sandbox: update-examples
+start-sandbox: # starts a local version of the sandbox
 	cd sandbox && npm run start
 
 build-proxy:
@@ -44,6 +47,12 @@ build-proxy:
 release: clean publish build-proxy
 	mkdir -p dist
 	cp -r build/. dist
+	cp -r tests dist
+	cp ecs-proxies-deploy.yml dist/ecs-deploy-sandbox.yml
+	cp ecs-proxies-deploy.yml dist/ecs-deploy-internal-qa-sandbox.yml
+	cp ecs-proxies-deploy.yml dist/ecs-deploy-internal-dev-sandbox.yml
+
+dist: release
 
 test:
-	echo "TODO: add tests"
+	poetry run pytest -v
