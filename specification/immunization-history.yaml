@@ -12,7 +12,7 @@ info:
     name: NHS Digital API Management
     url: 'https://digital.nhs.uk/developer/help-and-support'
     email: api.management@nhs.net
-  description:
+  description: |
     # Overview
     Use this API to access a patient’s coronavirus (COVID-19) immunisation history.
 
