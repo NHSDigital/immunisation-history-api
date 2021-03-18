@@ -5,6 +5,7 @@ build/
 public/
 newman/
 .idea
+.vscode
 .DS_Store
 .#*
 
@@ -12,3 +13,24 @@ __pycache__/
 .envrc
 .idea/
 .venv/
+
+# Misc
+!.gitkeep
+*.orig
+
+# Python
+__pycache__
+*.pyc
+.mypy_cache
+.python-version
+.venv/
+env
+**/.pytest_cache/
+
+# Big binaries
+*.bz2
+*.gz
+*.jar
+*.tar.gz
+*.tgz
+*.zip
