@@ -31,9 +31,9 @@
       <Flow name="StatusEndpoint">
         <Description/>
         <Request>
-          <Step>
-            <Name>KeyValueMapOperations.GetSecureVariables</Name>
-          </Step>
+<!--          <Step>-->
+<!--            <Name>KeyValueMapOperations.GetSecureVariables</Name>-->
+<!--          </Step>-->
           <Step>
             <Condition>private.apigee.status-endpoint-api-key NotEquals request.header.apikey</Condition>
             <Name>RaiseFault.401Unauthorized</Name>
