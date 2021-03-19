@@ -1,0 +1,31 @@
+{
+  "resourceType": "Bundle",
+  "id": "df5c63af-e79c-4226-921b-e20141b104a4",
+  "meta": {
+    "lastUpdated": "2021-02-17T09:38:40.456+00:00"
+  },
+  "type": "searchset",
+  "total": 2,
+  "link": [
+    {
+      "relation": "self",
+      "url": "https://api.service.nhs.uk/v1/[base]/Immunization"
+    }
+  ],
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:edea022a-2d81-11eb-adc1-0242ac120000",
+      "resource": {...},
+      "search": {
+        "mode": "match"
+      }
+    },
+    { 
+      "fullUrl": "urn:uuid:edea022a-2d81-11eb-adc1-0242ac120000",
+      "resource": {...},
+      "search": {
+        "mode": "match"
+      }
+    }
+  ]
+}
