@@ -176,7 +176,7 @@ paths:
             | ----------- | -------------------------- | --------------------------------------------- |
             | TBC         | TBC	                       | TBC |
             
-         content:
+          content:
             application/fhir+json:
               schema:
                 $ref: '#/components/schemas/OperationOutcome.yaml'
