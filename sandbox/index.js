@@ -1,23 +1,32 @@
-'use strict';
+"use strict";
 
-var path = require('path');
-var http = require('http');
+const app = require("./app");
 
-var oas3Tools = require('oas3-tools');
-var serverPort = 9000;
+app.setup(process.env);
 
-// swaggerRouter configuration
-var options = {
-    controllers: path.join(__dirname, './controllers')
+const server = app.start(process.env);
+
+
+const signals = {
+    'SIGHUP': 1,
+    'SIGINT': 2,
+    'SIGTERM': 15
 };
 
-var expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'api/openapi.yaml'), options);
-expressAppConfig.addValidator();
-var app = expressAppConfig.getApp();
+const shutdown = (signal, value) => {
+    console.log("shutdown!");
+    server.close(() => {
+        console.log(`server stopped by ${signal} with value ${value}`);
+        process.exit(128 + value);
+    });
+};
 
-// Initialize the Swagger middleware
-http.createServer(app).listen(serverPort, function () {
-    console.log('Your server is listening on port %d (http://localhost:%d)', serverPort, serverPort);
-    console.log('Swagger-ui is available on http://localhost:%d/docs', serverPort);
+Object.keys(signals).forEach((signal) => {
+    process.on(signal, () => {
+        console.log(`process received a ${signal} signal`);
+        shutdown(signal, signals[signal]);
+    });
 });
 
+
+module.exports = {server: server};

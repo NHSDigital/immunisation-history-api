@@ -1,9 +1,6 @@
 SHELL=/bin/bash -euo pipefail
 
-tests/.venv/bin/python:
-	cd tests; make install
-
-install-python: tests/.venv/bin/python
+install-python:
 	poetry install
 
 install-node:
@@ -44,10 +41,12 @@ start-sandbox: # starts a local version of the sandbox
 build-proxy:
 	scripts/build_proxy.sh
 
+
+_dist_include="pytest.ini poetry.lock poetry.toml pyproject.toml Makefile build/. tests"
+
 release: clean publish build-proxy
 	mkdir -p dist
-	cp -r build/. dist
-	cp -r tests dist
+	for f in $(_dist_include); do cp -r $$f dist; done
 	cp ecs-proxies-deploy.yml dist/ecs-deploy-sandbox.yml
 	cp ecs-proxies-deploy.yml dist/ecs-deploy-internal-qa-sandbox.yml
 	cp ecs-proxies-deploy.yml dist/ecs-deploy-internal-dev-sandbox.yml
@@ -55,4 +54,7 @@ release: clean publish build-proxy
 dist: release
 
 test:
-	poetry run pytest -v
+	make --no-print-directory -C sandbox test
+
+smoketest:
+	poetry run pytest -v --junitxml=smoketest-report.xml -s -m smoketest
