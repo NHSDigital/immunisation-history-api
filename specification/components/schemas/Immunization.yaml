@@ -25,7 +25,7 @@ properties:
     example: Bundle
   total:
     description: TBC
-    type: TBC
+    type: integer
     example: TBC
   link:
     description: TBC
