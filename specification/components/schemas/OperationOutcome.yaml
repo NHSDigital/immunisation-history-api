@@ -1,1 +1,34 @@
-TBC
+type: object
+description: |
+  Outcome of an operation that does not result in a resource or bundle being returned, for example an error or an async/batch submission.
+  There are a number of possible error codes that can be returned along with a more detailed description in the `diagnostics` field.
+properties:
+  resourceType:
+    type: string
+    description: FHIR Resource Type.
+    default: OperationOutcome
+  issue:
+    type: array
+    description: List of issues that have occurred.
+    minItems: 1
+    items:
+      type: object
+      required:
+        - severity
+        - code
+      properties:
+        severity:
+          type: string
+          enum: [fatal, error, warning, information]
+          description: Severity of the error.
+          example: error
+        code:
+          type: string
+          description: FHIR error code.
+          example: invalid
+          enum:
+            - processing
+        diagnostics:
+          type: string
+          description: Additional diagnostic information about the issue.
+          example: Unknown search parameter 'codeing' for resource type 'Immunization'.
