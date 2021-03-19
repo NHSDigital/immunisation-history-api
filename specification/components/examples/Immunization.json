@@ -15,14 +15,14 @@
   "entry": [
     {
       "fullUrl": "urn:uuid:edea022a-2d81-11eb-adc1-0242ac120000",
-      "resource": {...},
+      "resource": {},
       "search": {
         "mode": "match"
       }
     },
     { 
       "fullUrl": "urn:uuid:edea022a-2d81-11eb-adc1-0242ac120000",
-      "resource": {...},
+      "resource": {},
       "search": {
         "mode": "match"
       }
