@@ -16,7 +16,9 @@ properties:
     type: object
     properties:
       lastUpdated:
-        TBC
+        description: TBC
+        type: string
+        example: 2021-02-17T09:38:40.456+00:00
   type:
     description: TBC
     type: string
