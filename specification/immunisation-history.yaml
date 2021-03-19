@@ -159,9 +159,22 @@ paths:
           required: true
           schema:
             type: string
+        - name: X-Correlation-ID
+          in: header
+          required: false
+          description: |
+            An optional ID which you can use to track transactions across multiple systems. It can take any value, but we recommend avoiding `.` characters.
+            
+            Mirrored back in a response header.
+          schema:
+            type: string
+            example: 11C46F5F-CDEF-4865-94B2-0EE0EDCC26DA
       responses:
         '200':
           description: Information successfully found and returned.
+          headers:
+            X-Correlation-Id:
+              $ref: components/schemas/XCorrelationId.yaml
           content:
             application/fhir+json:   
               schema:
