@@ -124,13 +124,20 @@ paths:
       tags:
         - pets
       parameters:
-        - name: limit
+        - name: patient.identifier
           in: query
-          description: How many items to return at one time (max 100)
-          required: false
+          description: The patient's NHS number. Expressed as `type|value` where type must be `https://fhir.nhs.uk/Id/nhs-number` and value must be a [valid NHS number](https://www.datadictionary.nhs.uk/data_dictionary/attributes/n/nhs/nhs_number_de.asp)
+          required: true
           schema:
-            type: integer
-            format: int32
+            type: string
+            example: "https://fhir.nhs.uk/Id/nhs-number|9000000009"
+        - name: code:below
+          in: query
+          description: Parent SNOMED immunisation procedure code. Must be `90640007`, which is the parent code for all COVID-19 vaccinations.
+          required: true
+          schema:
+            type: string
+            example: "90640007"
       responses:
         '200':
           description: A paged array of pets
