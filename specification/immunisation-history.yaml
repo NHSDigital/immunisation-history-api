@@ -179,6 +179,6 @@ paths:
           content:
             application/fhir+json:
               schema:
-                $ref: '#/components/schemas/OperationOutcome.yaml'
+                $ref: 'components/schemas/OperationOutcome.yaml'
               example:
-                $ref: '#/components/examples/OperationOutcome.json'
+                $ref: 'components/examples/OperationOutcome.json'
