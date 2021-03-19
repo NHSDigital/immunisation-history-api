@@ -119,8 +119,8 @@ servers:
 paths:
   /Immunisation:
     get:
-      summary: List all pets
-      operationId: listPets
+      summary: Get immunisation history for a patient
+      operationId: get-immunisation-history
       tags:
         - pets
       parameters:
