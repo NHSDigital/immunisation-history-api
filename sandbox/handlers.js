@@ -39,7 +39,7 @@ async function status(req, res, next) {
         status: "pass",
         ping: "pong",
         service: req.app.locals.app_name,
-        _version: req.app.locals.version_info
+        version: req.app.locals.version_info
     });
     res.end();
     next();
