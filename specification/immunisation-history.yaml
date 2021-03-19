@@ -126,18 +126,38 @@ paths:
       parameters:
         - name: patient.identifier
           in: query
-          description: The patient's NHS number. Expressed as `type|value` where type must be `https://fhir.nhs.uk/Id/nhs-number` and value must be a [valid NHS number](https://www.datadictionary.nhs.uk/data_dictionary/attributes/n/nhs/nhs_number_de.asp)
+          description: |
+            The patient's NHS number.
+            Expressed as `type|value` where type must be `https://fhir.nhs.uk/Id/nhs-number` and value must be a [valid NHS number](https://www.datadictionary.nhs.uk/data_dictionary/attributes/n/nhs/nhs_number_de.asp)
           required: true
           schema:
             type: string
             example: "https://fhir.nhs.uk/Id/nhs-number|9000000009"
         - name: code:below
           in: query
-          description: Parent SNOMED immunisation procedure code. Must be `90640007`, which is the parent code for all COVID-19 vaccinations.
+          description: |
+            Parent SNOMED immunisation procedure code.
+            Must be `90640007`, which is the parent code for all COVID-19 vaccinations.
           required: true
           schema:
             type: string
             example: "90640007"
+        - name: Authorization
+          in: header
+          description: |
+            An OAuth 2.0 bearer token, obtained using our [signed JWT authentication pattern](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation/application-restricted-restful-apis-signed-jwt-authentication).
+          required: true
+          schema:
+            type: string
+            format: '^Bearer\ [[:ascii:]]+$'
+            example: 'Bearer g1112R_ccQ1Ebbb4gtHBP1aaaNM'            
+        - name: NHSD-User-Identity
+          in: header
+          description: |
+            Open ID Connect ID token for the end user, as obtained from NHS login.
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: A paged array of pets
