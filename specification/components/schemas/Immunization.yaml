@@ -1,1 +1,9 @@
-TBC
+type: object
+required:
+  - resourceType
+additionalProperties: false
+properties:
+  resourceType:
+    type: string
+    description: FHIR resource type.
+    default: "Bundle"
