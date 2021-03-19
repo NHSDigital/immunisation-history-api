@@ -34,3 +34,5 @@ env
 *.tar.gz
 *.tgz
 *.zip
+
+smoketest-report.xml
