@@ -27,13 +27,13 @@ context.setVariable("response.content", JSON.stringify( {
     "releaseId" : "{{ RELEASE_RELEASEID }}",
     "commitId": "{{ SOURCE_COMMIT_ID }}",
     "checks" : {
-        "healthcheck:status" : [{
+        "healthcheck" : {
             "status": healthcheck_status,
             "timeout" : timeout,
             "responseCode" : healthcheck_status_code,
             "outcome": healthcheck_content,
             "links" : {"self": healthcheck_request_url}
-        }]
+        }
     }
 }));
 

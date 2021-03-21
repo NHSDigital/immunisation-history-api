@@ -1,20 +1,26 @@
 import os
-from functools import partial
+from typing import List
 
 import pytest
 from aiohttp import ClientResponse
+from api_test_utils import poll_until
 from api_test_utils.api_session_client import APISessionClient
 from api_test_utils.api_test_session_config import APITestSessionConfig
-from api_test_utils import poll_until
 
 
-async def _is_deployed(resp: ClientResponse, api_test_config: APITestSessionConfig):
+def dict_path(raw, path: List[str]):
 
-    if resp.status != 200:
-        return False
-    body = await resp.json()
+    if not raw:
+        return raw
 
-    return body.get("commitId") == api_test_config.commit_id
+    if not path:
+        return raw
+
+    res = raw.get(path[0])
+    if not res or len(path) == 1 or type(res) != dict:
+        return res
+
+    return dict_path(res, path[1:])
 
 
 async def is_401(resp: ClientResponse) -> bool:
@@ -32,11 +38,17 @@ def test_output_test_config(api_test_config: APITestSessionConfig):
 @pytest.mark.asyncio
 async def test_wait_for_ping(api_client: APISessionClient, api_test_config: APITestSessionConfig):
 
-    is_deployed = partial(_is_deployed, api_test_config=api_test_config)
+    async def apigee_deployed(resp: ClientResponse):
+
+        if resp.status != 200:
+            return False
+        body = await resp.json()
+
+        return body.get("commitId") == api_test_config.commit_id
 
     await poll_until(
         make_request=lambda: api_client.get('_ping'),
-        until=is_deployed,
+        until=apigee_deployed,
         timeout=120
     )
 
@@ -58,7 +70,20 @@ async def test_check_status_is_secured(api_client: APISessionClient):
 @pytest.mark.asyncio
 async def test_wait_for_status(api_client: APISessionClient, api_test_config: APITestSessionConfig):
 
-    is_deployed = partial(_is_deployed, api_test_config=api_test_config)
+    async def is_deployed(resp: ClientResponse):
+
+        if resp.status != 200:
+            return False
+        body = await resp.json()
+
+        if body.get("commitId") != api_test_config.commit_id:
+            return False
+
+        backend = dict_path(body, ['checks', 'healthcheck', 'outcome', 'version'])
+        if not backend:
+            return True
+
+        return backend.get("commitId") == api_test_config.commit_id
 
     await poll_until(
         make_request=lambda: api_client.get('_status', headers={'apikey': os.environ.get('STATUS_ENDPOINT_API_KEY')}),
