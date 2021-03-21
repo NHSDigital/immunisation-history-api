@@ -5,13 +5,20 @@ const assert = require("chai").assert;
 
 
 describe("app handler tests", function () {
-    var server;
-
-    var env;
+    const version_info = {
+        build_label:"1233-shaacdef1",
+        releaseId:"1234",
+        commitId:"acdef12341ccc"
+    };
+    let server;
+    let env;
     before(function () {
         env = process.env;
         let app = require("./app");
-        app.setup({LOG_LEVEL: (process.env.NODE_ENV === "test" ? "warn": "debug")});
+        app.setup({
+            VERSION_INFO: JSON.stringify(version_info),
+            LOG_LEVEL: (process.env.NODE_ENV === "test" ? "warn": "debug")
+        });
         server = app.start();
 
     });
@@ -35,7 +42,7 @@ describe("app handler tests", function () {
                 status: "pass",
                 ping: "pong",
                 service: "immunisation-history",
-                _version: {}
+                version: version_info
             })
             .expect("Content-Type", /json/, done);
     });
@@ -47,7 +54,7 @@ describe("app handler tests", function () {
                 status: "pass",
                 ping: "pong",
                 service: "immunisation-history",
-                _version: {}
+                version: version_info
             })
             .expect("Content-Type", /json/, done);
     });

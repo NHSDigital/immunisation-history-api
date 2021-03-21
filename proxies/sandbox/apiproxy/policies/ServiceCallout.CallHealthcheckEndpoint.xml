@@ -7,7 +7,13 @@
     </Request>
     <Response>healthcheckResponse</Response>
     <HTTPTargetConnection>
-        {{ HOSTED_TARGET_CONNECTION }}
+        <SSLInfo>
+            <Enabled>true</Enabled>
+        </SSLInfo>
+        <LoadBalancer>
+            <Server name="hosted-apis"/>
+        </LoadBalancer>
+        <Path>/{{ service_id }}{{ '-' + pr_number if pr_number else '' }}/_ping</Path>
     </HTTPTargetConnection>
     <Timeout>20000</Timeout>
 </ServiceCallout>
