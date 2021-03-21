@@ -1,3 +1,4 @@
+import os
 from functools import partial
 
 import pytest
@@ -16,6 +17,10 @@ async def _is_deployed(resp: ClientResponse, api_test_config: APITestSessionConf
     return body.get("commitId") == api_test_config.commit_id
 
 
+async def is_401(resp: ClientResponse) -> bool:
+    return resp.status == 401
+
+
 @pytest.mark.e2e
 @pytest.mark.smoketest
 def test_output_test_config(api_test_config: APITestSessionConfig):
@@ -30,8 +35,20 @@ async def test_wait_for_ping(api_client: APISessionClient, api_test_config: APIT
     is_deployed = partial(_is_deployed, api_test_config=api_test_config)
 
     await poll_until(
-        make_request=lambda: api_client.get('_status'),
+        make_request=lambda: api_client.get('_ping'),
         until=is_deployed,
+        timeout=120
+    )
+
+
+@pytest.mark.e2e
+@pytest.mark.smoketest
+@pytest.mark.asyncio
+async def test_check_status_is_secured(api_client: APISessionClient):
+
+    await poll_until(
+        make_request=lambda: api_client.get('_status'),
+        until=is_401,
         timeout=120
     )
 
@@ -44,7 +61,7 @@ async def test_wait_for_status(api_client: APISessionClient, api_test_config: AP
     is_deployed = partial(_is_deployed, api_test_config=api_test_config)
 
     await poll_until(
-        make_request=lambda: api_client.get('_status'),
+        make_request=lambda: api_client.get('_status', headers={'apikey': os.environ.get('STATUS_ENDPOINT_API_KEY')}),
         until=is_deployed,
         timeout=120
     )
