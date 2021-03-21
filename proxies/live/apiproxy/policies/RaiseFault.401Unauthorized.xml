@@ -7,7 +7,7 @@
             <Headers/>
             <Payload contentType="text/plain"/>
             <StatusCode>401</StatusCode>
-            <ReasonPhrase>Server Error</ReasonPhrase>
+            <ReasonPhrase>Access Denied</ReasonPhrase>
         </Set>
     </FaultResponse>
     <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
