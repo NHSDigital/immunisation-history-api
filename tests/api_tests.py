@@ -1,11 +1,11 @@
-import os
 from typing import List
 
 import pytest
 from aiohttp import ClientResponse
-from api_test_utils import poll_until
+from api_test_utils import poll_until, is_401
 from api_test_utils.api_session_client import APISessionClient
 from api_test_utils.api_test_session_config import APITestSessionConfig
+from api_test_utils import env
 
 
 def dict_path(raw, path: List[str]):
@@ -21,10 +21,6 @@ def dict_path(raw, path: List[str]):
         return res
 
     return dict_path(res, path[1:])
-
-
-async def is_401(resp: ClientResponse) -> bool:
-    return resp.status == 401
 
 
 @pytest.mark.e2e
@@ -86,7 +82,7 @@ async def test_wait_for_status(api_client: APISessionClient, api_test_config: AP
         return backend.get("commitId") == api_test_config.commit_id
 
     await poll_until(
-        make_request=lambda: api_client.get('_status', headers={'apikey': os.environ.get('STATUS_ENDPOINT_API_KEY')}),
+        make_request=lambda: api_client.get('_status', headers={'apikey': env.status_endpoint_api_key()}),
         until=is_deployed,
         timeout=120
     )
