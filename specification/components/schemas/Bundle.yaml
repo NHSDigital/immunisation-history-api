@@ -45,9 +45,6 @@ properties:
     description: TBC
     type: array
     items:
-      type: object
-      properties:
-        dummy:
-          description: dummy
-          type: string
-          example: dummy
+      anyOf:
+        - $ref: Immunization.yaml
+        - $ref: Patient.yaml
