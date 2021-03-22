@@ -119,103 +119,79 @@ servers:
 paths:
   /Immunisation:
     get:
-      summary: List all pets
-      operationId: listPets
-      tags:
-        - pets
+      summary: Get immunisation history
+      operationId: get-immunisation-history
+      description: |
+        Given an NHS number, get the patient's immunisation history.
+        Also returns the patient's demographic details, as captured at the point of immunisation.
       parameters:
-        - name: limit
+        - name: patient.identifier
           in: query
-          description: How many items to return at one time (max 100)
-          required: false
-          schema:
-            type: integer
-            format: int32
-      responses:
-        '200':
-          description: A paged array of pets
-          headers:
-            x-next:
-              description: A link to the next page of responses
-              schema:
-                type: string
-          content:
-            application/json:   
-              schema:
-                $ref: "#/components/schemas/Pets"
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-    post:
-      summary: Create a pet
-      operationId: createPets
-      tags:
-        - pets
-      responses:
-        '201':
-          description: Null response
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  /pets/{petId}:
-    get:
-      summary: Info for a specific pet
-      operationId: showPetById
-      tags:
-        - pets
-      parameters:
-        - name: petId
-          in: path
+          description: |
+            The patient's NHS number.
+            Expressed as `<type>|<value>` where `<type>` must be `https://fhir.nhs.uk/Id/nhs-number` and `<value>` must be a [valid NHS number](https://www.datadictionary.nhs.uk/data_dictionary/attributes/n/nhs/nhs_number_de.asp)
           required: true
-          description: The id of the pet to retrieve
           schema:
             type: string
+            example: "https://fhir.nhs.uk/Id/nhs-number|9000000009"
+        - name: code:below
+          in: query
+          description: |
+            Parent SNOMED immunisation procedure code.
+            Must be `90640007`, which is the parent code for all COVID-19 vaccinations.
+          required: true
+          schema:
+            type: string
+            example: "90640007"
+        - name: Authorization
+          in: header
+          description: |
+            An OAuth 2.0 bearer token, obtained using our [signed JWT authentication pattern](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation/application-restricted-restful-apis-signed-jwt-authentication).
+          required: true
+          schema:
+            type: string
+            format: '^Bearer\ [[:ascii:]]+$'
+            example: 'Bearer g1112R_ccQ1Ebbb4gtHBP1aaaNM'            
+        - name: NHSD-User-Identity
+          in: header
+          description: |
+            Open ID Connect ID token for the end user, as obtained from NHS login.
+          required: true
+          schema:
+            type: string
+        - name: X-Correlation-ID
+          in: header
+          required: false
+          description: |
+            An optional ID which you can use to track transactions across multiple systems. It can take any value, but we recommend avoiding `.` characters.
+            
+            Mirrored back in a response header.
+          schema:
+            type: string
+            example: 11C46F5F-CDEF-4865-94B2-0EE0EDCC26DA
       responses:
         '200':
-          description: Expected response to a valid request
+          description: Information successfully found and returned.
+          headers:
+            X-Correlation-Id:
+              $ref: components/schemas/XCorrelationId.yaml
           content:
-            application/json:
+            application/fhir+json:   
               schema:
-                $ref: "#/components/schemas/Pet"
-        default:
-          description: unexpected error
+                $ref: "components/schemas/Immunization.yaml"
+              example:
+                $ref: "components/examples/Immunization.json"
+        '4XX':
+          description: |
+            An error occurred as follows:
+            
+            | HTTP status | Error code                 | Description |
+            | ----------- | -------------------------- | --------------------------------------------- |
+            | TBC         | TBC	                       | TBC |
+            
           content:
-            application/json:
+            application/fhir+json:
               schema:
-                $ref: "#/components/schemas/Error"
-components:
-  schemas:
-    Pet:
-      type: object
-      required:
-        - id
-        - name
-      properties:
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        tag:
-          type: string
-    Pets:
-      type: array
-      items:
-        $ref: "#/components/schemas/Pet"
-    Error:
-      type: object
-      required:
-        - code
-        - message
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
+                $ref: 'components/schemas/OperationOutcome.yaml'
+              example:
+                $ref: 'components/examples/OperationOutcome.json'
