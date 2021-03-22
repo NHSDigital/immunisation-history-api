@@ -70,12 +70,10 @@ info:
     ## Network access
     This API is available on the internet and, indirectly, on the [Health and Social Care Network (HSCN)](https://digital.nhs.uk/services/health-and-social-care-network).
 
-    To use this API with NHS smartcards you do need an HSCN connection, although internet-facing alternatives are available.
-    
     For more details see [Network access for APIs](https://digital.nhs.uk/developer/guides-and-documentation/network-access-for-apis).
     
     ## Security and authorisation
-    This API is currently [application-restricted](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation#application-restricted-apis),
+    This API is [application-restricted](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation#application-restricted-apis),
     meaning we authenticate the calling application but not the end user.
     
     Specifically, it uses the following security pattern:
@@ -91,7 +89,7 @@ info:
     ## Environments and testing
     | Environment       | Base URL                                                               |
     | ----------------- | ---------------------------------------------------------------------- |
-    | Sandbox           | `https://sandbox.api.service.nhs.uk/personal-demographics/FHIR/R4/`    |
+    | Sandbox           | `https://sandbox.api.service.nhs.uk/immunisation-history/FHIR/R4/`     |
     | Integration test  | Not yet available                                                      |
     | Production        | Not yet available                                                      |
 
@@ -122,6 +120,17 @@ paths:
       description: |
         Given an NHS number, get the patient's immunisation history.
         Also returns the patient's demographic details, as captured at the point of immunisation.
+        
+        ## Sandbox testing
+        You can test the following scenarios in our sandbox environment:
+        
+        | Scenario                      | Request                                                      | Response                                   |
+        | ----------------------------- | ------------------------------------------------------------ | ------------------------------------------ |
+        | Immunisation details found    | `patient.identifier`=`9000000009`                            | HTTP Status 200 with immunisation data in response body    |
+        | No immunisation details found | `patient.identifier`= anything else                          | HTTP Status 404 with problem description in response body  |
+
+        You can try out the sandbox using the 'Try this API' feature on this page.
+        
       parameters:
         - name: patient.identifier
           in: query
@@ -193,3 +202,4 @@ paths:
                 $ref: 'components/schemas/OperationOutcome.yaml'
               example:
                 $ref: 'components/examples/OperationOutcome.json'
+components:
