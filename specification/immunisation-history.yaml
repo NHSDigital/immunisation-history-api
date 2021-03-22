@@ -178,7 +178,7 @@ paths:
           content:
             application/fhir+json:   
               schema:
-                $ref: "components/schemas/Immunization.yaml"
+                $ref: "components/schemas/Bundle.yaml"
               example:
                 $ref: "components/examples/Immunization.json"
         '4XX':
