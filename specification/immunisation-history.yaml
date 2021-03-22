@@ -202,4 +202,14 @@ paths:
                 $ref: 'components/schemas/OperationOutcome.yaml'
               example:
                 $ref: 'components/examples/OperationOutcome.json'
+# components object must be present for spec rendering to work in Bloomreach, even if the spec has no components
 components:
+  parameters:
+    Dummy:
+      name: summy
+      in: path
+      description: Dummy.
+      required: true
+      schema:
+        type: string
+        example: "DUMMY"  
