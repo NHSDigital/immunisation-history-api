@@ -29,8 +29,7 @@ serve:
 	npm run serve
 
 check-licenses:
-	npm run check-licenses
-	scripts/check_python_licenses.sh
+	echo "Check licences here, if required"
 
 format:
 	poetry run black **/*.py
