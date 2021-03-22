@@ -126,7 +126,7 @@ paths:
         
         | Scenario                      | Request                                                      | Response                                   |
         | ----------------------------- | ------------------------------------------------------------ | ------------------------------------------ |
-        | Immunisation details found    | `patient.identifier`=`9000000009`                            | HTTP Status 200 with immunisation data in response body    |
+        | Immunisation details found    | `patient.identifier`=`9912003888`                            | HTTP Status 200 with immunisation data in response body    |
         | No immunisation details found | `patient.identifier`= anything else                          | HTTP Status 404 with problem description in response body  |
 
         You can try out the sandbox using the 'Try this API' feature on this page.
@@ -140,7 +140,7 @@ paths:
           required: true
           schema:
             type: string
-            example: "https://fhir.nhs.uk/Id/nhs-number|9000000009"
+            example: "https://fhir.nhs.uk/Id/nhs-number|9912003888"
         - name: code:below
           in: query
           description: |
@@ -206,7 +206,7 @@ paths:
 components:
   parameters:
     Dummy:
-      name: summy
+      name: dummy
       in: path
       description: Dummy.
       required: true
