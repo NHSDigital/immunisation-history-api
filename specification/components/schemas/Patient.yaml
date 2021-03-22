@@ -40,9 +40,13 @@ properties:
                 type: string
                 example: TBC
               given:
-                TBC
+                description: TBC
+                type: string
+                example: TBC
               family:
-                TBC
+                description: TBC
+                type: string
+                example: TBC
           birthDate:
             description: TBC
             type: string
