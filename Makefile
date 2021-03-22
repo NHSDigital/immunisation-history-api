@@ -25,7 +25,6 @@ publish: clean
 	npm run publish 2> /dev/null
 
 serve:
-	echo nope
 	npm run serve
 
 check-licenses:
@@ -40,7 +39,6 @@ start-sandbox: # starts a local version of the sandbox
 
 build-proxy:
 	scripts/build_proxy.sh
-
 
 _dist_include="pytest.ini poetry.lock poetry.toml pyproject.toml Makefile build/. tests"
 

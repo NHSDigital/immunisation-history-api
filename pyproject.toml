@@ -22,10 +22,10 @@ pytest = "^6.1.2"
 coverage = "^5.5"
 aiohttp = "^3.7.3"
 pytest-asyncio = "^0.14.0"
-api-test-utils = {url = "https://github.com/NHSDigital/apim-test-utils/releases/download/v1.0.86-alpha/api_test_utils-1.0.86a0-py3-none-any.whl"}
+api-test-utils = {url = "https://github.com/NHSDigital/apim-test-utils/releases/download/v1.0.92-alpha/api_test_utils-1.0.92a0-py3-none-any.whl"}
 flake8 = "^3.7.9"
-black = "^19.10b0"
-pip-licenses = "^2.0.1"
+black = "^20.8b1"
+pip-licenses = "^3.3.1"
 jinja2 = "^2.11.1"
 pyyaml = "^5.2"
 docopt = "^0.6.2"
