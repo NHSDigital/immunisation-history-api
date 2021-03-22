@@ -1,1 +1,73 @@
-TBC
+description: TBC
+type: object
+properties:
+  fullUrl:
+    description: TBC
+    type: string
+    example: TBC
+  resource:
+    description: TBC
+    type: object
+    properties:
+      Patient:
+        description: TBC
+        type: object
+        properties:
+          id:
+            description: TBC
+            type: string
+            example: TBC
+          identifier:
+            description: TBC
+            type: array
+            items:
+              type: object
+              properties:
+                system:
+                  description: TBC
+                  type: string
+                  example: TBC
+                value:
+                  description: TBC
+                  type: string
+                  example: TBC
+          name:
+            description: TBC
+            type: object
+            properties:
+              use:
+                description: TBC
+                type: string
+                example: TBC
+              given:
+                TBC
+              family:
+                TBC
+          birthDate:
+            description: TBC
+            type: string
+            example: TBC
+          address:
+            description: TBC
+            type: object
+            properties:
+              use:
+                description: TBC
+                type: string
+                example: TBC
+              postalCode:
+                description: TBC
+                type: string
+                example: TBC
+          gender:
+            description: TBC
+            type: string
+            example: TBC
+  search:
+    description: TBC
+    type: object
+    properties:
+      mode:
+        description: TBC
+        type: string
+        example: "match"
