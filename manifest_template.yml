@@ -14,9 +14,8 @@ APIGEE_ENVIRONMENTS:
   #   display_name: Reference
   - name: sandbox
     display_name: Sandbox
-# Enable int environment when ready by uncommenting:
-#   - name: int
-#     display_name: Integration Testing
+  - name: int
+    display_name: Integration Testing
 ---
 meta:
   api:
@@ -28,7 +27,7 @@ meta:
 apigee:
   environments:
 {% for ENV in APIGEE_ENVIRONMENTS %}
-{% set TITLE = PRODUCT_DISPLAY_NAME + '(' + ENV.display_name + ' Environment)' %}
+{% set TITLE = PRODUCT_DISPLAY_NAME + ' (' + ENV.display_name + ' Environment)' %}
 {% set NAME = SERVICE_NAME + '-' + ENV.name %}
   - name: {{ ENV.name }}
     products:
