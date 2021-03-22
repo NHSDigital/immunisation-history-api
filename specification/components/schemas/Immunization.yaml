@@ -14,41 +14,125 @@ properties:
         type: object
         properties:
           id:
-            TBC
+            description: TBC
+            type: string
+            example: TBC
           extension:
-            TBC
+            description: TBC
+            type: array
+            items:
+              type: object
+              properties:
+                dummy:
+                  description: TBC
+                  type: string
+                  example: TBC
           status:
-            TBC
+            description: TBC
+            type: string
+            example: TBC
           occurrenceDateTime:
-            TBC
+            description: TBC
+            type: string
+            example: TBC
           identifier:
-            TBC
+            description: TBC
+            type: object
+            properties:
+              dummy:
+                description: TBC
+                type: string
+                example: TBC
           patient:
-            TBC
+            description: TBC
+            type: object
+            properties:
+              dummy:
+                description: TBC
+                type: string
+                example: TBC
           vaccineCode:
-            TBC
+            description: TBC
+            type: object
+            properties:
+              dummy:
+                description: TBC
+                type: string
+                example: TBC
           manufactorer:
-            TBC
+            description: TBC
+            type: object
+            properties:
+              dummy:
+                description: TBC
+                type: string
+                example: TBC
           lotNumber:
-            TBC
+            description: TBC
+            type: string
+            example: TBC
           protocolApplied:
-            TBC
+            description: TBC
+            type: object
+            properties:
+              dummy:
+                description: TBC
+                type: string
+                example: TBC
           recorded:
-            TBC
+            description: TBC
+            type: string
+            example: TBC
           primarySource:
-            TBC
+            description: TBC
+            type: string
+            example: TBC
           site:
-            TBC
+            description: TBC
+            type: object
+            properties:
+              dummy:
+                description: TBC
+                type: string
+                example: TBC
           route:
-            TBC
+            description: TBC
+            type: object
+            properties:
+              dummy:
+                description: TBC
+                type: string
+                example: TBC
           doseQuantity:
-            TBC
+            description: TBC
+            type: object
+            properties:
+              dummy:
+                description: TBC
+                type: string
+                example: TBC
           reasonCode:
-            TBC
+            description: TBC
+            type: object
+            properties:
+              dummy:
+                description: TBC
+                type: string
+                example: TBC
           expirationDate:
-            TBC
+            description: TBC
+            type: string
+            example: TBC
           performer:
-            TBC
+            description: TBC
+            type: array
+            items:
+              type: object
+              properties:
+                dummy:
+                  description: TBC
+                  type: string
+                  example: TBC
   search:
     description: TBC
     type: object
