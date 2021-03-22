@@ -1,1 +1,59 @@
-TBC
+description: TBC
+type: object
+properties:
+  fullUrl:
+    description: TBC
+    type: string
+    example: TBC
+  resource:
+    description: TBC
+    type: object
+    properties:
+      Immunization:
+        description: TBC
+        type: object
+        properties:
+          id:
+            TBC
+          extension:
+            TBC
+          status:
+            TBC
+          occurrenceDateTime:
+            TBC
+          identifier:
+            TBC
+          patient:
+            TBC
+          vaccineCode:
+            TBC
+          manufactorer:
+            TBC
+          lotNumber:
+            TBC
+          protocolApplied:
+            TBC
+          recorded:
+            TBC
+          primarySource:
+            TBC
+          site:
+            TBC
+          route:
+            TBC
+          doseQuantity:
+            TBC
+          reasonCode:
+            TBC
+          expirationDate:
+            TBC
+          performer:
+            TBC
+  search:
+    description: TBC
+    type: object
+    properties:
+      mode:
+        description: TBC
+        type: string
+        example: "match"
