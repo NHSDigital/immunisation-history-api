@@ -126,8 +126,8 @@ paths:
         
         | Scenario                      | Request                                                              | Response                                   |
         | ----------------------------- | -------------------------------------------------------------------- | ------------------------------------------ |
-        | Immunisation details found    | `patient.identifier`=`https://fhir.nhs.uk/Id/nhs-number\|9912003888` | HTTP Status 200 with immunisation data in response body    |
-        | No immunisation details found | `patient.identifier`= anything else                                  | HTTP Status 404 with problem description in response body  |
+        | Immunisation history found    | `patient.identifier`=`https://fhir.nhs.uk/Id/nhs-number\|9912003888` | HTTP Status 200 with immunisation data in response body |
+        | No immunisations found        | `patient.identifier`= anything else                                  | HTTP Status 200 with empty `Bundle` in response body |
 
         You can try out the sandbox using the 'Try this API' feature on this page.
         
@@ -166,6 +166,7 @@ paths:
           required: true
           schema:
             type: string
+            example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
         - name: X-Correlation-ID
           in: header
           required: false
@@ -178,7 +179,9 @@ paths:
             example: 11C46F5F-CDEF-4865-94B2-0EE0EDCC26DA
       responses:
         '200':
-          description: Information successfully found and returned.
+          description: |
+            Valid request - response contains immunisation history and associated patient details.
+            If there are no immunisations for the given NHS number, the response `Bundle` will be empty.
           headers:
             X-Correlation-Id:
               $ref: components/schemas/XCorrelationId.yaml
@@ -194,7 +197,13 @@ paths:
             
             | HTTP status | Error code                 | Description |
             | ----------- | -------------------------- | --------------------------------------------- |
-            | TBC         | TBC	                       | TBC |
+            | 400         | `processing`               | Missing or invalid NHS number |
+            | 400         | `processing`               | Missing or invalid parent SNOMED code |
+            | 400         | `processing`               | Missing or invalid ID token |
+            | 401         | `processing`               | Missing or invalid OAuth 2.0 bearer token |
+            | 401         | `processing`               | NHS number in request doesn't match NHS number in ID token |
+            
+            For details see the `diagnostics` field.
             
           content:
             application/fhir+json:
