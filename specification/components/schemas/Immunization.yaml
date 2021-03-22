@@ -112,15 +112,15 @@ properties:
                     system:
                       description: TBC
                       type: string
-                      example: TBC
+                      example: "http://snomed.info/sct"
                     code:
                       description: TBC
                       type: string
-                      example: TBC
+                      example: "39114911000001105"
                     display:
                       description: TBC
                       type: string
-                      example: TBC
+                      example: "COVID-19 Vaccine AstraZeneca (ChAdOx1 S [recombinant]) 5x10,000,000,000 viral particles/0.5ml dose solution for injection multidose vials (AstraZeneca UK Ltd) (product)"
           manufactorer:
             description: TBC
             type: object
@@ -128,27 +128,27 @@ properties:
               display:
                 description: TBC
                 type: string
-                example: TBC
+                example: "AstraZeneca Ltd"
           lotNumber:
             description: TBC
             type: string
-            example: TBC
+            example: "R04X"
           protocolApplied:
             description: TBC
             type: object
             properties:
               doseNumberPositiveInt:
                 description: TBC
-                type: string
-                example: TBC
+                type: integer
+                example: 1
           recorded:
             description: TBC
             type: string
-            example: TBC
+            example: "2020-12-23"
           primarySource:
             description: TBC
-            type: string
-            example: TBC
+            type: boolean
+            example: true
           site:
             description: TBC
             type: object
@@ -162,15 +162,15 @@ properties:
                     system:
                       description: TBC
                       type: string
-                      example: TBC
+                      example: "http://snomed.info/sct"
                     code:
                       description: TBC
                       type: string
-                      example: TBC
+                      example: "368208006"
                     display:
                       description: TBC
                       type: string
-                      example: TBC
+                      example: "Left upper arm structure (body structure)"
           route:
             description: TBC
             type: object
@@ -184,35 +184,35 @@ properties:
                     system:
                       description: TBC
                       type: string
-                      example: TBC
+                      example: "http://snomed.info/sct"
                     code:
                       description: TBC
                       type: string
-                      example: TBC
+                      example: "78421000"
                     display:
                       description: TBC
                       type: string
-                      example: TBC
+                      example: "Intramuscular route (qualifier value)"
           doseQuantity:
             description: TBC
             type: object
             properties:
               value:
                 description: TBC
-                type: string
-                example: TBC
+                type: integer
+                example: 1
               unit:
                 description: TBC
                 type: string
-                example: TBC
+                example: "pre-filled disposable injection"
               system:
                 description: TBC
                 type: string
-                example: TBC
+                example: "http://snomed.info/sct"
               code:
                 description: TBC
                 type: string
-                example: TBC
+                example: "3318611000001103"
           reasonCode:
             description: TBC
             type: object
@@ -226,29 +226,117 @@ properties:
                     system:
                       description: TBC
                       type: string
-                      example: TBC
+                      example: "http://snomed.info/sct"
                     code:
                       description: TBC
                       type: string
-                      example: TBC
+                      example: "443684005"
                     display:
                       description: TBC
                       type: string
-                      example: TBC
+                      example: "Disease outbreak (event)"
           expirationDate:
             description: TBC
             type: string
-            example: TBC
+            example: "2021-04-29"
+          protocolApplied:
+            description: TBC
+            type: object
+            properties:
+              targetDisease:
+                description: TBC
+                type: object
+                properties:
+                  coding:
+                    description: TBC
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        system:
+                          description: TBC
+                          type: string
+                          example: "http://snomed.info/sct"
+                        code:
+                          description: TBC
+                          type: string
+                          example: "840544004"
+                        display:
+                          description: TBC
+                          type: string
+                          example: "Suspected disease caused by Severe acute respiratory coronavirus 2 (situation)"
           performer:
             description: TBC
             type: array
             items:
-              type: object
-              properties:
-                dummy:
-                  description: TBC
-                  type: string
-                  example: TBC
+              anyof:
+                - type: object
+                  properties:
+                    actor:
+                      type: object
+                      properties:
+                        type:
+                          description: TBC
+                          type: string
+                          example: "Practitioner"
+                        identifier:
+                          description: TBC
+                          type: object
+                          properties:
+                            system:
+                              description: TBC
+                              type: string
+                              example: "https://fhir.hl7.org.uk/Id/nmc-number"
+                            value:
+                              description: TBC
+                              type: string
+                              example: "5566789"
+                        display:
+                          description: TBC
+                          type: string
+                          example: "HOLDING,Rafferty"
+                - type: object
+                  properties:
+                    function:
+                      type: object
+                      properties:
+                        coding:
+                          description: TBC
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              system:
+                                description: TBC
+                                type: string
+                                example: "http://terminology.hl7.org/CodeSystem/v2-0443"
+                              code:
+                                description: TBC
+                                type: string
+                                example: "AP"
+                              display:
+                                description: TBC
+                                type: string
+                                example: "AdministeringProvider"
+                    actor:
+                      type: object
+                      properties:
+                        type:
+                          description: TBC
+                          type: string
+                          example: "Organization"
+                        identifier:
+                          description: TBC
+                          type: object
+                          properties:
+                            system:
+                              description: TBC
+                              type: string
+                              example: "https://fhir.nhs.uk/Id/ods-organization-code"
+                            value:
+                              description: TBC
+                              type: string
+                              example: "RX809"
   search:
     description: TBC
     type: object
