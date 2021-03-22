@@ -2,7 +2,7 @@
   "resourceType": "Bundle",
   "id": "df5c63af-e79c-4226-921b-e20141b104a4",
   "meta": {
-    "lastUpdated": "2021-02-17T09:38:40.456+00:00"
+    "lastUpdated": "2021-02-17T09:38:40.456+00:00",
   },
   "type": "searchset",
   "total": 2,
@@ -45,7 +45,7 @@
             "identifier": [
               {
                 "system": "https://fhir.nhs.uk/Id/nhs-number",
-                "value": "9000000009"
+                "value": "9912003888"
               }
             ]
           },
@@ -101,17 +101,20 @@
             ]
           },
           "expirationDate": "2021-04-29",
+          "protocolApplied": {
+            "targetDisease": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "840544004",
+                  "display": "Suspected disease caused by Severe acute respiratory coronavirus 2 (situation)"
+                }
+              ]
+            }
+          },
           "performer": [
             {
               "actor": {
-                "extension": [
-                  {
-                    "url": "https://fhir.nhs.uk/StructureDefinition/Extension-Spine-ActorRole",
-                    "valueCodeableConcept": {
-                      "text": "NursePractitioner"
-                    }
-                  }
-                ],
                 "type": "Practitioner",
                 "identifier": {
                   "system": "https://fhir.hl7.org.uk/Id/nmc-number",
@@ -131,20 +134,6 @@
                 ]
               },
               "actor": {
-                "extension": [
-                  {
-                    "url": "https://fhir.nhs.uk/StructureDefinition/Extension-Spine-ActorRole",
-                    "valueCodeableConcept": {
-                      "coding": [
-                        {
-                          "system": "http://snomed.info/sct",
-                          "code": "413294000",
-                          "display": "Community health services(qualifier value)"
-                        }
-                      ]
-                    }
-                  }
-                ],
                 "type": "Organization",
                 "identifier": {
                   "system": "https://fhir.nhs.uk/Id/ods-organization-code",
@@ -191,7 +180,7 @@
             "identifier": [
               {
                 "system": "https://fhir.nhs.uk/Id/nhs-number",
-                "value": "9000000009"
+                "value": "9912003888"
               }
             ]
           },
@@ -247,17 +236,20 @@
             ]
           },
           "expirationDate": "2021-04-29",
+          "protocolApplied": {
+            "targetDisease": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "840544004",
+                  "display": "Suspected disease caused by Severe acute respiratory coronavirus 2 (situation)"
+                }
+              ]
+            }
+          },
           "performer": [
             {
               "actor": {
-                "extension": [
-                  {
-                    "url": "https://fhir.nhs.uk/StructureDefinition/Extension-Spine-ActorRole",
-                    "valueCodeableConcept": {
-                      "text": "NursePractitioner"
-                    }
-                  }
-                ],
                 "type": "Practitioner",
                 "identifier": {
                   "system": "https://fhir.hl7.org.uk/Id/nmc-number",
@@ -277,20 +269,6 @@
                 ]
               },
               "actor": {
-                "extension": [
-                  {
-                    "url": "https://fhir.nhs.uk/StructureDefinition/Extension-Spine-ActorRole",
-                    "valueCodeableConcept": {
-                      "coding": [
-                        {
-                          "system": "http://snomed.info/sct",
-                          "code": "413294000",
-                          "display": "Community health services(qualifier value)"
-                        }
-                      ]
-                    }
-                  }
-                ],
                 "type": "Organization",
                 "identifier": {
                   "system": "https://fhir.nhs.uk/Id/ods-organization-code",
@@ -312,8 +290,22 @@
           "id": "edea022a-2d81-11eb-adc1-0242ac120002",
           "identifier": [
             {
+              "extension":  [
+                {
+                  "url": "https://fhir.hl7.org.uk/StructureDefinition/Extension-UKCore-NHSNumberVerificationStatus",
+                  "valueCodeableConcept": {
+                    "coding":  [
+                      {
+                        "system": "https://fhir.hl7.org.uk/CodeSystem/UKCore-NHSNumberVerificationStatus",
+                        "code": "01",
+                        "display": "Number present and verified"
+                      }
+                    ]
+                  }
+                }
+              ],
               "system": "https://fhir.nhs.uk/Id/nhs-number",
-              "value": "9000000009"
+              "value": "9912003888"
             }
           ],
           "name": {
