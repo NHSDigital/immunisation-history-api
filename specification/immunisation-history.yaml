@@ -124,10 +124,10 @@ paths:
         ## Sandbox testing
         You can test the following scenarios in our sandbox environment:
         
-        | Scenario                      | Request                                                             | Response                                   |
-        | ----------------------------- | ------------------------------------------------------------------- | ------------------------------------------ |
-        | Immunisation details found    | `patient.identifier`=`https://fhir.nhs.uk/Id/nhs-number|9912003888` | HTTP Status 200 with immunisation data in response body    |
-        | No immunisation details found | `patient.identifier`= anything else                                 | HTTP Status 404 with problem description in response body  |
+        | Scenario                      | Request                                                              | Response                                   |
+        | ----------------------------- | -------------------------------------------------------------------- | ------------------------------------------ |
+        | Immunisation details found    | `patient.identifier`=`https://fhir.nhs.uk/Id/nhs-number\|9912003888` | HTTP Status 200 with immunisation data in response body    |
+        | No immunisation details found | `patient.identifier`= anything else                                  | HTTP Status 404 with problem description in response body  |
 
         You can try out the sandbox using the 'Try this API' feature on this page.
         
