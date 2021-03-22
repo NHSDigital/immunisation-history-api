@@ -239,32 +239,32 @@ properties:
             description: TBC
             type: string
             example: "2021-04-29"
-          protocolApplied:
-            description: TBC
-            type: object
-            properties:
-              targetDisease:
-                description: TBC
-                type: object
-                properties:
-                  coding:
-                    description: TBC
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        system:
-                          description: TBC
-                          type: string
-                          example: "http://snomed.info/sct"
-                        code:
-                          description: TBC
-                          type: string
-                          example: "840544004"
-                        display:
-                          description: TBC
-                          type: string
-                          example: "Suspected disease caused by Severe acute respiratory coronavirus 2 (situation)"
+#          protocolApplied:
+#            description: TBC
+#            type: object
+#            properties:
+#              targetDisease:
+#                description: TBC
+#                type: object
+#                properties:
+#                  coding:
+#                    description: TBC
+#                    type: array
+#                    items:
+#                      type: object
+#                      properties:
+#                        system:
+#                          description: TBC
+#                          type: string
+#                          example: "http://snomed.info/sct"
+#                        code:
+#                          description: TBC
+#                          type: string
+#                          example: "840544004"
+#                        display:
+#                          description: TBC
+#                          type: string
+#                          example: "Suspected disease caused by Severe acute respiratory coronavirus 2 (situation)"
           performer:
             description: TBC
             type: array
