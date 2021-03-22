@@ -14,7 +14,7 @@ install: install-node install-python .git/hooks/pre-commit
 
 lint:
 	npm run lint
-	find . -name '*.py' -not -path '**/.venv/*' | xargs poetry run flake8
+	# find . -name '*.py' -not -path '**/.venv/*' | xargs poetry run flake8
 
 clean:
 	rm -rf build
@@ -25,7 +25,6 @@ publish: clean
 	npm run publish 2> /dev/null
 
 serve:
-	echo nope
 	npm run serve
 
 check-licenses:
