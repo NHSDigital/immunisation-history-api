@@ -1,53 +1,143 @@
+description: TBC
 type: object
-required:
-  - resourceType
-additionalProperties: false
 properties:
-  resourceType:
-    description: FHIR resource type. Must be `Bundle`.
-    type: string
-    example: Bundle
-  id:
+  fullUrl:
     description: TBC
     type: string
-    example: df5c63af-e79c-4226-921b-e20141b104a4
-  meta:
+    example: TBC
+  resource:
     description: TBC
     type: object
     properties:
-      lastUpdated:
+      Immunization:
+        description: TBC
+        type: object
+        properties:
+          id:
+            description: TBC
+            type: string
+            example: TBC
+          extension:
+            description: TBC
+            type: array
+            items:
+              type: object
+              properties:
+                dummy:
+                  description: TBC
+                  type: string
+                  example: TBC
+          status:
+            description: TBC
+            type: string
+            example: TBC
+          occurrenceDateTime:
+            description: TBC
+            type: string
+            example: TBC
+          identifier:
+            description: TBC
+            type: object
+            properties:
+              dummy:
+                description: TBC
+                type: string
+                example: TBC
+          patient:
+            description: TBC
+            type: object
+            properties:
+              dummy:
+                description: TBC
+                type: string
+                example: TBC
+          vaccineCode:
+            description: TBC
+            type: object
+            properties:
+              dummy:
+                description: TBC
+                type: string
+                example: TBC
+          manufactorer:
+            description: TBC
+            type: object
+            properties:
+              dummy:
+                description: TBC
+                type: string
+                example: TBC
+          lotNumber:
+            description: TBC
+            type: string
+            example: TBC
+          protocolApplied:
+            description: TBC
+            type: object
+            properties:
+              dummy:
+                description: TBC
+                type: string
+                example: TBC
+          recorded:
+            description: TBC
+            type: string
+            example: TBC
+          primarySource:
+            description: TBC
+            type: string
+            example: TBC
+          site:
+            description: TBC
+            type: object
+            properties:
+              dummy:
+                description: TBC
+                type: string
+                example: TBC
+          route:
+            description: TBC
+            type: object
+            properties:
+              dummy:
+                description: TBC
+                type: string
+                example: TBC
+          doseQuantity:
+            description: TBC
+            type: object
+            properties:
+              dummy:
+                description: TBC
+                type: string
+                example: TBC
+          reasonCode:
+            description: TBC
+            type: object
+            properties:
+              dummy:
+                description: TBC
+                type: string
+                example: TBC
+          expirationDate:
+            description: TBC
+            type: string
+            example: TBC
+          performer:
+            description: TBC
+            type: array
+            items:
+              type: object
+              properties:
+                dummy:
+                  description: TBC
+                  type: string
+                  example: TBC
+  search:
+    description: TBC
+    type: object
+    properties:
+      mode:
         description: TBC
         type: string
-        example: 2021-02-17T09:38:40.456+00:00
-  type:
-    description: TBC
-    type: string
-    example: Bundle
-  total:
-    description: TBC
-    type: integer
-    example: TBC
-  link:
-    description: TBC
-    type: array
-    items:
-      type: object
-      properties:
-        relation:
-          description: TBC
-          type: string
-          example: self
-        url:
-          description: TBC
-          type: string
-          example: https://sandbox.api.service.nhs.uk/immunisation-history/FHIR/R4/Immunization?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|9000000009&code:below=90640007
-  entry:
-    description: TBC
-    type: array
-    items:
-      type: object
-      properties:
-        dummy:
-          description: dummy
-          type: string
-          example: dummy
+        example: "match"

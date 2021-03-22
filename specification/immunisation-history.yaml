@@ -13,11 +13,11 @@ info:
     url: 'https://digital.nhs.uk/developer/help-and-support'
     email: api.management@nhs.net
   description: |
-    # Overview
-    Use this API to access a patient’s coronavirus (COVID-19) immunisation history.
+    ## Overview
+    Use this API to access a patient’s immunisation history.
 
     You can:
-    - get the immunisation history for a given patient based on their NHS number
+    - get a patient's coronavirus (COVID-19) immunisation history, based on their NHS number
 
     You cannot currently use this API to:
     - get details of other types of immunisation
@@ -32,30 +32,28 @@ info:
     
     Details on how quickly the data is available after the vaccination event are to follow.
 
-    To use this API, the patient must be strongly authenticated with NHS login.
-    
-    # Who can use this API
+    ## Who can use this API
     
     This API can only be used where there is a legal basis to do so. Make sure you have a valid use case before you go too far with your development.
     To do this, [contact us](https://digital.nhs.uk/developer/help-and-support).
 
     You must do this before you can go live (see ‘Onboarding’ below).
     
-    # API status and roadmap    
+    ## API status and roadmap    
     
-    ## Status
+    ### Status
     This API is in alpha, meaning:
     - it is available for testing but not yet for production use
     - we might make breaking changes
     
     If you would like to be involved in our beta programme, [contact us](https://digital.nhs.uk/developer/help-and-support).
     
-    ## Roadmap
+    ### Roadmap
     To see our roadmap, or to suggest, comment or vote on features for this API, see our [interactive product backlog](https://nhs-digital-api-management.featureupvote.com/?tag=immunisation-history-api).
 
     If you have any other queries, please [contact us](https://digital.nhs.uk/developer/help-and-support).
     
-    # Technology
+    ## Technology
     This API is [RESTful](https://digital.nhs.uk/developer/guides-and-documentation/api-technologies-at-nhs-digital#basic-rest).
 
     It also conforms to the [FHIR](https://digital.nhs.uk/developer/guides-and-documentation/api-technologies-at-nhs-digital#fhir) global standard for health care data exchange.
@@ -63,21 +61,19 @@ info:
 
     You don’t need to know much about FHIR to use this API - FHIR APIs are just RESTful APIs that follow specific rules.
     In particular:
-    - resource names are capitalised and singular, and use US spellings, for example `/Immunisation` not `/immunisations`
+    - resource names are capitalised and singular, and use US spellings, for example `/Immunization` not `/immunisations`
     - array names are singular, for example `entry` not `entries` for address lines
     - data items that are country-specific and thus not included in the FHIR global base resources are usually wrapped in an `extension` object
 
     There are [libraries and SDKs available](https://digital.nhs.uk/developer/guides-and-documentation/api-technologies-at-nhs-digital#fhir-libraries-and-sdks) to help with FHIR API integration.
     
-    # Network access
+    ## Network access
     This API is available on the internet and, indirectly, on the [Health and Social Care Network (HSCN)](https://digital.nhs.uk/services/health-and-social-care-network).
 
-    To use this API with NHS smartcards you do need an HSCN connection, although internet-facing alternatives are available.
-    
     For more details see [Network access for APIs](https://digital.nhs.uk/developer/guides-and-documentation/network-access-for-apis).
     
-    # Security and authorisation
-    This API is currently [application-restricted](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation#application-restricted-apis),
+    ## Security and authorisation
+    This API is [application-restricted](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation#application-restricted-apis),
     meaning we authenticate the calling application but not the end user.
     
     Specifically, it uses the following security pattern:
@@ -90,10 +86,10 @@ info:
     - the calling application must pass the user's NHS login identity token in the `NHSD-User-Identity` header when calling the API
     - the NHS number in the identity token must match the NHS number for which data is being requested
 
-    # Environments and testing
+    ## Environments and testing
     | Environment       | Base URL                                                               |
     | ----------------- | ---------------------------------------------------------------------- |
-    | Sandbox           | `https://sandbox.api.service.nhs.uk/personal-demographics/FHIR/R4/`    |
+    | Sandbox           | `https://sandbox.api.service.nhs.uk/immunisation-history/FHIR/R4/`     |
     | Integration test  | Not yet available                                                      |
     | Production        | Not yet available                                                      |
 
@@ -105,7 +101,7 @@ info:
 
     For details of sandbox test scenarios, or to try out the sandbox using our 'Try this API' feature, see the documentation for each endpoint.
     
-    # Onboarding
+    ## Onboarding
     You need to get your software approved by us before it can go live with this API. We call this onboarding. The onboarding process can sometimes be quite long, so it’s worth planning well ahead.
 
     Details to follow.
@@ -117,13 +113,24 @@ servers:
   - url: 'https://api.service.nhs.uk/immunisation-history/FHIR/R4'
     description: Production environment.
 paths:
-  /Immunisation:
+  /Immunization:
     get:
       summary: Get immunisation history
       operationId: get-immunisation-history
       description: |
         Given an NHS number, get the patient's immunisation history.
         Also returns the patient's demographic details, as captured at the point of immunisation.
+        
+        ## Sandbox testing
+        You can test the following scenarios in our sandbox environment:
+        
+        | Scenario                      | Request                                                      | Response                                   |
+        | ----------------------------- | ------------------------------------------------------------ | ------------------------------------------ |
+        | Immunisation details found    | `patient.identifier`=`9000000009`                            | HTTP Status 200 with immunisation data in response body    |
+        | No immunisation details found | `patient.identifier`= anything else                          | HTTP Status 404 with problem description in response body  |
+
+        You can try out the sandbox using the 'Try this API' feature on this page.
+        
       parameters:
         - name: patient.identifier
           in: query
@@ -178,7 +185,7 @@ paths:
           content:
             application/fhir+json:   
               schema:
-                $ref: "components/schemas/Immunization.yaml"
+                $ref: "components/schemas/Bundle.yaml"
               example:
                 $ref: "components/examples/Immunization.json"
         '4XX':
@@ -195,3 +202,31 @@ paths:
                 $ref: 'components/schemas/OperationOutcome.yaml'
               example:
                 $ref: 'components/examples/OperationOutcome.json'
+# components object must be present for spec rendering to work in Bloomreach, even if the spec has no components
+components:
+  parameters:
+    Dummy:
+      name: summy
+      in: path
+      description: Dummy.
+      required: true
+      schema:
+        type: string
+        example: "DUMMY"
+  schemas:
+    Patient:
+      $ref: components/schemas/Patient.yaml
+  examples:
+    Dummy:
+      summary: Dummy example
+      value:
+        resourceType: Dummy
+        issue:
+          - severity: error
+            code: value
+            details:
+              coding:
+                - system: 'https://fhir.nhs.uk/R4/CodeSystem/Spine-ErrorOrWarningCode'
+                  version: '1'
+                  code: INVALID_RESOURCE_ID
+                  display: Resource Id is invalid
