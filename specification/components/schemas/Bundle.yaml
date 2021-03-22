@@ -22,11 +22,11 @@ properties:
   type:
     description: TBC
     type: string
-    example: Bundle
+    example: searchset
   total:
     description: TBC
     type: integer
-    example: TBC
+    example: 2
   link:
     description: TBC
     type: array
@@ -40,7 +40,7 @@ properties:
         url:
           description: TBC
           type: string
-          example: https://sandbox.api.service.nhs.uk/immunisation-history/FHIR/R4/Immunization?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|9000000009&code:below=90640007
+          example: https://sandbox.api.service.nhs.uk/immunisation-history/FHIR/R4/Immunization?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|9912003888&code:below=90640007
   entry:
     description: TBC
     type: array
