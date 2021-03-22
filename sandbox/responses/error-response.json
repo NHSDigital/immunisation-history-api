@@ -1,0 +1,10 @@
+{
+    "resourceType": "OperationOutcome",
+    "issue": [
+      {
+        "severity": "error",
+        "code": "processing",
+        "diagnostics": "Unknown search parameter 'codeing' for resource type 'Immunization'."
+      }
+    ]
+  }

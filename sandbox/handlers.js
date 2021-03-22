@@ -1,4 +1,6 @@
 "use strict";
+const getresponse = require("./responses/get-imm-response.json");
+const errresponse = require("./responses/error-response.json")
 
 const log = require("loglevel");
 
@@ -62,7 +64,28 @@ async function hello(req, res, next) {
     next();
 }
 
+async function immunisation(req, res, next) {
+
+    write_log(res, "info", {
+        message: "immunisation",
+        req: {
+            path: req.path,
+            query: req.query,
+            headers: req.rawHeaders,
+            patientIdentifier: req.query["patient.identifier"].split("|")[1]
+        }
+    });
+    if (req.query["patient.identifier"].split("|")[1] == "9912003888") {
+        res.json(getresponse);
+    } else {
+        res.json(errresponse)
+    }
+    res.end();
+    next();
+}
+
 module.exports = {
     status: status,
-    hello: hello
+    hello: hello,
+    immunisation: immunisation
 };
