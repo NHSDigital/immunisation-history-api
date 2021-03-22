@@ -23,10 +23,32 @@ properties:
             items:
               type: object
               properties:
-                dummy:
+                url:
                   description: TBC
                   type: string
                   example: TBC
+                valueCodeableConcept:
+                  description: TBC
+                  type: object
+                  properties:
+                    coding:
+                      description: TBC
+                      type: arrap
+                      items:
+                        type: object
+                        properties:
+                          system:
+                            description: TBC
+                            type: string
+                            example: TBC
+                          code:
+                            description: TBC
+                            type: string
+                            example: TBC
+                          display:
+                            description: TBC
+                            type: string
+                            example: TBC
           status:
             description: TBC
             type: string
@@ -39,7 +61,15 @@ properties:
             description: TBC
             type: object
             properties:
-              dummy:
+              use:
+                description: TBC
+                type: string
+                example: TBC
+              system:
+                description: TBC
+                type: string
+                example: TBC
+              value:
                 description: TBC
                 type: string
                 example: TBC
@@ -47,23 +77,55 @@ properties:
             description: TBC
             type: object
             properties:
-              dummy:
+              reference:
                 description: TBC
                 type: string
                 example: TBC
+              type:
+                description: TBC
+                type: string
+                example: TBC
+              identifier:
+                description: TBC
+                type: array
+                items:
+                  type: object
+                  properties:
+                    system:
+                      description: TBC
+                      type: string
+                      example: TBC
+                    value:
+                      description: TBC
+                      type: string
+                      example: TBC
           vaccineCode:
             description: TBC
             type: object
             properties:
-              dummy:
+              coding:
                 description: TBC
-                type: string
-                example: TBC
+                type: array
+                items:
+                  type: object
+                  properties:
+                    system:
+                      description: TBC
+                      type: string
+                      example: TBC
+                    code:
+                      description: TBC
+                      type: string
+                      example: TBC
+                    display:
+                      description: TBC
+                      type: string
+                      example: TBC
           manufactorer:
             description: TBC
             type: object
             properties:
-              dummy:
+              display:
                 description: TBC
                 type: string
                 example: TBC
@@ -75,7 +137,7 @@ properties:
             description: TBC
             type: object
             properties:
-              dummy:
+              doseNumberPositiveInt:
                 description: TBC
                 type: string
                 example: TBC
@@ -91,23 +153,63 @@ properties:
             description: TBC
             type: object
             properties:
-              dummy:
+              coding:
                 description: TBC
-                type: string
-                example: TBC
+                type: array
+                items:
+                  type: object
+                  properties:
+                    system:
+                      description: TBC
+                      type: string
+                      example: TBC
+                    code:
+                      description: TBC
+                      type: string
+                      example: TBC
+                    display:
+                      description: TBC
+                      type: string
+                      example: TBC
           route:
             description: TBC
             type: object
             properties:
-              dummy:
+              coding:
                 description: TBC
-                type: string
-                example: TBC
+                type: array
+                items:
+                  type: object
+                  properties:
+                    system:
+                      description: TBC
+                      type: string
+                      example: TBC
+                    code:
+                      description: TBC
+                      type: string
+                      example: TBC
+                    display:
+                      description: TBC
+                      type: string
+                      example: TBC
           doseQuantity:
             description: TBC
             type: object
             properties:
-              dummy:
+              value:
+                description: TBC
+                type: string
+                example: TBC
+              unit:
+                description: TBC
+                type: string
+                example: TBC
+              system:
+                description: TBC
+                type: string
+                example: TBC
+              code:
                 description: TBC
                 type: string
                 example: TBC
@@ -115,10 +217,24 @@ properties:
             description: TBC
             type: object
             properties:
-              dummy:
+              coding:
                 description: TBC
-                type: string
-                example: TBC
+                type: array
+                items:
+                  type: object
+                  properties:
+                    system:
+                      description: TBC
+                      type: string
+                      example: TBC
+                    code:
+                      description: TBC
+                      type: string
+                      example: TBC
+                    display:
+                      description: TBC
+                      type: string
+                      example: TBC
           expirationDate:
             description: TBC
             type: string
