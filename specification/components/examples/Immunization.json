@@ -101,17 +101,6 @@
             ]
           },
           "expirationDate": "2021-04-29",
-          "protocolApplied": {
-            "targetDisease": {
-              "coding": [
-                {
-                  "system": "http://snomed.info/sct",
-                  "code": "840544004",
-                  "display": "Suspected disease caused by Severe acute respiratory coronavirus 2 (situation)"
-                }
-              ]
-            }
-          },
           "performer": [
             {
               "actor": {
