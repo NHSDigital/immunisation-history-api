@@ -1,22 +1,22 @@
-description: TBC
+description: A matching immunisation, formatted as a FHIR Immunization resource.
 type: object
 properties:
   Immunization:
-    description: TBC
+    description: The matching immunisation.
     type: object
     properties:
       id:
-        description: TBC
+        description: Logical identifier for the Immunization resource.
         type: string
         example: "edea022a-2d81-11eb-adc1-0242ac120001"
       extension:
-        description: TBC
+        description: FHIR extension wrapper for the vaccination procedure that was performed for the immunisation. Always contains exactly one object.
         type: array
         items:
           type: object
           properties:
             url:
-              description: TBC
+              description: URI for the type of extension - in this case a vaccination procedure.
               type: string
               example: "https://simplifier.net/guide/UKCoreDevelopment2/ExtensionUKCore-VaccinationProcedure"
             valueCodeableConcept:
@@ -30,23 +30,23 @@ properties:
                     type: object
                     properties:
                       system:
-                        description: TBC
+                        description: Coding system used for the vaccination procedure. Always SNOMED.
                         type: string
                         example: "http://snomed.info/sct"
                       code:
-                        description: TBC
+                        description: Code for the vaccination procedure.
                         type: string
                         example: "1324681000000101"
                       display:
-                        description: TBC
+                        description: Description of the vaccination procedure.
                         type: string
                         example: "Administration of first dose of severe acute respiratory syndrome coronavirus 2 vaccine (procedure)"
       status:
-        description: TBC
+        description: Status of the immunisation.
         type: string
         example: "completed"
       occurrenceDateTime:
-        description: TBC
+        description: Date and time of immunisation administration.
         type: string
         example: "2020-12-23T13:00:08.476+00:00"
       identifier:
@@ -66,11 +66,11 @@ properties:
             type: string
             example: "1324761000000100"
       patient:
-        description: TBC
+        description: Reference to patient who was immunised.
         type: object
         properties:
           reference:
-            description: TBC
+            description: Logical identifier for the associated Patient resource in the Bundle.
             type: string
             example: "edea022a-2d81-11eb-adc1-0242ac120002"
           type:
