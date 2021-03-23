@@ -128,7 +128,7 @@ app.get("/_status", handlers.status);
 app.get("/health", handlers.status);
 app.all("/hello", handlers.hello);
 app.all("/FHIR/R4/Immunisation", handlers.immunisation);
-app.use(on_error)
+app.use(on_error);
 app.use(after_request);
 
 module.exports = {start: start, setup: setup};
