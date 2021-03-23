@@ -162,7 +162,7 @@ paths:
         - name: NHSD-User-Identity
           in: header
           description: |
-            Open ID Connect ID token for the end user, as obtained from NHS login.
+            Open ID Connect ID token for the end user, as obtained from NHS login. Must be a signed JWT in the format `xxxxx.yyyyy.zzzzz`.
           required: true
           schema:
             type: string
