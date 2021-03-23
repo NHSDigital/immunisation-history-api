@@ -15,11 +15,6 @@
       <Step>
         <Name>OauthV2.VerifyAccessToken</Name>
       </Step>
-      <Step>
-        <!-- X-Correlation-ID header renamed to NHSD-Correlation-ID -->
-        <Name>AssignMessage.400BadRequest</Name>
-        <Condition>not(request.header.X-Correlation-ID is null)</Condition>
-      </Step>
       <!-- <Step>
         <Name>VerifyApiKey.XApiKey</Name>
         <Condition>(proxy.pathsuffix MatchesPath "/_status") and (request.verb = "GET")</Condition>
