@@ -1,109 +1,93 @@
 description: TBC
 type: object
 properties:
-  fullUrl:
-    description: TBC
-    type: string
-    example: "edea022a-2d81-11eb-adc1-0242ac120002"
-  resource:
+  Patient:
     description: TBC
     type: object
     properties:
-      Patient:
+      id:
+        description: TBC
+        type: string
+        example: "edea022a-2d81-11eb-adc1-0242ac120002"
+      identifier:
+        description: TBC
+        type: array
+        items:
+          type: object
+          properties:
+            extension:
+              description: TBC
+              type: array
+              items:
+                type: object
+                properties:
+                  url:
+                    description: TBC
+                    type: string
+                    example: "https://fhir.hl7.org.uk/StructureDefinition/Extension-UKCore-NHSNumberVerificationStatus"
+                  valueCodeableConcept:
+                    description: TBC
+                    type: object
+                    properties:
+                      coding:
+                        description: TBC
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            system:
+                              description: TBC
+                              type: string
+                              example: "https://fhir.hl7.org.uk/CodeSystem/UKCore-NHSNumberVerificationStatus"
+                            code:
+                              description: TBC
+                              type: string
+                              example: "01"
+                            display:
+                              description: TBC
+                              type: string
+                              example: "Number present and verified"
+            system:
+              description: TBC
+              type: string
+              example: "https://fhir.nhs.uk/Id/nhs-number"
+            value:
+              description: TBC
+              type: string
+              example: "9912003888"
+      name:
         description: TBC
         type: object
         properties:
-          id:
+          use:
             description: TBC
             type: string
-            example: "edea022a-2d81-11eb-adc1-0242ac120002"
-          identifier:
-            description: TBC
-            type: array
-            items:
-              type: object
-              properties:
-                extension:
-                  description: TBC
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      url:
-                        description: TBC
-                        type: string
-                        example: "https://fhir.hl7.org.uk/StructureDefinition/Extension-UKCore-NHSNumberVerificationStatus"
-                      valueCodeableConcept:
-                        description: TBC
-                        type: object
-                        properties:
-                          coding:
-                            description: TBC
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                system:
-                                  description: TBC
-                                  type: string
-                                  example: "https://fhir.hl7.org.uk/CodeSystem/UKCore-NHSNumberVerificationStatus"
-                                code:
-                                  description: TBC
-                                  type: string
-                                  example: "01"
-                                display:
-                                  description: TBC
-                                  type: string
-                                  example: "Number present and verified"
-                system:
-                  description: TBC
-                  type: string
-                  example: "https://fhir.nhs.uk/Id/nhs-number"
-                value:
-                  description: TBC
-                  type: string
-                  example: "9912003888"
-          name:
-            description: TBC
-            type: object
-            properties:
-              use:
-                description: TBC
-                type: string
-                example: "official"
-              given:
-                description: TBC
-                type: string
-                example: "Jack"
-              family:
-                description: TBC
-                type: string
-                example: "Dawkins"
-          birthDate:
+            example: "official"
+          given:
             description: TBC
             type: string
-            example: "1965-02-28"
-          address:
-            description: TBC
-            type: object
-            properties:
-              use:
-                description: TBC
-                type: string
-                example: "home"
-              postalCode:
-                description: TBC
-                type: string
-                example: "AB12 3CD"
-          gender:
+            example: "Jack"
+          family:
             description: TBC
             type: string
-            example: "male"
-  search:
-    description: TBC
-    type: object
-    properties:
-      mode:
+            example: "Dawkins"
+      birthDate:
         description: TBC
         type: string
-        example: "match"
+        example: "1965-02-28"
+      address:
+        description: TBC
+        type: object
+        properties:
+          use:
+            description: TBC
+            type: string
+            example: "home"
+          postalCode:
+            description: TBC
+            type: string
+            example: "AB12 3CD"
+      gender:
+        description: TBC
+        type: string
+        example: "male"
