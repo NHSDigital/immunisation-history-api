@@ -127,7 +127,8 @@ app.get("/_ping", handlers.status);
 app.get("/_status", handlers.status);
 app.get("/health", handlers.status);
 app.all("/hello", handlers.hello);
-app.use(on_error)
+app.all("/FHIR/R4/Immunisation", handlers.immunisation);
+app.use(on_error);
 app.use(after_request);
 
 module.exports = {start: start, setup: setup};
