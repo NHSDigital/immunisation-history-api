@@ -14,6 +14,15 @@
       <Condition>oauthV2.OauthV2.VerifyAccessToken.failed</Condition>
     </FaultRule>
   </FaultRules>
+  <DefaultFaultRule>
+    <Step>
+      <Name>AssignMessage.Errors.CatchAllMessage</Name>
+    </Step>
+    <Step>
+      <Name>AssignMessage.Mirror.CorrelationID</Name>
+      <Condition>(original-request-details.header.X-Correlation-ID ~~ ".+")</Condition>
+    </Step>
+  </DefaultFaultRule>
   <PreFlow>
     <Request>
       <Step>
