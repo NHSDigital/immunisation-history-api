@@ -1,6 +1,7 @@
 "use strict";
 const getResponse = require("./responses/get-imm-response.json");
 const errResponse = require("./responses/error-response.json");
+const emptyBundle = require("./responses/empty-bundle-response.json");
 
 const log = require("loglevel");
 
@@ -64,12 +65,12 @@ async function hello(req, res, next) {
     next();
 }
 
-async function immunisation(req, res, next) {
+async function immunization(req, res, next) {
 
     var patientIdentifier = req.query["patient.identifier"].split("|")[1];
 
     write_log(res, "info", {
-        message: "immunisation",
+        message: "immunization",
         req: {
             path: req.path,
             query: req.query,
@@ -77,10 +78,12 @@ async function immunisation(req, res, next) {
             patientIdentifier: patientIdentifier
         }
     });
-    if (patientIdentifier == "9912003888") {
+    if (patientIdentifier == null || patientIdentifier == "") {
+        res.json(errResponse);
+    } else if (patientIdentifier == "9912003888") {
         res.json(getResponse);
     } else {
-        res.json(errResponse);
+        res.json(emptyBundle);
     }
     res.end();
     next();
@@ -89,5 +92,5 @@ async function immunisation(req, res, next) {
 module.exports = {
     status: status,
     hello: hello,
-    immunisation: immunisation
+    immunization: immunization
 };
