@@ -4,7 +4,7 @@ properties:
   fullUrl:
     description: TBC
     type: string
-    example: "urn:uuid:edea022a-2d81-11eb-adc1-0242ac120002"
+    example: "edea022a-2d81-11eb-adc1-0242ac120002"
   resource:
     description: TBC
     type: object
