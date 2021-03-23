@@ -2,19 +2,19 @@
   "resourceType": "Bundle",
   "id": "df5c63af-e79c-4226-921b-e20141b104a4",
   "meta": {
-    "lastUpdated": "2021-02-17T09:38:40.456+00:00",
+    "lastUpdated": "2021-02-17T09:38:40.456+00:00"
   },
   "type": "searchset",
   "total": 2,
   "link": [
     {
       "relation": "self",
-      "url": "https://api.service.nhs.uk/immunisation-history/FHIR/R4/Immunization?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|9912003888&code:below=90640007"
+      "url": "https://api.service.nhs.uk/immunisation-history/FHIR/R4/Immunization?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|9987123456&code:below=90640007"
     }
   ],
   "entry": [
     {
-      "fullUrl": "urn:uuid:edea022a-2d81-11eb-adc1-0242ac120001",
+      "fullUrl": "edea022a-2d81-11eb-adc1-0242ac120001",
       "resource": {
         "Immunization": {
           "id": "edea022a-2d81-11eb-adc1-0242ac120001",
@@ -40,7 +40,7 @@
             "value": "1324761000000100"
           },
           "patient": {
-            "reference": "urn:uuid:edea022a-2d81-11eb-adc1-0242ac120002",
+            "reference": "edea022a-2d81-11eb-adc1-0242ac120002",
             "type": "Patient",
             "identifier": [
               {
@@ -62,9 +62,6 @@
             "display": "AstraZeneca Ltd"
           },
           "lotNumber": "R04X",
-          "protocolApplied": {
-            "doseNumberPositiveInt": 1
-          },
           "recorded": "2020-12-23",
           "primarySource": true,
           "site": {
@@ -101,6 +98,20 @@
             ]
           },
           "expirationDate": "2021-04-29",
+          "protocolApplied": {
+            "doseNumberPositiveInt": 1,
+            "targetDisease": [
+              {
+                "coding": [
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "840544004",
+                    "display": "Suspected disease caused by Severe acute respiratory coronavirus 2 (situation)"
+                  }
+                ]
+              }
+            ]
+          },
           "performer": [
             {
               "actor": {
@@ -138,7 +149,7 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:edea022a-2d81-11eb-adc1-0242ac120000",
+      "fullUrl": "edea022a-2d81-11eb-adc1-0242ac120000",
       "resource": {
         "Immunization": {
           "id": "edea022a-2d81-11eb-adc1-0242ac120001",
@@ -164,7 +175,7 @@
             "value": "1324761000000102"
           },
           "patient": {
-            "reference": "urn:uuid:edea022a-2d81-11eb-adc1-0242ac120002",
+            "reference": "edea022a-2d81-11eb-adc1-0242ac120002",
             "type": "Patient",
             "identifier": [
               {
@@ -186,9 +197,6 @@
             "display": "AstraZeneca Ltd"
           },
           "lotNumber": "R04X",
-          "protocolApplied": {
-            "doseNumberPositiveInt": 1
-          },
           "recorded": "2020-12-23",
           "primarySource": true,
           "site": {
@@ -225,6 +233,20 @@
             ]
           },
           "expirationDate": "2021-04-29",
+          "protocolApplied": {
+            "doseNumberPositiveInt": 2,
+            "targetDisease": [
+              {
+                "coding": [
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "840544004",
+                    "display": "Suspected disease caused by Severe acute respiratory coronavirus 2 (situation)"
+                  }
+                ]
+              }
+            ]
+          },
           "performer": [
             {
               "actor": {
@@ -262,17 +284,17 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:edea022a-2d81-11eb-adc1-0242ac120002",
+      "fullUrl": "edea022a-2d81-11eb-adc1-0242ac120002",
       "resource": {
         "Patient": {
           "id": "edea022a-2d81-11eb-adc1-0242ac120002",
           "identifier": [
             {
-              "extension":  [
+              "extension": [
                 {
                   "url": "https://fhir.hl7.org.uk/StructureDefinition/Extension-UKCore-NHSNumberVerificationStatus",
                   "valueCodeableConcept": {
-                    "coding":  [
+                    "coding": [
                       {
                         "system": "https://fhir.hl7.org.uk/CodeSystem/UKCore-NHSNumberVerificationStatus",
                         "code": "01",
