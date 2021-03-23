@@ -53,7 +53,7 @@ properties:
           type: string
           example: "edea022a-2d81-11eb-adc1-0242ac120001"
         resource:
-          anyOf:
+          oneOf:
             - $ref: Immunization.yaml
             - $ref: Patient.yaml
         search:
