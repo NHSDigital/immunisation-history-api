@@ -150,6 +150,15 @@ paths:
           schema:
             type: string
             example: "90640007"
+        - name: _include
+          in: query
+          description: |
+            Specifies other resources to be included in the response along with the immunisations.
+            Must be `Immunization:patient`, which will include patient demographic details.
+          required: true
+          schema:
+            type: string
+            example: "Immunization:patient"
         - name: Authorization
           in: header
           description: |
