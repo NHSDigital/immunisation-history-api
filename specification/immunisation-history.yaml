@@ -127,7 +127,7 @@ paths:
         | Scenario                      | Request                                                              | Response                                   |
         | ----------------------------- | -------------------------------------------------------------------- | ------------------------------------------ |
         | Immunisation history found    | `patient.identifier`=`https://fhir.nhs.uk/Id/nhs-number\|9912003888` | HTTP Status 200 with immunisation data in response body |
-        | No immunisations found        | `patient.identifier`= anything else                                  | HTTP Status 200 with empty `Bundle` in response body |
+        | No immunisations found        | `patient.identifier`= anything else                                  | HTTP Status 200 with empty bundle in response body |
 
         You can try out the sandbox using the 'Try this API' feature on this page.
         
@@ -150,6 +150,15 @@ paths:
           schema:
             type: string
             example: "90640007"
+        - name: _include
+          in: query
+          description: |
+            Specifies other resources to be included in the response along with the immunisations.
+            Must be `Immunization:patient`, which will include patient demographic details.
+          required: true
+          schema:
+            type: string
+            example: "Immunization:patient"
         - name: Authorization
           in: header
           description: |
@@ -166,7 +175,7 @@ paths:
           required: true
           schema:
             type: string
-            example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+            example: xxxxx.yyyyy.zzzzz
         - name: X-Correlation-ID
           in: header
           required: false
@@ -180,8 +189,8 @@ paths:
       responses:
         '200':
           description: |
-            Valid request - response contains immunisation history and associated patient details.
-            If there are no immunisations for the given NHS number, the response `Bundle` will be empty.
+            The request was valid, and the response contains immunisation history and associated patient details.
+            If there are no immunisations for the given NHS number, the response bundle will be empty.
           headers:
             X-Correlation-Id:
               $ref: components/schemas/XCorrelationId.yaml
