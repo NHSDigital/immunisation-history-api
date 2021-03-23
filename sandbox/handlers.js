@@ -65,12 +65,12 @@ async function hello(req, res, next) {
     next();
 }
 
-async function immunisation(req, res, next) {
+async function immunization(req, res, next) {
 
     var patientIdentifier = req.query["patient.identifier"].split("|")[1];
 
     write_log(res, "info", {
-        message: "immunisation",
+        message: "immunization",
         req: {
             path: req.path,
             query: req.query,
@@ -92,5 +92,5 @@ async function immunisation(req, res, next) {
 module.exports = {
     status: status,
     hello: hello,
-    immunisation: immunisation
+    immunization: immunization
 };
