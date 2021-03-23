@@ -1,18 +1,21 @@
 <ProxyEndpoint name="default">
     <PreFlow>
         <Request>
-            <Step>
+            <!-- <Step>
                 <Name>AssignMessage.Copy.RequestHeaders</Name>
+            </Step> -->
+            <Step>
+                <Name>FlowCallout.PreProxyAddCorrelationId</Name>
             </Step>
         </Request>
     </PreFlow>
-    <PostFlow>
+    <!-- <PostFlow>
         <Response>
             <Step>
                 <Name>AssignMessage.Revert.RequestHeaders</Name>
             </Step>
         </Response>
-    </PostFlow>
+    </PostFlow> -->
     <Flows>
         <Flow name="AddPayloadToPing">
             <Response>
