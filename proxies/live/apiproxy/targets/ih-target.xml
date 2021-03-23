@@ -13,19 +13,30 @@
   <PreFlow>
     <Request>
       <Step>
-        <!-- This will return 404 because /_status doesn't exist for the backend. Either implement _status for your backend
-        or use a service-callout to call health-check endpoint -->
+        <Name>OauthV2.VerifyAccessToken</Name>
+      </Step>
+      <Step>
+        <!-- X-Correlation-ID header renamed to NHSD-Correlation-ID -->
+        <Name>AssignMessage.400BadRequest</Name>
+        <Condition>not(request.header.X-Correlation-ID is null)</Condition>
+      </Step>
+      <!-- <Step>
         <Name>VerifyApiKey.XApiKey</Name>
         <Condition>(proxy.pathsuffix MatchesPath "/_status") and (request.verb = "GET")</Condition>
       </Step>
       <Step>
         <Name>AssignMessage.RenameQuotaVarsFromVerifyAPIKeyPolicyClientId</Name>
-      </Step>
+      </Step> -->
       <Step>
         <Name>Quota</Name>
       </Step>
       <Step>
         <Name>SpikeArrest</Name>
+      </Step>
+      <Step>
+        <!--This should always be the last Step - as it is just before the message is sent - so the initial request stays intact for as long as possible.
+            The Swapping of the Request Headers converts X-Correlation-ID to NHSD-Correlation-ID before sending to backend. -->
+        <Name>AssignMessage.Swap.RequestHeaders</Name>
       </Step>
     </Request>
   </PreFlow>

@@ -1,4 +1,9 @@
 <ProxyEndpoint name="default">
+    <PreFlow>
+        <Step>
+          <Name>AssignMessage.Copy.RequestHeaders</Name>
+        </Step>
+    </PreFlow>
     <Flows>
         <Flow name="AddPayloadToPing">
             <Response>
@@ -34,7 +39,6 @@
             <Condition>request.verb == "OPTIONS" AND request.header.origin != null AND request.header.Access-Control-Request-Method != null</Condition>
         </Flow>
     </Flows>
-    <PreFlow />
     <PostClientFlow name="PostClientFlow">
         <Response>
             <Step>
