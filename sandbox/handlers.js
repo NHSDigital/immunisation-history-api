@@ -1,6 +1,7 @@
 "use strict";
 const getResponse = require("./responses/get-imm-response.json");
 const errResponse = require("./responses/error-response.json");
+const emptyBundle = require("./responses/empty-bundle-response.json");
 
 const log = require("loglevel");
 
@@ -77,10 +78,12 @@ async function immunisation(req, res, next) {
             patientIdentifier: patientIdentifier
         }
     });
-    if (patientIdentifier == "9912003888") {
+    if (patientIdentifier == null || patientIdentifier == "") {
+        res.json(errResponse);
+    } else if (patientIdentifier == "9912003888") {
         res.json(getResponse);
     } else {
-        res.json(errResponse);
+        res.json(emptyBundle);
     }
     res.end();
     next();
