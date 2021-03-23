@@ -166,6 +166,7 @@ paths:
           required: true
           schema:
             type: string
+            example: xxxxx.yyyyy.zzzzz
         - name: X-Correlation-ID
           in: header
           required: false
