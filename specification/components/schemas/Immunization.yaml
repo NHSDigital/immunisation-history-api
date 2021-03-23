@@ -125,14 +125,6 @@ properties:
         description: TBC
         type: string
         example: "R04X"
-      protocolApplied:
-        description: TBC
-        type: object
-        properties:
-          doseNumberPositiveInt:
-            description: TBC
-            type: integer
-            example: 1
       recorded:
         description: TBC
         type: string
@@ -231,6 +223,38 @@ properties:
         description: TBC
         type: string
         example: "2021-04-29"
+      protocolApplied:
+        description: TBC
+        type: object
+        properties:
+          doseNumberPositiveInt:
+            description: TBC
+            type: integer
+            example: 1
+          targetDisease:
+            description: TBC
+            type: array
+            items:
+              type: object
+              properties:
+                coding:
+                  description: TBC
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      system:
+                        description: TBC
+                        type: string
+                        example: TBC
+                      code:
+                        description: TBC
+                        type: string
+                        example: TBC
+                      display:
+                        description: TBC
+                        type: string
+                        example: TBC
       performer:
         description: TBC
         type: array
