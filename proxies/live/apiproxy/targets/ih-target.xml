@@ -25,6 +25,7 @@
   </DefaultFaultRule>
   <PreFlow>
     <Request>
+      <!-- Will be updated to use JWT Auth -->
       <Step>
         <Name>OauthV2.VerifyAccessToken</Name>
       </Step>

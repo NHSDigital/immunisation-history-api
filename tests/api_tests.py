@@ -1,5 +1,5 @@
 from typing import List
-
+import uuid
 import pytest
 from aiohttp import ClientResponse
 from api_test_utils import poll_until, is_401
@@ -87,6 +87,28 @@ async def test_wait_for_status(api_client: APISessionClient, api_test_config: AP
         timeout=120
     )
 
+
+@pytest.mark.e2e
+@pytest.mark.smoketest
+@pytest.mark.asyncio
+async def test_check_for_correlation_id(api_client: APISessionClient, api_test_config: APITestSessionConfig):
+
+    correlation_id = str(uuid.uuid4())
+
+    async def has_returned_correlation_id(resp: ClientResponse):
+
+        headers = resp.headers
+
+        if not headers["X-Correlation-ID"]:
+            return False
+
+        return headers["X-Correlation-ID"] == correlation_id
+
+    await poll_until(
+        make_request=lambda: api_client.get('_ping', headers={'X-Correlation-ID': correlation_id}),
+        until=has_returned_correlation_id,
+        timeout=120
+    )
 
 # class TestEndpoints:
 #
