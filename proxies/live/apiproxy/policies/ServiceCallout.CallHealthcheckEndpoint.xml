@@ -13,7 +13,7 @@
         <LoadBalancer>
             <Server name="immunisation-history"/>
         </LoadBalancer>
-        <Path>/get</Path>
+        <Path>/immunisation-history/FHIR/R4/Immunization</Path>
     </HTTPTargetConnection>
     <Timeout>20000</Timeout>
 </ServiceCallout>
