@@ -4,9 +4,6 @@
             <!-- <Step>
                 <Name>AssignMessage.Copy.RequestHeaders</Name>
             </Step> -->
-            <Step>
-                <Name>FlowCallout.PreProxyAddCorrelationId</Name>
-            </Step>
         </Request>
     </PreFlow>
     <!-- <PostFlow>

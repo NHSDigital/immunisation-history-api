@@ -1,4 +1,0 @@
-<FlowCallout async="false" continueOnError="false" enabled="true" name="FlowCallout.PreProxyAddCorrelationId">
-    <DisplayName>FlowCallout.PreProxyAddCorrelationId</DisplayName>
-    <SharedFlowBundle>PreProxyAddCorrelationID</SharedFlowBundle>
-</FlowCallout>
