@@ -16,6 +16,14 @@ APIGEE_ENVIRONMENTS:
     display_name: Sandbox
   - name: int
     display_name: Integration Testing
+
+ACCESS_MODES:
+  - name: application-restricted
+    nameSuffix: -application-restricted
+    displayName: Application-Restricted
+    scopes: ['urn:nhsd:apim:app:level3:immunisation-history']
+    requireCallbackUrl: false
+    description: Application Restricted
 ---
 meta:
   api:
