@@ -12,6 +12,16 @@
   </FaultRules>
   <PreFlow>
     <Request>
+      <Step>
+        <Name>OauthV2.VerifyAccessToken</Name>
+      </Step>
+      <!-- Set flow variable 'access-mode' by inspecting the token's scopes.
+      First set to least-privilege (application restricted) then look for scopes indicating higher privilege, overwriting as appropriate.
+      'scope' is a space-separated string of scopes, determined by the Application's API Product assignments.
+      Follow pattern used in AssignMessage.SetAccessModeUserRestricted condition. See Apigee docs for JavaRegex gotchas (uses '.match()' behaviour matching whole string only). -->
+      <Step>
+        <Name>AssignMessage.SetAccessModeApplicationRestricted</Name>
+      </Step>
 <!--      <Step>-->
 <!--        &lt;!&ndash; This will return 404 because /_status doesn't exist for the backend. Either implement _status for your backend-->
 <!--        or use a service-callout to call health-check endpoint &ndash;&gt;-->
