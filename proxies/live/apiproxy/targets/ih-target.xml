@@ -4,10 +4,10 @@
       <Step>
         <Name>ExtractVariables.OAuthErrorFaultString</Name>
       </Step>
-      <Step>
+      <!-- <Step>
         <Name>AssignMessage.Mirror.CorrelationID</Name>
         <Condition>(original-request-details.header.X-Correlation-ID ~~ ".+")</Condition>
-      </Step>
+      </Step> -->
       <Step>
         <Name>AssignMessage.OAuthPolicyErrorResponse</Name>
       </Step>
@@ -18,10 +18,10 @@
     <Step>
       <Name>AssignMessage.Errors.CatchAllMessage</Name>
     </Step>
-    <Step>
+    <!-- <Step>
       <Name>AssignMessage.Mirror.CorrelationID</Name>
       <Condition>(original-request-details.header.X-Correlation-ID ~~ ".+")</Condition>
-    </Step>
+    </Step> -->
   </DefaultFaultRule>
   <PreFlow>
     <Request>
@@ -42,10 +42,10 @@
       </Step> -->
     </Request>
     <Response>
-      <Step>
+      <!-- <Step>
         <Name>AssignMessage.Mirror.CorrelationID</Name>
         <Condition>(original-request-details.header.X-Correlation-ID ~~ ".+")</Condition>
-      </Step>
+      </Step> -->
     </Response>
   </PreFlow>
   <HTTPTargetConnection>

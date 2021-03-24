@@ -93,19 +93,19 @@ async def test_wait_for_status(api_client: APISessionClient, api_test_config: AP
 @pytest.mark.asyncio
 async def test_check_for_correlation_id(api_client: APISessionClient, api_test_config: APITestSessionConfig):
 
-    correlation_id = str(uuid.uuid4())
+    request_correlation_id = str(uuid.uuid4())
 
     async def has_returned_correlation_id(resp: ClientResponse):
 
-        headers = resp.headers
-
-        if not headers["X-Correlation-ID"]:
+        try:
+            response_correlation_id = resp.headers["X-Correlation-ID"]
+        except KeyError:
             return False
 
-        return headers["X-Correlation-ID"] == correlation_id
+        return response_correlation_id == request_correlation_id
 
     await poll_until(
-        make_request=lambda: api_client.get('_ping', headers={'X-Correlation-ID': correlation_id}),
+        make_request=lambda: api_client.get('_ping', headers={'X-Correlation-ID': request_correlation_id}),
         until=has_returned_correlation_id,
         timeout=120
     )
