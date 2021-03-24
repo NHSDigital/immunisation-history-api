@@ -51,6 +51,9 @@
     <PostClientFlow name="PostClientFlow">
         <Response>
             <Step>
+                <Name>FlowCallout.SetOriginalCorrelationID</Name>
+            </Step>
+            <Step>
                 <Name>FlowCallout.LogToSplunk</Name>
             </Step>
         </Response>
