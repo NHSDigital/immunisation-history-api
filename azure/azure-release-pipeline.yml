@@ -57,6 +57,13 @@ extends:
         proxy_path: sandbox
         post_deploy:
           - template: ./templates/run-smoke-tests.yml
+      - environment: ref
+        make_spec_visible: true
+        depends_on:
+          - internal_qa
+          - internal_qa_sandbox
+        post_deploy:
+          - template: ./templates/run-smoke-tests.yml
       - environment: int
         make_spec_visible: true
         depends_on:

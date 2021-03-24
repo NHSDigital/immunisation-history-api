@@ -55,5 +55,6 @@
     <LoadBalancer>
       <Server name="immunisation-history" />
     </LoadBalancer>
+    <Path>/immunisation-history</Path>
   </HTTPTargetConnection>
 </TargetEndpoint>
