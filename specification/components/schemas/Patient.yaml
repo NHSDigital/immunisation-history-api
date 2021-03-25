@@ -5,48 +5,12 @@ properties:
     description: Demographics and other administrative information about a person receiving a vaccine.
     type: object
     properties:
-      id:
-        description: System identifier for this patient.
-        type: string
-        example: "edea022a-2d81-11eb-adc1-0242ac120002"
       identifier:
         description: Business identifier(s) for this patient.
         type: array
         items:
           type: object
           properties:
-            extension:
-              description: Additional identification information about this patient. Always NHS number verification status.
-              type: array
-              items:
-                type: object
-                properties:
-                  url:
-                    description: URL of extension definition.
-                    type: string
-                    example: "https://fhir.hl7.org.uk/StructureDefinition/Extension-UKCore-NHSNumberVerificationStatus"
-                  valueCodeableConcept:
-                    description: A reference to a code in a terminology, or a textual description.
-                    type: object
-                    properties:
-                      coding:
-                        description: A code and the terminology or system which defines it.
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            system:
-                              description: Coding system used to signal NHS number verification status. Always `UKCore-NHSNumberVerificationStatus`.
-                              type: string
-                              example: "https://fhir.hl7.org.uk/CodeSystem/UKCore-NHSNumberVerificationStatus"
-                            code:
-                              description: Code for the NHS number verification status.
-                              type: string
-                              example: "01"
-                            display:
-                              description: Description of the NHS number verification status.
-                              type: string
-                              example: "Number present and verified"
             system:
               description: Coding system used to identify patients.
               type: string
@@ -71,40 +35,16 @@ properties:
               - anonymous
               - old
               - maiden
+          family:
+            description: Family name of the patient.
+            type: string
+            example: "Dawkins"
           given:
             description: Given names of the patient.
             type: array
             items:
               type: string
             example: ["Jack"]
-          family:
-            description: Family name of the patient.
-            type: string
-            example: "Dawkins"
-      birthDate:
-        description: Patient's date of birth.
-        type: string
-        example: "1965-02-28"
-      address:
-        description: Patient's addresses.
-        type: array
-        items:
-          type: object
-          properties:
-            use:
-              description: Purpose of the address as defined by https://www.hl7.org/fhir/valueset-address-use.html.
-              type: string
-              example: "home"
-              enum:
-                - home
-                - work
-                - temp
-                - old
-                - billing
-            postalCode:
-              description: Postal code of the address.
-              type: string
-              example: "AB12 3CD"
       gender:
         description: Administrative gender of the patient. As defined by https://www.hl7.org/fhir/valueset-administrative-gender.html.
         type: string
@@ -114,3 +54,7 @@ properties:
           - female
           - other
           - unknown
+      birthDate:
+        description: Patient's date of birth.
+        type: string
+        example: "1965-02-28"
