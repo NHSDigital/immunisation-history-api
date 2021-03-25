@@ -1,7 +1,7 @@
 "use strict";
-const getResponse = require("./responses/get-imm-response.json");
-const errResponse = require("./responses/error-response.json");
-const emptyBundle = require("./responses/empty-bundle-response.json");
+const getResponse = require("./responses/Immunization.json");
+const errResponse = require("./responses/OperationOutcome.json");
+const emptyBundle = require("./responses/EmptyBundle.json");
 
 const log = require("loglevel");
 
