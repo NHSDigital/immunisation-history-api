@@ -151,7 +151,7 @@ paths:
           schema:
             type: string
             example: "https://fhir.nhs.uk/Id/nhs-number|9912003888"
-        - name: code:below
+        - name: procedure-code:below
           in: query
           description: |
             Parent SNOMED immunisation procedure code.
