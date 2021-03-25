@@ -9,10 +9,6 @@ properties:
         description: FHIR resource type. Always `Immunization`.
         type: string
         example: "Immunization"
-      id:
-        description: Logical identifier for the Immunization resource.
-        type: string
-        example: "edea022a-2d81-11eb-adc1-0242ac120001"
       extension:
         description: FHIR extension wrapper for the vaccination procedure that was performed for the immunisation. Always contains exactly one object.
         type: array
@@ -22,7 +18,7 @@ properties:
             url:
               description: URI for the type of extension - in this case a vaccination procedure.
               type: string
-              example: "https://simplifier.net/guide/UKCoreDevelopment2/ExtensionUKCore-VaccinationProcedure"
+              example: "https://fhir.hl7.org.uk/StructureDefinition/Extension-UKCore-VaccinationProcedure"
             valueCodeableConcept:
               description: A reference to a code in a terminology, or a textual description.
               type: object
@@ -45,18 +41,6 @@ properties:
                         description: Description of the vaccination procedure.
                         type: string
                         example: "Administration of first dose of severe acute respiratory syndrome coronavirus 2 vaccine (procedure)"
-      status:
-        description: Status of the immunisation.
-        type: string
-        enum:
-          - completed
-          - entered-in-error
-          - not-done
-        example: "completed"
-      occurrenceDateTime:
-        description: Date and time of immunisation administration.
-        type: string
-        example: "2020-12-23T13:00:08.476+00:00"
       identifier:
         description: Business identifier for this Immunization.
         type: array
@@ -81,32 +65,14 @@ properties:
               description: Identifier value within `system`.
               type: string
               example: "1324761000000100"
-      patient:
-        description: Reference to patient who was immunised.
-        type: object
-        properties:
-          reference:
-            description: Logical identifier for the associated Patient resource in the Bundle.
-            type: string
-            example: "urn:uuid:edea022a-2d81-11eb-adc1-0242ac120002"
-          type:
-            description: Type this reference refers to. Always `Patient`.
-            type: string
-            example: "Patient"
-          identifier:
-            description: Business identifier for linked Patient.
-            type: array
-            items:
-              type: object
-              properties:
-                system:
-                  description: URL of coding system used to identify linked patient.
-                  type: string
-                  example: "https://fhir.nhs.uk/Id/nhs-number"
-                value:
-                  description: Value in coding system representing linked patient.
-                  type: string
-                  example: "9912003888"
+      status:
+        description: Status of the immunisation.
+        type: string
+        enum:
+          - completed
+          - entered-in-error
+          - not-done
+        example: "completed"
       vaccineCode:
         description: Vaccine product administered
         type: object
@@ -129,6 +95,42 @@ properties:
                   description: Description of the vaccine type.
                   type: string
                   example: "COVID-19 Vaccine AstraZeneca (ChAdOx1 S [recombinant]) 5x10,000,000,000 viral particles/0.5ml dose solution for injection multidose vials (AstraZeneca UK Ltd) (product)"
+      patient:
+        description: Reference to patient who was immunised.
+        type: object
+        properties:
+          reference:
+            description: Logical identifier for the associated Patient resource in the Bundle.
+            type: string
+            example: "urn:uuid:edea022a-2d81-11eb-adc1-0242ac120002"
+          type:
+            description: Type this reference refers to. Always `Patient`.
+            type: string
+            example: "Patient"
+          identifier:
+            description: Business identifier for linked Patient.
+            type: object
+            properties:
+              system:
+                description: URL of coding system used to identify linked patient.
+                type: string
+                example: "https://fhir.nhs.uk/Id/nhs-number"
+              value:
+                description: Value in coding system representing linked patient.
+                type: string
+                example: "9912003888"
+      occurrenceDateTime:
+        description: Date and time of immunisation administration.
+        type: string
+        example: "2020-12-23T13:00:08.476+00:00"
+      recorded:
+        description: Date this immunization was first recorded in the subject's record.
+        type: string
+        example: "2020-12-23"
+      primarySource:
+        description: Indicates if this data was recorded in a primary context.
+        type: boolean
+        example: true
       manufacturer:
         description: Information on the manufacturer of the vaccine.
         type: object
@@ -141,36 +143,10 @@ properties:
         description: Vaccine lot number.
         type: string
         example: "R04X"
-      recorded:
-        description: Date (and time) this immunization was first recorded in the subject's record.
+      expirationDate:
+        description: Vaccine expiration date.
         type: string
-        example: "2020-12-23"
-      primarySource:
-        description: Indicates if this data was recorded in a primary context.
-        type: boolean
-        example: true
-      site:
-        description: Body site at which vaccine was administered.
-        type: object
-        properties:
-          coding:
-            description: A code and the terminology or system which defines it.
-            type: array
-            items:
-              type: object
-              properties:
-                system:
-                  description: Coding system used for describing the vaccination site. Always SNOMED.
-                  type: string
-                  example: "http://snomed.info/sct"
-                code:
-                  description: Code for the vaccination site.
-                  type: string
-                  example: "368208006"
-                display:
-                  description: Description of the vaccination site.
-                  type: string
-                  example: "Left upper arm structure (body structure)"
+        example: "2021-04-29"
       route:
         description: How vaccine entered the subject's body.
         type: object
@@ -215,133 +191,35 @@ properties:
             example: "3318611000001103"
       reasonCode:
         description: Code explaining why vaccination was administed.
-        type: object
-        properties:
-          coding:
-            description: A code and the terminology or system which defines it.
-            type: array
-            items:
-              type: object
-              properties:
-                system:
-                  description: Coding system used to describe the reason for administration of vaccine. Always SNOMED.
-                  type: string
-                  example: "http://snomed.info/sct"
-                code:
-                  description: Code for the vaccination reason.
-                  type: string
-                  example: "443684005"
-                display:
-                  description: Description of the vaccination reason.
-                  type: string
-                  example: "Disease outbreak (event)"
-      expirationDate:
-        description: Vaccine expiration date.
-        type: string
-        example: "2021-04-29"
-      protocolApplied:
-        description: Protocol followed by the provider.
-        type: object
-        properties:
-          doseNumberPositiveInt:
-            description: Dose number within a series of doses.
-            type: integer
-            example: 1
-          targetDisease:
-            description: Vaccine-preventable disease(s) targeted by this immunisation.
-            type: array
-            items:
-              type: object
-              properties:
-                coding:
-                  description: A code and the terminology or system which defines it.
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      system:
-                        description: Coding system used to describe target disease. Always SNOMED.
-                        type: string
-                        example: "http://snomed.info/sct"
-                      code:
-                        description: Code for the target disease.
-                        type: string
-                        example: "840544004"
-                      display:
-                        description: Description of the target disease.
-                        type: string
-                        example: "Suspected disease caused by Severe acute respiratory coronavirus 2 (situation)"
-      performer:
-        description: Who administered the vaccine to the subject.
         type: array
         items:
-          anyOf:
-            - type: object
-              properties:
-                actor:
-                  description: Performing practitioner.
-                  type: object
-                  properties:
-                    type:
-                      description: Type of performer. Always `Practitioner`.
-                      type: string
-                      example: "Practitioner"
-                    identifier:
-                      description: Business identifier of practitioner.
-                      type: object
-                      properties:
-                        system:
-                          description: Coding system used to identify practitioner.
-                          type: string
-                          example: "https://fhir.hl7.org.uk/Id/nmc-number"
-                        value:
-                          description: Code identifying practitioner.
-                          type: string
-                          example: "5566789"
-                    display:
-                      description: Name of practitioner.
-                      type: string
-                      example: "HOLDING,Rafferty"
-            - type: object
-              properties:
-                function:
-                  type: object
-                  description: Describes the type of performance.
-                  properties:
-                    coding:
-                      description: A code and the terminology or system which defines it.
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          system:
-                            description: Coding system for immunisation performer functions. Always `v2-0443`.
-                            type: string
-                            example: "http://terminology.hl7.org/CodeSystem/v2-0443"
-                          code:
-                            description: Code for the performer's function.
-                            type: string
-                            example: "AP"
-                          display:
-                            description: Description of the performer's function.
-                            type: string
-                            example: "AdministeringProvider"
-                actor:
-                  type: object
-                  properties:
-                    type:
-                      description: Type of performer. Always `Organization`.
-                      type: string
-                      example: "Organization"
-                    identifier:
-                      description: Business identifier of performing organization.
-                      type: object
-                      properties:
-                        system:
-                          description: Coding system used to identify performing organization. Always ODS code.
-                          type: string
-                          example: "https://fhir.nhs.uk/Id/ods-organization-code"
-                        value:
-                          description: Code for the performing organization.
-                          type: string
-                          example: "RX809"
+          type: object
+          properties:
+            coding:
+              description: A code and the terminology or system which defines it.
+              type: array
+              items:
+                type: object
+                properties:
+                  system:
+                    description: Coding system used to describe the reason for administration of vaccine. Always SNOMED.
+                    type: string
+                    example: "http://snomed.info/sct"
+                  code:
+                    description: Code for the vaccination reason.
+                    type: string
+                    example: "443684005"
+                  display:
+                    description: Description of the vaccination reason.
+                    type: string
+                    example: "Disease outbreak (event)"
+      protocolApplied:
+        description: Protocol followed by the provider.
+        type: array
+        items:
+          type: object
+          properties:
+            doseNumberPositiveInt:
+              description: Dose number within a series of doses.
+              type: integer
+              example: 1
