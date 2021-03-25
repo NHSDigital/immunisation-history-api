@@ -12,7 +12,7 @@ APIGEE_ENVIRONMENTS:
     display_name: Internal QA Sandbox
   - name: ref
     display_name: Reference
-    ratelimit: '1000ps'
+    ratelimit: '60000pm'
     quota: '60000'
   - name: prod
     display_name: Production
@@ -52,7 +52,7 @@ apigee:
           - name: access
             value: public
           - name: ratelimit
-            value: {{ ENV.ratelimit | default('5ps') }}
+            value: {{ ENV.ratelimit | default('300pm') }}
         description: {{ DESCRIPTION }}
         displayName: {{ TITLE }}
         environments: [ {{ ENV.name }} ]
