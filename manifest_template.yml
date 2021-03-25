@@ -16,7 +16,7 @@ APIGEE_ENVIRONMENTS:
     quota: '60000'
   - name: prod
     display_name: Production
-    ratelimit: '1000ps'
+    ratelimit: '60000pm'
     quota: '60000'
   - name: sandbox
     display_name: Sandbox
