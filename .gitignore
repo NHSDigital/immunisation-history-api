@@ -36,3 +36,6 @@ env
 *.zip
 
 smoketest-report.xml
+
+# Files that are copied before sandbox build
+sandbox/responses/*
