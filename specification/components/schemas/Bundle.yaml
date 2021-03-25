@@ -8,18 +8,6 @@ properties:
     description: FHIR resource type. Always `Bundle`.
     type: string
     example: "Bundle"
-  id:
-    description: Logical identifier for the Bundle.
-    type: string
-    example: "df5c63af-e79c-4226-921b-e20141b104a4"
-  meta:
-    description: Metadata for the Bundle.
-    type: object
-    properties:
-      lastUpdated:
-        description: The instant at which the Bundle was generated.
-        type: string
-        example: "2021-02-17T09:38:40.456+00:00"
   type:
     description: Indicates how the bundle is intended to be used. Always `searchset`.
     type: string
@@ -28,20 +16,6 @@ properties:
     description: Number of matching immunisations found.
     type: integer
     example: 2
-  link:
-    description: List of linked objects related to this search result.
-    type: array
-    items:
-      type: object
-      properties:
-        relation:
-          description: Type of link relation, as defined by http://www.iana.org/assignments/link-relations/link-relations.xhtml#link-relations-1.
-          type: string
-          example: "self"
-        url:
-          description: URL reference for the link.
-          type: string
-          example: "https://sandbox.api.service.nhs.uk/immunisation-history/FHIR/R4/Immunization?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|9912003888&code:below=90640007"
   entry:
     description: List of matching immunisations and associated patients.
     type: array
