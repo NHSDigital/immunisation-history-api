@@ -90,7 +90,7 @@ info:
     | Environment       | Base URL                                                               |
     | ----------------- | ---------------------------------------------------------------------- |
     | Sandbox           | `https://sandbox.api.service.nhs.uk/immunisation-history/FHIR/R4/`     |
-    | Integration test  | Not yet available                                                      |
+    | Integration test  | `https://int.api.service.nhs.uk/immunisation-history/FHIR/R4/`         |
     | Production        | Not yet available                                                      |
 
     ### Sandbox testing
@@ -100,6 +100,16 @@ info:
     * is open access, so does not allow you to test authorisation
 
     For details of sandbox test scenarios, or to try out the sandbox using our 'Try this API' feature, see the documentation for each endpoint.
+    
+    ### Integration testing
+    Our [integration test environment](https://digital.nhs.uk/developer/guides-and-documentation/testing#integration-testing):
+    * is for formal integration testing
+    * includes authorisation
+         
+    Currently, the integration test environment returns a single static response, the same one as the sandbox environment - regardless of what request parameters you send.
+    In due course we will change it to support more scenarios.
+
+    For more details see [integration testing with our RESTful APIs](https://digital.nhs.uk/developer/guides-and-documentation/testing#integration-testing-with-our-restful-apis).
     
     ## Onboarding
     You need to get your software approved by us before it can go live with this API. We call this onboarding. The onboarding process can sometimes be quite long, so it’s worth planning well ahead.
