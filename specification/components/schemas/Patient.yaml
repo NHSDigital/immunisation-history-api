@@ -1,93 +1,116 @@
-description: TBC
+description: Demographics and other administrative information about a person receiving a vaccine.
 type: object
 properties:
   Patient:
-    description: TBC
+    description: Demographics and other administrative information about a person receiving a vaccine.
     type: object
     properties:
       id:
-        description: TBC
+        description: System identifier for this patient.
         type: string
         example: "edea022a-2d81-11eb-adc1-0242ac120002"
       identifier:
-        description: TBC
+        description: Business identifier(s) for this patient.
         type: array
         items:
           type: object
           properties:
             extension:
-              description: TBC
+              description: Additional identification information about this patient. Always NHS number verification status.
               type: array
               items:
                 type: object
                 properties:
                   url:
-                    description: TBC
+                    description: URL of extension definition.
                     type: string
                     example: "https://fhir.hl7.org.uk/StructureDefinition/Extension-UKCore-NHSNumberVerificationStatus"
                   valueCodeableConcept:
-                    description: TBC
+                    description: A reference to a code in a terminology, or a textual description.
                     type: object
                     properties:
                       coding:
-                        description: TBC
+                        description: A code and the terminology or system which defines it.
                         type: array
                         items:
                           type: object
                           properties:
                             system:
-                              description: TBC
+                              description: Coding system used to signal NHS number verification status. Always `UKCore-NHSNumberVerificationStatus`.
                               type: string
                               example: "https://fhir.hl7.org.uk/CodeSystem/UKCore-NHSNumberVerificationStatus"
                             code:
-                              description: TBC
+                              description: Code for the NHS number verification status.
                               type: string
                               example: "01"
                             display:
-                              description: TBC
+                              description: Description of the NHS number verification status.
                               type: string
                               example: "Number present and verified"
             system:
-              description: TBC
+              description: Coding system used to identify patients.
               type: string
               example: "https://fhir.nhs.uk/Id/nhs-number"
             value:
-              description: TBC
+              description: Code identifying the patient.
               type: string
               example: "9912003888"
       name:
-        description: TBC
+        description: Patient's name.
         type: object
         properties:
           use:
-            description: TBC
+            description: Code indicating use and status of this patient's name, as defined by https://www.hl7.org/fhir/valueset-name-use.html.
             type: string
             example: "official"
+            enum:
+              - official
+              - usual
+              - temp
+              - nickname
+              - anonymous
+              - old
+              - maiden
           given:
-            description: TBC
-            type: string
-            example: "Jack"
+            description: Given names of the patient.
+            type: array
+            items:
+              type: string
+            example: ["Jack"]
           family:
-            description: TBC
+            description: Family name of the patient.
             type: string
             example: "Dawkins"
       birthDate:
-        description: TBC
+        description: Patient's date of birth.
         type: string
         example: "1965-02-28"
       address:
-        description: TBC
-        type: object
-        properties:
-          use:
-            description: TBC
-            type: string
-            example: "home"
-          postalCode:
-            description: TBC
-            type: string
-            example: "AB12 3CD"
+        description: Patient's addresses.
+        type: array
+        items:
+          type: object
+          properties:
+            use:
+              description: Purpose of the address as defined by https://www.hl7.org/fhir/valueset-address-use.html.
+              type: string
+              example: "home"
+              enum:
+                - home
+                - work
+                - temp
+                - old
+                - billing
+            postalCode:
+              description: Postal code of the address.
+              type: string
+              example: "AB12 3CD"
       gender:
-        description: TBC
+        description: Administrative gender of the patient. As defined by https://www.hl7.org/fhir/valueset-administrative-gender.html.
         type: string
         example: "male"
+        enum:
+          - male
+          - female
+          - other
+          - unknown
