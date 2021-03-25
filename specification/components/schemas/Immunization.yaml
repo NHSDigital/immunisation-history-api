@@ -5,6 +5,10 @@ properties:
     description: The matching immunisation.
     type: object
     properties:
+      resourceType:
+        description: FHIR resource type. Always `Immunization`.
+        type: string
+        example: "Immunization"
       id:
         description: Logical identifier for the Immunization resource.
         type: string
@@ -20,11 +24,11 @@ properties:
               type: string
               example: "https://simplifier.net/guide/UKCoreDevelopment2/ExtensionUKCore-VaccinationProcedure"
             valueCodeableConcept:
-              description: TBC
+              description: A reference to a code in a terminology, or a textual description.
               type: object
               properties:
                 coding:
-                  description: TBC
+                  description: A code and the terminology or system which defines it.
                   type: array
                   items:
                     type: object
@@ -44,27 +48,39 @@ properties:
       status:
         description: Status of the immunisation.
         type: string
+        enum:
+          - completed
+          - entered-in-error
+          - not-done
         example: "completed"
       occurrenceDateTime:
         description: Date and time of immunisation administration.
         type: string
         example: "2020-12-23T13:00:08.476+00:00"
       identifier:
-        description: TBC
-        type: object
-        properties:
-          use:
-            description: TBC
-            type: string
-            example: "secondary"
-          system:
-            description: TBC
-            type: string
-            example: "https://supplierABC/identifiers/vacc"
-          value:
-            description: TBC
-            type: string
-            example: "1324761000000100"
+        description: Business identifier for this Immunization.
+        type: array
+        items:
+          type: object
+          properties:
+            use:
+              description: Identifier use as defined by https://www.hl7.org/fhir/valueset-identifier-use.html.
+              type: string
+              enum:
+                - usual
+                - official
+                - temp
+                - secondary
+                - old
+              example: "secondary"
+            system:
+              description: URI of the namespace of this identifier.
+              type: string
+              example: "https://supplierABC/identifiers/vacc"
+            value:
+              description: Identifier value within `system`.
+              type: string
+              example: "1324761000000100"
       patient:
         description: Reference to patient who was immunised.
         type: object
@@ -72,258 +88,260 @@ properties:
           reference:
             description: Logical identifier for the associated Patient resource in the Bundle.
             type: string
-            example: "edea022a-2d81-11eb-adc1-0242ac120002"
+            example: "urn:uuid:edea022a-2d81-11eb-adc1-0242ac120002"
           type:
-            description: TBC
+            description: Type this reference refers to. Always `Patient`.
             type: string
             example: "Patient"
           identifier:
-            description: TBC
+            description: Business identifier for linked Patient.
             type: array
             items:
               type: object
               properties:
                 system:
-                  description: TBC
+                  description: URL of coding system used to identify linked patient.
                   type: string
                   example: "https://fhir.nhs.uk/Id/nhs-number"
                 value:
-                  description: TBC
+                  description: Value in coding system representing linked patient.
                   type: string
                   example: "9912003888"
       vaccineCode:
-        description: TBC
+        description: Vaccine product administered
         type: object
         properties:
           coding:
-            description: TBC
+            description: A code and the terminology or system which defines it.
             type: array
             items:
               type: object
               properties:
                 system:
-                  description: TBC
+                  description: Coding system for type of administered vaccine. Always SNOMED.
                   type: string
                   example: "http://snomed.info/sct"
                 code:
-                  description: TBC
+                  description: Code for the vaccine type.
                   type: string
                   example: "39114911000001105"
                 display:
-                  description: TBC
+                  description: Description of the vaccine type.
                   type: string
                   example: "COVID-19 Vaccine AstraZeneca (ChAdOx1 S [recombinant]) 5x10,000,000,000 viral particles/0.5ml dose solution for injection multidose vials (AstraZeneca UK Ltd) (product)"
-      manufactorer:
-        description: TBC
+      manufacturer:
+        description: Information on the manufacturer of the vaccine.
         type: object
         properties:
           display:
-            description: TBC
+            description: Decsription of the vaccine manufacturer.
             type: string
             example: "AstraZeneca Ltd"
       lotNumber:
-        description: TBC
+        description: Vaccine lot number.
         type: string
         example: "R04X"
       recorded:
-        description: TBC
+        description: Date (and time) this immunization was first recorded in the subject's record.
         type: string
         example: "2020-12-23"
       primarySource:
-        description: TBC
+        description: Indicates if this data was recorded in a primary context.
         type: boolean
         example: true
       site:
-        description: TBC
+        description: Body site at which vaccine was administered.
         type: object
         properties:
           coding:
-            description: TBC
+            description: A code and the terminology or system which defines it.
             type: array
             items:
               type: object
               properties:
                 system:
-                  description: TBC
+                  description: Coding system used for describing the vaccination site. Always SNOMED.
                   type: string
                   example: "http://snomed.info/sct"
                 code:
-                  description: TBC
+                  description: Code for the vaccination site.
                   type: string
                   example: "368208006"
                 display:
-                  description: TBC
+                  description: Description of the vaccination site.
                   type: string
                   example: "Left upper arm structure (body structure)"
       route:
-        description: TBC
+        description: How vaccine entered the subject's body.
         type: object
         properties:
           coding:
-            description: TBC
+            description: A code and the terminology or system which defines it.
             type: array
             items:
               type: object
               properties:
                 system:
-                  description: TBC
+                  description: Coding system used to describe vaccination route. Always SNOMED.
                   type: string
                   example: "http://snomed.info/sct"
                 code:
-                  description: TBC
+                  description: Code for the vaccination route.
                   type: string
                   example: "78421000"
                 display:
-                  description: TBC
+                  description: Description of the vaccination route.
                   type: string
                   example: "Intramuscular route (qualifier value)"
       doseQuantity:
-        description: TBC
+        description: Amount of vaccine administered.
         type: object
         properties:
           value:
-            description: TBC
+            description: Number of units administered.
             type: integer
             example: 1
           unit:
-            description: TBC
+            description: Description of unit.
             type: string
             example: "pre-filled disposable injection"
           system:
-            description: TBC
+            description: System that defines coded unit form.
             type: string
             example: "http://snomed.info/sct"
           code:
-            description: TBC
+            description: Code describing the unit.
             type: string
             example: "3318611000001103"
       reasonCode:
-        description: TBC
+        description: Code explaining why vaccination was administed.
         type: object
         properties:
           coding:
-            description: TBC
+            description: A code and the terminology or system which defines it.
             type: array
             items:
               type: object
               properties:
                 system:
-                  description: TBC
+                  description: Coding system used to describe the reason for administration of vaccine. Always SNOMED.
                   type: string
                   example: "http://snomed.info/sct"
                 code:
-                  description: TBC
+                  description: Code for the vaccination reason.
                   type: string
                   example: "443684005"
                 display:
-                  description: TBC
+                  description: Description of the vaccination reason.
                   type: string
                   example: "Disease outbreak (event)"
       expirationDate:
-        description: TBC
+        description: Vaccine expiration date.
         type: string
         example: "2021-04-29"
       protocolApplied:
-        description: TBC
+        description: Protocol followed by the provider.
         type: object
         properties:
           doseNumberPositiveInt:
-            description: TBC
+            description: Dose number within a series of doses.
             type: integer
             example: 1
           targetDisease:
-            description: TBC
+            description: Vaccine-preventable disease(s) targeted by this immunisation.
             type: array
             items:
               type: object
               properties:
                 coding:
-                  description: TBC
+                  description: A code and the terminology or system which defines it.
                   type: array
                   items:
                     type: object
                     properties:
                       system:
-                        description: TBC
+                        description: Coding system used to describe target disease. Always SNOMED.
                         type: string
-                        example: TBC
+                        example: "http://snomed.info/sct"
                       code:
-                        description: TBC
+                        description: Code for the target disease.
                         type: string
-                        example: TBC
+                        example: "840544004"
                       display:
-                        description: TBC
+                        description: Description of the target disease.
                         type: string
-                        example: TBC
+                        example: "Suspected disease caused by Severe acute respiratory coronavirus 2 (situation)"
       performer:
-        description: TBC
+        description: Who administered the vaccine to the subject.
         type: array
         items:
           anyOf:
             - type: object
               properties:
                 actor:
+                  description: Performing practitioner.
                   type: object
                   properties:
                     type:
-                      description: TBC
+                      description: Type of performer. Always `Practitioner`.
                       type: string
                       example: "Practitioner"
                     identifier:
-                      description: TBC
+                      description: Business identifier of practitioner.
                       type: object
                       properties:
                         system:
-                          description: TBC
+                          description: Coding system used to identify practitioner.
                           type: string
                           example: "https://fhir.hl7.org.uk/Id/nmc-number"
                         value:
-                          description: TBC
+                          description: Code identifying practitioner.
                           type: string
                           example: "5566789"
                     display:
-                      description: TBC
+                      description: Name of practitioner.
                       type: string
                       example: "HOLDING,Rafferty"
             - type: object
               properties:
                 function:
                   type: object
+                  description: Describes the type of performance.
                   properties:
                     coding:
-                      description: TBC
+                      description: A code and the terminology or system which defines it.
                       type: array
                       items:
                         type: object
                         properties:
                           system:
-                            description: TBC
+                            description: Coding system for immunisation performer functions. Always `v2-0443`.
                             type: string
                             example: "http://terminology.hl7.org/CodeSystem/v2-0443"
                           code:
-                            description: TBC
+                            description: Code for the performer's function.
                             type: string
                             example: "AP"
                           display:
-                            description: TBC
+                            description: Description of the performer's function.
                             type: string
                             example: "AdministeringProvider"
                 actor:
                   type: object
                   properties:
                     type:
-                      description: TBC
+                      description: Type of performer. Always `Organization`.
                       type: string
                       example: "Organization"
                     identifier:
-                      description: TBC
+                      description: Business identifier of performing organization.
                       type: object
                       properties:
                         system:
-                          description: TBC
+                          description: Coding system used to identify performing organization. Always ODS code.
                           type: string
                           example: "https://fhir.nhs.uk/Id/ods-organization-code"
                         value:
-                          description: TBC
+                          description: Code for the performing organization.
                           type: string
                           example: "RX809"
