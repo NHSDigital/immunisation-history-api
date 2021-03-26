@@ -1,225 +1,221 @@
 description: A matching immunisation, formatted as a FHIR Immunization resource.
 type: object
 properties:
-  Immunization:
-    description: The matching immunisation.
-    type: object
-    properties:
-      resourceType:
-        description: FHIR resource type. Always `Immunization`.
-        type: string
-        example: "Immunization"
-      extension:
-        description: FHIR extension wrapper for the vaccination procedure that was performed for the immunisation. Always contains exactly one object.
-        type: array
-        items:
-          type: object
-          properties:
-            url:
-              description: URI for the type of extension - in this case a vaccination procedure.
-              type: string
-              example: "https://fhir.hl7.org.uk/StructureDefinition/Extension-UKCore-VaccinationProcedure"
-            valueCodeableConcept:
-              description: A reference to a code in a terminology, or a textual description.
-              type: object
-              properties:
-                coding:
-                  description: A code and the terminology or system which defines it.
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      system:
-                        description: Coding system used for the vaccination procedure. Always SNOMED.
-                        type: string
-                        example: "http://snomed.info/sct"
-                      code:
-                        description: Code for the vaccination procedure.
-                        type: string
-                        example: "1324681000000101"
-                      display:
-                        description: Description of the vaccination procedure.
-                        type: string
-                        example: "Administration of first dose of severe acute respiratory syndrome coronavirus 2 vaccine (procedure)"
-      identifier:
-        description: Business identifier for this Immunization.
-        type: array
-        items:
-          type: object
-          properties:
-            use:
-              description: Identifier use as defined by https://www.hl7.org/fhir/valueset-identifier-use.html.
-              type: string
-              enum:
-                - usual
-                - official
-                - temp
-                - secondary
-                - old
-              example: "secondary"
-            system:
-              description: URI of the namespace of this identifier.
-              type: string
-              example: "https://supplierABC/identifiers/vacc"
-            value:
-              description: Identifier value within `system`.
-              type: string
-              example: "1324761000000100"
-      status:
-        description: Status of the immunisation.
-        type: string
-        enum:
-          - completed
-          - entered-in-error
-          - not-done
-        example: "completed"
-      vaccineCode:
-        description: Vaccine product administered
-        type: object
-        properties:
-          coding:
-            description: A code and the terminology or system which defines it.
-            type: array
-            items:
-              type: object
-              properties:
-                system:
-                  description: Coding system for type of administered vaccine. Always SNOMED.
-                  type: string
-                  example: "http://snomed.info/sct"
-                code:
-                  description: Code for the vaccine type.
-                  type: string
-                  example: "39114911000001105"
-                display:
-                  description: Description of the vaccine type.
-                  type: string
-                  example: "COVID-19 Vaccine AstraZeneca (ChAdOx1 S [recombinant]) 5x10,000,000,000 viral particles/0.5ml dose solution for injection multidose vials (AstraZeneca UK Ltd) (product)"
-      patient:
-        description: Reference to patient who was immunised.
-        type: object
-        properties:
-          reference:
-            description: Logical identifier for the associated Patient resource in the Bundle.
-            type: string
-            example: "urn:uuid:edea022a-2d81-11eb-adc1-0242ac120002"
-          type:
-            description: Type this reference refers to. Always `Patient`.
-            type: string
-            example: "Patient"
-          identifier:
-            description: Business identifier for linked Patient.
-            type: object
-            properties:
-              system:
-                description: URL of coding system used to identify linked patient.
-                type: string
-                example: "https://fhir.nhs.uk/Id/nhs-number"
-              value:
-                description: Value in coding system representing linked patient.
-                type: string
-                example: "9912003888"
-      occurrenceDateTime:
-        description: Date and time of immunisation administration.
-        type: string
-        example: "2020-12-23T13:00:08.476+00:00"
-      recorded:
-        description: Date this immunization was first recorded in the subject's record.
-        type: string
-        example: "2020-12-23"
-      primarySource:
-        description: Indicates if this data was recorded in a primary context.
-        type: boolean
-        example: true
-      manufacturer:
-        description: Information on the manufacturer of the vaccine.
-        type: object
-        properties:
-          display:
-            description: Decsription of the vaccine manufacturer.
-            type: string
-            example: "AstraZeneca Ltd"
-      lotNumber:
-        description: Vaccine lot number.
-        type: string
-        example: "R04X"
-      expirationDate:
-        description: Vaccine expiration date.
-        type: string
-        example: "2021-04-29"
-      route:
-        description: How vaccine entered the subject's body.
-        type: object
-        properties:
-          coding:
-            description: A code and the terminology or system which defines it.
-            type: array
-            items:
-              type: object
-              properties:
-                system:
-                  description: Coding system used to describe vaccination route. Always SNOMED.
-                  type: string
-                  example: "http://snomed.info/sct"
-                code:
-                  description: Code for the vaccination route.
-                  type: string
-                  example: "78421000"
-                display:
-                  description: Description of the vaccination route.
-                  type: string
-                  example: "Intramuscular route (qualifier value)"
-      doseQuantity:
-        description: Amount of vaccine administered.
-        type: object
-        properties:
-          value:
-            description: Number of units administered.
-            type: integer
-            example: 1
-          unit:
-            description: Description of unit.
-            type: string
-            example: "pre-filled disposable injection"
-          system:
-            description: System that defines coded unit form.
-            type: string
-            example: "http://snomed.info/sct"
-          code:
-            description: Code describing the unit.
-            type: string
-            example: "3318611000001103"
-      reasonCode:
-        description: Code explaining why vaccination was administed.
-        type: array
-        items:
+  resourceType:
+    description: FHIR resource type. Always `Immunization`.
+    type: string
+    example: "Immunization"
+  extension:
+    description: FHIR extension wrapper for the vaccination procedure performed. Always contains exactly one object.
+    type: array
+    items:
+      type: object
+      properties:
+        url:
+          description: URI for the type of extension - in this case a vaccination procedure.
+          type: string
+          example: "https://fhir.hl7.org.uk/StructureDefinition/Extension-UKCore-VaccinationProcedure"
+        valueCodeableConcept:
+          description: Wrapper for the vaccination procedure details.
           type: object
           properties:
             coding:
-              description: A code and the terminology or system which defines it.
+              description: Wrapper for the vaccination procedure details.
               type: array
               items:
                 type: object
                 properties:
                   system:
-                    description: Coding system used to describe the reason for administration of vaccine. Always SNOMED.
+                    description: Coding system used for the vaccination procedure. Always SNOMED.
                     type: string
                     example: "http://snomed.info/sct"
                   code:
-                    description: Code for the vaccination reason.
+                    description: SNOMED code for the vaccination procedure.
                     type: string
-                    example: "443684005"
+                    example: "1324681000000101"
                   display:
-                    description: Description of the vaccination reason.
+                    description: Description of the vaccination procedure.
                     type: string
-                    example: "Disease outbreak (event)"
-      protocolApplied:
-        description: Protocol followed by the provider.
+                    example: "Administration of first dose of severe acute respiratory syndrome coronavirus 2 vaccine (procedure)"
+  identifier:
+    description: Business identifier for this Immunization, as generated by the source system.
+    type: array
+    items:
+      type: object
+      properties:
+        use:
+          description: Identifier use as defined by https://www.hl7.org/fhir/valueset-identifier-use.html.
+          type: string
+          enum:
+            - usual
+            - official
+            - temp
+            - secondary
+            - old
+          example: "secondary"
+        system:
+          description: URI of the namespace of this identifier.
+          type: string
+          example: "https://supplierABC/identifiers/vacc"
+        value:
+          description: Identifier value within `system`.
+          type: string
+          example: "1324761000000100"
+  status:
+    description: Status of the immunisation.
+    type: string
+    enum:
+      - completed
+      - entered-in-error
+      - not-done
+    example: "completed"
+  vaccineCode:
+    description: Vaccine product administered.
+    type: object
+    properties:
+      coding:
+        description: Wrapper for the vaccine product details.
         type: array
         items:
           type: object
           properties:
-            doseNumberPositiveInt:
-              description: Dose number within a series of doses.
-              type: integer
-              example: 1
+            system:
+              description: Coding system for type of administered vaccine. Always SNOMED.
+              type: string
+              example: "http://snomed.info/sct"
+            code:
+              description: SNOMED code for the vaccine product.
+              type: string
+              example: "39114911000001105"
+            display:
+              description: Description of the vaccine product.
+              type: string
+              example: "COVID-19 Vaccine AstraZeneca (ChAdOx1 S [recombinant]) 5x10,000,000,000 viral particles/0.5ml dose solution for injection multidose vials (AstraZeneca UK Ltd) (product)"
+  patient:
+    description: Reference to patient who was immunised.
+    type: object
+    properties:
+      reference:
+        description: URI for the associated Patient resource in the bundle.
+        type: string
+        example: "urn:uuid:edea022a-2d81-11eb-adc1-0242ac120002"
+      type:
+        description: Type of resource this reference refers to. Always `Patient`.
+        type: string
+        example: "Patient"
+      identifier:
+        description: Business identifier for linked Patient. Always an NHS number.
+        type: object
+        properties:
+          system:
+            description: URI of coding system used to identify linked patient.
+            type: string
+            example: "https://fhir.nhs.uk/Id/nhs-number"
+          value:
+            description: Value in coding system representing linked patient.
+            type: string
+            example: "9912003888"
+  occurrenceDateTime:
+    description: Date and time of immunisation.
+    type: string
+    example: "2020-12-23T13:00:08.476+00:00"
+  recorded:
+    description: Date this immunization was first recorded in the subject's record.
+    type: string
+    example: "2020-12-23"
+  primarySource:
+    description: Indicates if this data was recorded in a primary context.
+    type: boolean
+    example: true
+  manufacturer:
+    description: Information on the vaccine manufacturer.
+    type: object
+    properties:
+      display:
+        description: Decsription of the vaccine manufacturer.
+        type: string
+        example: "AstraZeneca Ltd"
+  lotNumber:
+    description: Vaccine lot number.
+    type: string
+    example: "R04X"
+  expirationDate:
+    description: Vaccine expiration date.
+    type: string
+    example: "2021-04-29"
+  route:
+    description: How vaccine entered the patient's body.
+    type: object
+    properties:
+      coding:
+        description: Wrapper for the vaccine .
+        type: array
+        items:
+          type: object
+          properties:
+            system:
+              description: Coding system used to describe vaccination route. Always SNOMED.
+              type: string
+              example: "http://snomed.info/sct"
+            code:
+              description: Code for the vaccination route.
+              type: string
+              example: "78421000"
+            display:
+              description: Description of the vaccination route.
+              type: string
+              example: "Intramuscular route (qualifier value)"
+  doseQuantity:
+    description: Amount of vaccine administered.
+    type: object
+    properties:
+      value:
+        description: Number of units administered.
+        type: integer
+        example: 1
+      unit:
+        description: Description of unit.
+        type: string
+        example: "pre-filled disposable injection"
+      system:
+        description: System that defines coded unit form.
+        type: string
+        example: "http://snomed.info/sct"
+      code:
+        description: Code describing the unit.
+        type: string
+        example: "3318611000001103"
+  reasonCode:
+    description: Code explaining why vaccination was administed.
+    type: array
+    items:
+      type: object
+      properties:
+        coding:
+          description: A code and the terminology or system which defines it.
+          type: array
+          items:
+            type: object
+            properties:
+              system:
+                description: Coding system used to describe the reason for administration of vaccine. Always SNOMED.
+                type: string
+                example: "http://snomed.info/sct"
+              code:
+                description: Code for the vaccination reason.
+                type: string
+                example: "443684005"
+              display:
+                description: Description of the vaccination reason.
+                type: string
+                example: "Disease outbreak (event)"
+  protocolApplied:
+    description: Protocol followed by the provider.
+    type: array
+    items:
+      type: object
+      properties:
+        doseNumberPositiveInt:
+          description: Dose number within a series of doses.
+          type: integer
+          example: 1
