@@ -1,16 +1,5 @@
 description: A matching immunisation, formatted as a FHIR Immunization resource.
 type: object
-required:
-  - resourceType
-  - extension
-  - identifier
-  - vaccineCode
-  - status
-  - occurrenceDateTime
-  - manufacturer
-  - protocolApplied
-  - patient
-  - primarySource
 properties:
   resourceType:
     description: FHIR resource type. Always `Immunization`.
