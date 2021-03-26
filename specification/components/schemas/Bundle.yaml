@@ -17,13 +17,8 @@ properties:
   entry:
     description: List of matching immunisations and associated patients. If there were no matching immunisations, this is an empty list.
     type: array
-    minItems: 0
     items:
       type: object
-      required:
-        - fullUrl
-        - resource
-        - search
       properties:
         fullUrl:
           description: URI for the Immunization or Patient resource.
