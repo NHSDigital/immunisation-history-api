@@ -2,6 +2,9 @@ description: FHIR Bundle containing the query results - a list of matching immun
 type: object
 required:
   - resourceType
+  - type
+  - total
+  - entry
 additionalProperties: false
 properties:
   resourceType:
@@ -17,10 +20,15 @@ properties:
     type: integer
     example: 2
   entry:
-    description: List of matching immunisations and associated patients.
+    description: List of matching immunisations and associated patients. If there were no matching immunisations, this is an empty list.
     type: array
+    minItems: 0
     items:
       type: object
+      required:
+        - fullUrl
+        - resource
+        - search
       properties:
         fullUrl:
           description: URI for the Immunization or Patient resource.
