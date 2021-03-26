@@ -170,3 +170,58 @@ async def test_immunization_empty_path(
         until=is_happy_path,
         timeout=10,
     )
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
+async def test_correlation_id_mirrored_in_resp_happy_path(
+    api_client: APISessionClient, test_app, get_token
+):
+    jwt = test_app.oauth.create_jwt(
+        **{
+            "kid": "test-1",
+            "claims": {
+                "sub": test_app.client_id,
+                "iss": test_app.client_id,
+                "jti": str(uuid4()),
+                "aud": ENV["token_url"],
+                "exp": int(time()) + 5,
+            },
+        }
+    )
+    token = await get_token(test_app, grant_type="client_credentials", _jwt=jwt)
+    access_token = token["access_token"]
+
+    correlation_id = str(uuid4())
+
+    async def is_happy_path(resp: ClientResponse):
+        if resp.status != 200:
+            return False
+
+        return resp.headers["x-correlation-id"] == correlation_id
+
+    await poll_until(
+        make_request=lambda: api_client.get(
+            "FHIR/R4/Immunization?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|9912003888",
+            headers={"Authorization": f"Bearer {access_token}", "X-Correlation-ID": correlation_id},
+        ),
+        until=is_happy_path,
+        timeout=10,
+    )
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
+async def test_correlation_id_mirrored_in_resp_when_error(
+    api_client: APISessionClient
+):
+    access_token = "invalid_token"
+
+    correlation_id = str(uuid4())
+
+    resp = await api_client.get(
+            "FHIR/R4/Immunization?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|9912003888",
+            headers={"Authorization": f"Bearer {access_token}", "X-Correlation-ID": correlation_id},
+        )
+
+    return resp.status == 401 and resp.headers["x-correlation-id"] == correlation_id
