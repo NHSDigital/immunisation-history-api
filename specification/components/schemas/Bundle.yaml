@@ -23,10 +23,11 @@ properties:
       type: object
       properties:
         fullUrl:
-          description: URI for the Immunization or Patient resource
+          description: URI for the Immunization or Patient resource.
           type: string
           example: "urn:uuid:edea022a-2d81-11eb-adc1-0242ac120001"
         resource:
+          description: The Immunization or Patient resource.
           oneOf:
             - $ref: Immunization.yaml
             - $ref: Patient.yaml
