@@ -8,18 +8,6 @@ properties:
     description: FHIR resource type. Always `Bundle`.
     type: string
     example: "Bundle"
-  id:
-    description: Logical identifier for the Bundle.
-    type: string
-    example: "df5c63af-e79c-4226-921b-e20141b104a4"
-  meta:
-    description: Metadata for the Bundle.
-    type: object
-    properties:
-      lastUpdated:
-        description: The instant at which the Bundle was generated.
-        type: string
-        example: "2021-02-17T09:38:40.456+00:00"
   type:
     description: Indicates how the bundle is intended to be used. Always `searchset`.
     type: string
@@ -28,20 +16,6 @@ properties:
     description: Number of matching immunisations found.
     type: integer
     example: 2
-  link:
-    description: TBC
-    type: array
-    items:
-      type: object
-      properties:
-        relation:
-          description: TBC
-          type: string
-          example: "self"
-        url:
-          description: TBC
-          type: string
-          example: "https://sandbox.api.service.nhs.uk/immunisation-history/FHIR/R4/Immunization?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|9912003888&code:below=90640007"
   entry:
     description: List of matching immunisations and associated patients.
     type: array
@@ -51,13 +25,13 @@ properties:
         fullUrl:
           description: URI for the Immunization or Patient resource
           type: string
-          example: "edea022a-2d81-11eb-adc1-0242ac120001"
+          example: "urn:uuid:edea022a-2d81-11eb-adc1-0242ac120001"
         resource:
           oneOf:
             - $ref: Immunization.yaml
             - $ref: Patient.yaml
         search:
-          description: Search-relared information for the Immunization or Patient resource.
+          description: Search-related information for the Immunization or Patient resource.
           type: object
           properties:
             mode:
