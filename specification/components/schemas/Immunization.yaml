@@ -1,5 +1,16 @@
 description: A matching immunisation, formatted as a FHIR Immunization resource.
 type: object
+required:
+  - resourceType
+  - extension
+  - identifier
+  - vaccineCode
+  - status
+  - occurrenceDateTime
+  - manufacturer
+  - protocolApplied
+  - patient
+  - primarySource
 properties:
   resourceType:
     description: FHIR resource type. Always `Immunization`.
@@ -136,7 +147,7 @@ properties:
         type: string
         example: "AstraZeneca Ltd"
   lotNumber:
-    description: Lot number of the vaccine product.
+    description: Lot number of the vaccine product. Present if and only if `status`=`completed`.
     type: string
     example: "R04X"
   expirationDate:
