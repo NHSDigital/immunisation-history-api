@@ -1,10 +1,5 @@
 description: FHIR Bundle containing the query results - a list of matching immunisations and associated patients.
 type: object
-required:
-  - resourceType
-  - type
-  - total
-  - entry
 additionalProperties: false
 properties:
   resourceType:
