@@ -2,7 +2,7 @@ description: Demographic information about the patient receiving an immunisation
 type: object
 properties:
   identifier:
-    description: Business identifier(s) for this patient.
+    description: Unique identifier for this patient. Always an NHS number.
     type: array
     items:
       type: object
