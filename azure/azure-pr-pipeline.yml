@@ -41,14 +41,14 @@ extends:
       - environment: internal-dev
         make_spec_visible: true
         post_deploy:
-          - template: ./templates/run-pytests.yml
+          - template: ./templates/run-tests.yml
             parameters:
               e2e_tests: true
               smoke_tests: true
       - environment: internal-dev-sandbox
         proxy_path: sandbox
         post_deploy:
-          - template: ./templates/run-sandbox-tests.yml
-          - template: ./templates/run-pytests.yml
+          - template: ./templates/run-tests.yml
             parameters:
               smoke_tests: true
+              sandbox_tests: true

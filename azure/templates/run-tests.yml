@@ -7,6 +7,11 @@ parameters:
     type: boolean
     displayName: Toggle e2e tests
     default: false
+  - name: sandbox_tests
+    type: boolean
+    displayName: Toggle smoke tests
+    default: false
+    
 
 steps:
   - task: s3-cache-action@1
@@ -30,3 +35,7 @@ steps:
   # e2e tests
   - ${{ if parameters.e2e_tests }}:
     - template: ../components/run-e2e-tests.yml
+
+  # sandbox tests
+  - ${{ if parameters.sandbox_tests }}:
+    - template: ../components/run-sandbox-tests.yml

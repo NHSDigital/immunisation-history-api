@@ -39,21 +39,21 @@ extends:
       - environment: internal-dev
         make_spec_visible: true
         post_deploy:
-          - template: ./templates/run-pytests.yml
+          - template: ./templates/run-tests.yml
             parameters:
               e2e_tests: true
               smoke_tests: true
       - environment: internal-dev-sandbox
         proxy_path: sandbox
         post_deploy:
-          - template: ./templates/run-sandbox-tests.yml
-          - template: ./templates/run-pytests.yml
+          - template: ./templates/run-tests.yml
             parameters:
               smoke_tests: true
+              sandbox_tests: true
       - environment: internal-qa
         make_spec_visible: true
         post_deploy:
-          - template: ./templates/run-pytests.yml
+          - template: ./templates/run-tests.yml
             parameters:
               e2e_tests: true
               smoke_tests: true
@@ -61,24 +61,24 @@ extends:
         proxy_path: sandbox
         make_spec_visible: true
         post_deploy:
-          - template: ./templates/run-sandbox-tests.yml
-          - template: ./templates/run-pytests.yml
+          - template: ./templates/run-tests.yml
             parameters:
               smoke_tests: true
+              sandbox_tests: true
       - environment: sandbox
         proxy_path: sandbox
         post_deploy:
-          - template: ./templates/run-sandbox-tests.yml
-          - template: ./templates/run-pytests.yml
+          - template: ./templates/run-tests.yml
             parameters:
               smoke_tests: true
+              sandbox_tests: true
       - environment: ref
         make_spec_visible: true
         depends_on:
           - internal_qa
           - internal_qa_sandbox
         post_deploy:
-          - template: ./templates/run-pytests.yml
+          - template: ./templates/run-tests.yml
             parameters:
               smoke_tests: true
       - environment: int
@@ -87,6 +87,6 @@ extends:
           - internal_qa
           - internal_qa_sandbox
         post_deploy:
-          - template: ./templates/run-pytests.yml
+          - template: ./templates/run-tests.yml
             parameters:
               smoke_tests: true
