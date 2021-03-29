@@ -49,7 +49,6 @@ extends:
           - template: ./templates/run-tests.yml
             parameters:
               smoke_tests: true
-              sandbox_tests: true
       - environment: internal-qa
         make_spec_visible: true
         post_deploy:
@@ -64,14 +63,12 @@ extends:
           - template: ./templates/run-tests.yml
             parameters:
               smoke_tests: true
-              sandbox_tests: true
       - environment: sandbox
         proxy_path: sandbox
         post_deploy:
           - template: ./templates/run-tests.yml
             parameters:
               smoke_tests: true
-              sandbox_tests: true
       - environment: ref
         make_spec_visible: true
         depends_on:

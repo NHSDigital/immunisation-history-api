@@ -46,3 +46,5 @@ extends:
             location: '${{ variables.service_name }}/.venv'
             debug: true
           displayName: cache python dependencies
+    test_steps:
+      - template: ../templates/run-sandbox-tests.yml

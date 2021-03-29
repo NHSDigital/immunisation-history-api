@@ -51,4 +51,3 @@ extends:
           - template: ./templates/run-tests.yml
             parameters:
               smoke_tests: true
-              sandbox_tests: true
