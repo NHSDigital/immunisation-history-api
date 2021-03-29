@@ -13,6 +13,18 @@ steps:
     condition: ne(variables['CacheRestored-Pytest'], 'true')
     displayName: Setup pytests
 
+  - template: "azure/components/aws-assume-role.yml@common"
+    parameters:
+      role: "auto-ops"
+      profile: "apm_ptl"
+
+  - template: "azure/components/get-aws-secrets-and-ssm-params.yml@common"
+    parameters:
+        secret_file_ids:
+          - ptl/app-credentials/jwt_testing/non-prod/JWT_TESTING_PRIVATE_KEY
+        config_ids: []
+        secret_ids: []
+
   # Smoketests
   - template: ../components/run-smoke-tests.yml
 
