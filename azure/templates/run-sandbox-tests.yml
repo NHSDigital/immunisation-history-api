@@ -1,7 +1,7 @@
 steps:
   - task: s3-cache-action@1
     inputs:
-      key: 'node modules | $(SERVICE_NAME) | $(Pipeline.Workspace)/s/$(SERVICE_NAME)/$(SERVICE_ARTIFACT_NAME)/sandbox/node_modules'
+      key: 'node modules | $(SERVICE_NAME) | $(Pipeline.Workspace)/s/$(SERVICE_NAME)/sandbox/node_modules'
       location: '$(Pipeline.Workspace)/s/$(SERVICE_NAME)/$(SERVICE_ARTIFACT_NAME)/sandbox/package-lock.json'
       debug: true
       alias: 'Sandbox'
@@ -10,18 +10,18 @@ steps:
   - bash: |
       cd sandbox
       make install
-    workingDirectory: $(Pipeline.Workspace)/s/$(SERVICE_NAME)/$(SERVICE_ARTIFACT_NAME)
+    workingDirectory: $(Pipeline.Workspace)/s/$(SERVICE_NAME)
     condition: ne(variables['CacheRestored-Sandbox'], 'true')
     displayName: Setup sandbox dependencies
   
   - bash: |
       make sandbox
-    workingDirectory: $(Pipeline.Workspace)/s/$(SERVICE_NAME)/$(SERVICE_ARTIFACT_NAME)
+    workingDirectory: $(Pipeline.Workspace)/s/$(SERVICE_NAME)
     displayName: run sandbox tests
 
   - task: PublishTestResults@2
     displayName: 'Publish sandbox test results'
     condition: always()
     inputs:
-      testResultsFiles: '$(Pipeline.Workspace)/s/$(SERVICE_NAME)/$(SERVICE_ARTIFACT_NAME)/reports/tests/sandbox.xml'
+      testResultsFiles: '$(Pipeline.Workspace)/s/$(SERVICE_NAME)/reports/tests/sandbox.xml'
       failTaskOnFailedTests: true
