@@ -64,7 +64,7 @@ dist: release
 test: smoketest sandboxtest e2etest
 
 sandboxtest:
-	make --no-print-directory -C sandbox test
+	make --no-print-directory -C sandbox test-report
 
 pytest-guards: guard-SERVICE_BASE_PATH guard-APIGEE_ENVIRONMENT guard-SOURCE_COMMIT_ID guard-STATUS_ENDPOINT_API_KEY
 

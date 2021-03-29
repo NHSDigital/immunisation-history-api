@@ -48,6 +48,7 @@ extends:
       - environment: internal-dev-sandbox
         proxy_path: sandbox
         post_deploy:
+          - template: ./templates/run-sandbox-tests.yml
           - template: ./templates/run-pytests.yml
             parameters:
               smoke_tests: true
