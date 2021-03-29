@@ -1,60 +1,56 @@
-description: Demographics and other administrative information about a person receiving a vaccine.
+description: Demographic information about the patient receiving an immunisation.
 type: object
 properties:
-  Patient:
-    description: Demographics and other administrative information about a person receiving a vaccine.
+  identifier:
+    description: Unique identifier for this patient. Always an NHS number.
+    type: array
+    items:
+      type: object
+      properties:
+        system:
+          description: Coding system used to identify patients.
+          type: string
+          example: "https://fhir.nhs.uk/Id/nhs-number"
+        value:
+          description: Code identifying the patient.
+          type: string
+          example: "9912003888"
+  name:
+    description: Patient's name.
     type: object
     properties:
-      identifier:
-        description: Business identifier(s) for this patient.
+      use:
+        description: Code indicating use and status of this patient's name, as defined by https://www.hl7.org/fhir/valueset-name-use.html.
+        type: string
+        example: "official"
+        enum:
+          - official
+          - usual
+          - temp
+          - nickname
+          - anonymous
+          - old
+          - maiden
+      family:
+        description: Family name of the patient.
+        type: string
+        example: "Dawkins"
+      given:
+        description: Given names of the patient.
         type: array
         items:
-          type: object
-          properties:
-            system:
-              description: Coding system used to identify patients.
-              type: string
-              example: "https://fhir.nhs.uk/Id/nhs-number"
-            value:
-              description: Code identifying the patient.
-              type: string
-              example: "9912003888"
-      name:
-        description: Patient's name.
-        type: object
-        properties:
-          use:
-            description: Code indicating use and status of this patient's name, as defined by https://www.hl7.org/fhir/valueset-name-use.html.
-            type: string
-            example: "official"
-            enum:
-              - official
-              - usual
-              - temp
-              - nickname
-              - anonymous
-              - old
-              - maiden
-          family:
-            description: Family name of the patient.
-            type: string
-            example: "Dawkins"
-          given:
-            description: Given names of the patient.
-            type: array
-            items:
-              type: string
-            example: ["Jack"]
-      gender:
-        description: Administrative gender of the patient. As defined by https://www.hl7.org/fhir/valueset-administrative-gender.html.
-        type: string
-        example: "male"
-        enum:
-          - male
-          - female
-          - other
-          - unknown
-      birthDate:
-        description: Patient's date of birth.
-        type: string
-        example: "1965-02-28"
+          type: string
+        example: ["Jack"]
+  gender:
+    description: Administrative gender of the patient. As defined by https://www.hl7.org/fhir/valueset-administrative-gender.html.
+    type: string
+    example: "male"
+    enum:
+      - male
+      - female
+      - other
+      - unknown
+  birthDate:
+    description: Patient's date of birth.
+    type: string
+    example: "1965-02-28"

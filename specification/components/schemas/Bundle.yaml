@@ -1,7 +1,5 @@
 description: FHIR Bundle containing the query results - a list of matching immunisations and associated patients.
 type: object
-required:
-  - resourceType
 additionalProperties: false
 properties:
   resourceType:
@@ -17,16 +15,17 @@ properties:
     type: integer
     example: 2
   entry:
-    description: List of matching immunisations and associated patients.
+    description: List of matching immunisations and associated patients. If there were no matching immunisations, this is an empty list.
     type: array
     items:
       type: object
       properties:
         fullUrl:
-          description: URI for the Immunization or Patient resource
+          description: URI for the Immunization or Patient resource.
           type: string
           example: "urn:uuid:edea022a-2d81-11eb-adc1-0242ac120001"
         resource:
+          description: The Immunization or Patient resource.
           oneOf:
             - $ref: Immunization.yaml
             - $ref: Patient.yaml
@@ -35,7 +34,7 @@ properties:
           type: object
           properties:
             mode:
-              description: Indicates why this resource is in the result set. For Immunization resources this will be `match` and for Patient resources it will be `include`.
+              description: Indicates why this resource is in the result set. For Immunization resources this is always `match` and for Patient resources it is always `include`.
               enum:
                 - match
                 - include
