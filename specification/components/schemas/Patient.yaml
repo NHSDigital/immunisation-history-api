@@ -1,6 +1,10 @@
 description: Demographic information about the patient receiving an immunisation.
 type: object
 properties:
+  resourceType:
+    description: FHIR resource type. Always `Patient`.
+    type: string
+    example: "Patient"
   identifier:
     description: Unique identifier for this patient. Always an NHS number.
     type: array
