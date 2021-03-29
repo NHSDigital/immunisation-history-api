@@ -24,9 +24,9 @@ steps:
     displayName: Setup pytests
 
   # Smoketests
-  - template: ../components/run-smoke-tests.yml
-    condition: eq(paramters.smoke_tests, 'true')
+  - ${{ if parameters.smoke_tests }}:
+    - template: ../components/run-smoke-tests.yml
 
   # e2e tests
-  - template: ../components/run-e2e-tests.yml
-    condition: eq(paramters.e2e_tests, 'true')
+  - ${{ if parameters.e2e_tests }}:
+    - template: ../components/run-e2e-tests.yml
