@@ -1,21 +1,6 @@
 steps:
-  - task: s3-cache-action@1
-    inputs:
-      key: 'node modules | $(SERVICE_NAME) | $(Pipeline.Workspace)/s/$(SERVICE_NAME)/sandbox/node_modules'
-      location: '$(Pipeline.Workspace)/s/$(SERVICE_NAME)/sandbox/package-lock.json'
-      debug: true
-      alias: 'Sandbox'
-    displayName: cache sandbox dependencies
-
   - bash: |
-      cd sandbox
-      make install
-    workingDirectory: $(Pipeline.Workspace)/s/$(SERVICE_NAME)
-    condition: ne(variables['CacheRestored-Sandbox'], 'true')
-    displayName: Setup sandbox dependencies
-  
-  - bash: |
-      make sandbox
+      make sandboxtest
     workingDirectory: $(Pipeline.Workspace)/s/$(SERVICE_NAME)
     displayName: run sandbox tests
 
