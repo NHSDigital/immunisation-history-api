@@ -1,3 +1,13 @@
+parameters:
+  - name: smoke_tests
+    type: boolean
+    displayName: Toggle smoke tests
+    default: false
+  - name: e2e_tests
+    type: boolean
+    displayName: Toggle e2e tests
+    default: false
+
 steps:
   - task: s3-cache-action@1
     inputs:
@@ -14,7 +24,9 @@ steps:
     displayName: Setup pytests
 
   # Smoketests
+${{ if parameters.smoke_tests }}:
   - template: ../components/run-smoke-tests.yml
 
   # e2e tests
+${{ if parameters.e2e_tests }}:
   - template: ../components/run-e2e-tests.yml
