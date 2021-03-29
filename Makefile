@@ -1,5 +1,11 @@
 SHELL=/bin/bash -euo pipefail
 
+guard-%:
+	@ if [ "${${*}}" = "" ]; then \
+		echo "Environment variable $* not set"; \
+		exit 1; \
+	fi
+
 install-python:
 	poetry install
 
@@ -55,8 +61,15 @@ release: clean publish build-proxy
 
 dist: release
 
-test:
-	make --no-print-directory -C sandbox test
+test: smoketest sandboxtest e2etest
 
-smoketest:
+sandboxtest:
+	make --no-print-directory -C sandbox test-report
+
+pytest-guards: guard-SERVICE_BASE_PATH guard-APIGEE_ENVIRONMENT guard-SOURCE_COMMIT_ID guard-STATUS_ENDPOINT_API_KEY
+
+smoketest: pytest-guards
 	poetry run pytest -v --junitxml=smoketest-report.xml -s -m smoketest
+
+e2etest: pytest-guards
+	poetry run pytest -v --junitxml=e2e-report.xml -s -m e2e
