@@ -2,7 +2,7 @@ steps:
   - task: s3-cache-action@1
     inputs:
       key: 'node modules | $(SERVICE_NAME) | $(Pipeline.Workspace)/s/$(SERVICE_NAME)/sandbox/node_modules'
-      location: '$(Pipeline.Workspace)/s/$(SERVICE_NAME)/$(SERVICE_ARTIFACT_NAME)/sandbox/package-lock.json'
+      location: '$(Pipeline.Workspace)/s/$(SERVICE_NAME)/sandbox/package-lock.json'
       debug: true
       alias: 'Sandbox'
     displayName: cache sandbox dependencies
