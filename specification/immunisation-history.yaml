@@ -146,7 +146,7 @@ paths:
           in: query
           description: |
             The patient's NHS number.
-            Expressed as `<type>|<value>` where `<type>` must be `https://fhir.nhs.uk/Id/nhs-number` and `<value>` must be a [valid NHS number](https://www.datadictionary.nhs.uk/data_dictionary/attributes/n/nhs/nhs_number_de.asp)
+            Expressed as `<type>|<value>` where `<type>` must be `https://fhir.nhs.uk/Id/nhs-number` and `<value>` must be a [valid NHS number](https://www.datadictionary.nhs.uk/data_dictionary/attributes/n/nhs/nhs_number_de.asp).
           required: true
           schema:
             type: string
@@ -155,11 +155,12 @@ paths:
           in: query
           description: |
             Parent SNOMED immunisation procedure code.
-            Must be `90640007`, which is the parent code for all COVID-19 vaccinations.
+            For example, `90640007`, which is the parent code for all COVID-19 vaccinations.
           required: true
           schema:
             type: string
             example: "90640007"
+            description: Parent SNOMED code for all COVID-19 vaccinations.
         - name: _include
           in: query
           description: |
@@ -181,7 +182,10 @@ paths:
         - name: NHSD-User-Identity
           in: header
           description: |
-            Open ID Connect ID token for the end user, as obtained from NHS login. Must be a signed JWT in the format `xxxxx.yyyyy.zzzzz`.
+            Open ID Connect ID token for the end user citizen, as obtained from NHS login.
+            Must be a signed JWT in the format `xxxxx.yyyyy.zzzzz`.
+            Must be valid i.e. not expired.
+            Must be for a user who has had their identity verified to 'high' (P9) level.
           required: true
           schema:
             type: string
