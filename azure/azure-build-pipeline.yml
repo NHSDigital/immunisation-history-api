@@ -47,4 +47,4 @@ extends:
             debug: true
           displayName: cache python dependencies
     test_steps:
-      - template: ../templates/run-sandbox-tests.yml
+      - template: templates/run-sandbox-tests.yml
