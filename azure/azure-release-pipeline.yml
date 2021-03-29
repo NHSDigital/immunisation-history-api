@@ -33,6 +33,8 @@ extends:
     product_display_name: ${{ variables.product_display_name }}
     product_description: ${{ variables.product_description }}
     spec_file: ${{ variables.spec_file }}
+    secret_file_ids:
+      - ptl/app-credentials/jwt_testing/non-prod/JWT_TESTING_PRIVATE_KEY
     enable_monitoring: true
     enable_status_monitoring: true
     apigee_deployments:
