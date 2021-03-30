@@ -2,6 +2,9 @@ type: object
 description: |
   Outcome of an operation that does not result in a resource or bundle being returned, for example an error or an async/batch submission.
   There are a number of possible error codes that can be returned along with a more detailed description in the `diagnostics` field.
+required:
+  - resourceType
+  - issue
 properties:
   resourceType:
     type: string
