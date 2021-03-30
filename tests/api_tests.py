@@ -1,14 +1,12 @@
 from typing import List
+from uuid import uuid4
 
 import pytest
-from time import time
-from uuid import uuid4
 from aiohttp import ClientResponse
-from api_test_utils import poll_until, is_401
+from api_test_utils import env
+from api_test_utils import poll_until
 from api_test_utils.api_session_client import APISessionClient
 from api_test_utils.api_test_session_config import APITestSessionConfig
-from api_test_utils import env
-from .configuration.environment import ENV
 
 
 def dict_path(raw, path: List[str]):
@@ -53,9 +51,9 @@ async def test_wait_for_ping(
 @pytest.mark.smoketest
 @pytest.mark.asyncio
 async def test_check_status_is_secured(api_client: APISessionClient):
-    await poll_until(
-        make_request=lambda: api_client.get("_status"), until=is_401, timeout=10
-    )
+
+    async with api_client.get("_status", allow_retries=True) as resp:
+        assert resp.status == 401
 
 
 @pytest.mark.e2e
@@ -87,127 +85,63 @@ async def test_wait_for_status(
     )
 
 
+def _base_valid_uri(nhs_number) -> str:
+    return f"FHIR/R4/Immunization?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|{nhs_number}"
+
+
+def _valid_uri(nhs_number, procedure_code) -> str:
+    return _base_valid_uri(nhs_number) + f"&procedure-code:below={procedure_code}"
+
+
+@pytest.fixture(scope='function')
+def authorised_headers(valid_access_token):
+    return {"Authorization": f"Bearer {valid_access_token}"}
+
+
 @pytest.mark.e2e
 @pytest.mark.asyncio
 async def test_check_immunization_is_secured(api_client: APISessionClient):
-    await poll_until(
-        make_request=lambda: api_client.get(
-            "FHIR/R4/Immunization?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|9912003888"
-        ),
-        until=is_401,
-        timeout=10,
-    )
+
+    async with api_client.get(_base_valid_uri("9912003888"), allow_retries=True) as resp:
+        assert resp.status == 401
 
 
 @pytest.mark.e2e
 @pytest.mark.asyncio
-async def test_immunization_happy_path(
-    api_client: APISessionClient, test_app, get_token
-):
-    jwt = test_app.oauth.create_jwt(
-        **{
-            "kid": "test-1",
-            "claims": {
-                "sub": test_app.client_id,
-                "iss": test_app.client_id,
-                "jti": str(uuid4()),
-                "aud": ENV["token_url"],
-                "exp": int(time()) + 5,
-            },
-        }
-    )
-    token = await get_token(test_app, grant_type="client_credentials", _jwt=jwt)
-    access_token = token["access_token"]
-
-    async def is_happy_path(resp: ClientResponse):
-        if resp.status != 200:
-            return False
-        body = await resp.json()
-        return body["resourceType"] == "Bundle" and len(body["entry"]) >= 1
-
-    await poll_until(
-        make_request=lambda: api_client.get(
-            "FHIR/R4/Immunization?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|9912003888",
-            headers={"Authorization": f"Bearer {access_token}"},
-        ),
-        until=is_happy_path,
-        timeout=10,
-    )
-
-
-@pytest.mark.e2e
-@pytest.mark.asyncio
-@pytest.mark.skip  # Won't work while there's a dummy endpoint
-async def test_immunization_empty_path(
-    api_client: APISessionClient, test_app, get_token
-):
-    jwt = test_app.oauth.create_jwt(
-        **{
-            "kid": "test-1",
-            "claims": {
-                "sub": test_app.client_id,
-                "iss": test_app.client_id,
-                "jti": str(uuid4()),
-                "aud": ENV["token_url"],
-                "exp": int(time()) + 5,
-            },
-        }
-    )
-    token = await get_token(test_app, grant_type="client_credentials", _jwt=jwt)
-    access_token = token["access_token"]
-
-    async def is_happy_path(resp: ClientResponse):
-        if resp.status != 200:
-            return False
-        body = await resp.json()
-        return body["resourceType"] == "Bundle" and len(body["entry"]) == 0
-
-    await poll_until(
-        make_request=lambda: api_client.get(
-            "FHIR/R4/Immunization?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|90000000009",
-            headers={"Authorization": f"Bearer {access_token}"},
-        ),
-        until=is_happy_path,
-        timeout=10,
-    )
-
-
-@pytest.mark.e2e
-@pytest.mark.asyncio
-async def test_correlation_id_mirrored_in_resp_happy_path(
-    api_client: APISessionClient, test_app, get_token
-):
-    jwt = test_app.oauth.create_jwt(
-        **{
-            "kid": "test-1",
-            "claims": {
-                "sub": test_app.client_id,
-                "iss": test_app.client_id,
-                "jti": str(uuid4()),
-                "aud": ENV["token_url"],
-                "exp": int(time()) + 5,
-            },
-        }
-    )
-    token = await get_token(test_app, grant_type="client_credentials", _jwt=jwt)
-    access_token = token["access_token"]
+async def test_immunization_happy_path(api_client: APISessionClient, authorised_headers):
 
     correlation_id = str(uuid4())
+    authorised_headers["X-Correlation-ID"] = correlation_id
 
-    async def is_happy_path(resp: ClientResponse):
-        if resp.status != 200:
-            return False
+    async with api_client.get(
+        _valid_uri("9912003888", "90640007"),
+        headers=authorised_headers,
+        allow_retries=True
+    ) as resp:
+        assert resp.status == 200
+        body = await resp.json()
+        assert "x-correlation-id" in resp.headers, resp.headers
+        assert resp.headers["x-correlation-id"] == correlation_id
+        assert body["resourceType"] == "Bundle", body
+        # no data for this nhs number ...
+        assert len(body["entry"]) == 0, body
 
-        return resp.headers["x-correlation-id"] == correlation_id
 
-    await poll_until(
-        make_request=lambda: api_client.get(
-            "FHIR/R4/Immunization?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|9912003888",
-            headers={"Authorization": f"Bearer {access_token}", "X-Correlation-ID": correlation_id},
-        ),
-        until=is_happy_path,
-        timeout=10,
-    )
+@pytest.mark.e2e
+@pytest.mark.asyncio
+async def test_bad_nhs_number(api_client: APISessionClient, authorised_headers):
+
+    async with api_client.get(
+        _valid_uri("90000000009", "90640007"),
+        headers=authorised_headers,
+        allow_retries=True
+    ) as resp:
+        assert resp.status == 400
+
+        body = await resp.json()
+        assert body["resourceType"] == "OperationOutcome", body
+        issue = next((i for i in body.get('issue', []) if i.get('severity') == 'error'), None)
+        assert issue.get("diagnostics") == "Missing or invalid NHS number", body
 
 
 @pytest.mark.e2e
@@ -219,9 +153,11 @@ async def test_correlation_id_mirrored_in_resp_when_error(
 
     correlation_id = str(uuid4())
 
-    resp = await api_client.get(
-            "FHIR/R4/Immunization?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|9912003888",
-            headers={"Authorization": f"Bearer {access_token}", "X-Correlation-ID": correlation_id},
-        )
-
-    return resp.status == 401 and resp.headers["x-correlation-id"] == correlation_id
+    async with api_client.get(
+        _valid_uri("9912003888", "90640007"),
+        headers={"Authorization": f"Bearer {access_token}", "X-Correlation-ID": correlation_id},
+        allow_retries=True
+    ) as resp:
+        assert resp.status == 401
+        assert "x-correlation-id" in resp.headers, resp.headers
+        assert resp.headers["x-correlation-id"] == correlation_id, resp.headers
