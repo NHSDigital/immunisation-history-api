@@ -43,7 +43,7 @@ async def test_wait_for_ping(
         return body.get("commitId") == api_test_config.commit_id
 
     await poll_until(
-        make_request=lambda: api_client.get("_ping"), until=apigee_deployed, timeout=10
+        make_request=lambda: api_client.get("_ping"), until=apigee_deployed, timeout=30
     )
 
 
@@ -76,12 +76,14 @@ async def test_wait_for_status(
 
         return backend.get("commitId") == api_test_config.commit_id
 
+    deploy_timeout = 120 if api_test_config.api_environment.endswith("sandbox") else 30
+
     await poll_until(
         make_request=lambda: api_client.get(
             "_status", headers={"apikey": env.status_endpoint_api_key()}
         ),
         until=is_deployed,
-        timeout=10,
+        timeout=deploy_timeout,
     )
 
 
