@@ -1,5 +1,9 @@
 description: Demographic information about the patient receiving an immunisation.
 type: object
+required:
+  - resourceType
+  - identifier
+  - birthDate
 properties:
   resourceType:
     description: FHIR resource type. Always `Patient`.
@@ -8,8 +12,12 @@ properties:
   identifier:
     description: Unique identifier for this patient. Always an NHS number.
     type: array
+    minItems: 1
     items:
       type: object
+      required:
+        - system
+        - value
       properties:
         system:
           description: Coding system used to identify patients.
@@ -19,41 +27,6 @@ properties:
           description: Code identifying the patient.
           type: string
           example: "9912003888"
-  name:
-    description: Patient's name.
-    type: object
-    properties:
-      use:
-        description: Code indicating use and status of this patient's name, as defined by https://www.hl7.org/fhir/valueset-name-use.html.
-        type: string
-        example: "official"
-        enum:
-          - official
-          - usual
-          - temp
-          - nickname
-          - anonymous
-          - old
-          - maiden
-      family:
-        description: Family name of the patient.
-        type: string
-        example: "Dawkins"
-      given:
-        description: Given names of the patient.
-        type: array
-        items:
-          type: string
-        example: ["Jack"]
-  gender:
-    description: Administrative gender of the patient. As defined by https://www.hl7.org/fhir/valueset-administrative-gender.html.
-    type: string
-    example: "male"
-    enum:
-      - male
-      - female
-      - other
-      - unknown
   birthDate:
     description: Patient's date of birth.
     type: string
