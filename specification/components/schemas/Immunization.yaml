@@ -117,18 +117,18 @@ properties:
               - code
               - display
             properties:
-            system:
-              description: Coding system for reason immunisation not done. Always SNOMED.
-              type: string
-              example: http://snomed.info/sct
-            code:
-              description: SNOMED code for the reason immunisation not done.
-              type: string
-              example: 1324721000000108
-            display:
-              description: Description of the reason immunisation not done.
-              type: string
-              example: SARS-CoV-2 (severe acute respiratory syndrome coronavirus 2) vaccination dose declined
+              system:
+                description: Coding system for reason immunisation not done. Always SNOMED.
+                type: string
+                example: http://snomed.info/sct
+              code:
+                description: SNOMED code for the reason immunisation not done.
+                type: string
+                example: 1324721000000108
+              display:
+                description: Description of the reason immunisation not done.
+                type: string
+                example: SARS-CoV-2 (severe acute respiratory syndrome coronavirus 2) vaccination dose declined
   vaccineCode:
     description: Vaccine product administered.
     type: object
