@@ -32,7 +32,7 @@ properties:
         valueCodeableConcept:
           description: Wrapper for the vaccination procedure details.
           type: object
-          required
+          required:
             - coding
           properties:
             coding:
@@ -40,7 +40,7 @@ properties:
               type: array
               items:
                 type: object
-                required
+                required:
                   - system
                   - code
                   - display
@@ -144,7 +144,7 @@ properties:
       identifier:
         description: Business identifier for linked Patient. Always an NHS number.
         type: object
-        raquired:
+        required:
           - system
           - value
         properties:
