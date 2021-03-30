@@ -1,6 +1,10 @@
 description: FHIR Bundle containing the query results - a list of matching immunisations and associated patients.
 type: object
-additionalProperties: false
+required:
+  - resourceType
+  - type
+  - total
+  - entry
 properties:
   resourceType:
     description: FHIR resource type. Always `Bundle`.
@@ -19,6 +23,10 @@ properties:
     type: array
     items:
       type: object
+      required:
+        - fullUrl
+        - resource
+        - search
       properties:
         fullUrl:
           description: URI for the Immunization or Patient resource.
@@ -32,6 +40,8 @@ properties:
         search:
           description: Search-related information for the Immunization or Patient resource.
           type: object
+          required:
+            - mode
           properties:
             mode:
               description: Indicates why this resource is in the result set. For Immunization resources this is always `match` and for Patient resources it is always `include`.
