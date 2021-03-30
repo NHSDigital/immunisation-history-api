@@ -1,6 +1,6 @@
 description: A matching immunisation, formatted as a FHIR Immunization resource.
 type: object
-required
+required:
   - resourceType
   - extension
   - identifier
