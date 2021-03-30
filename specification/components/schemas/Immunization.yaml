@@ -9,6 +9,7 @@ required:
   - patient
   - occurrenceDateTime
   - primarySource
+  - performer
 properties:
   resourceType:
     description: FHIR resource type. Always `Immunization`.
@@ -240,6 +241,70 @@ properties:
         description: Code describing the unit.
         type: string
         example: "3318611000001103"
+  performer:
+    description: Details of the organisation that performed the immunisation.
+    type: array
+    minItems: 1
+    maxItems: 1
+    items:
+      type: object
+      properties:
+        function:
+          description: Type of organisation that performed the immunisaton.
+          type: object
+          required:
+            - coding
+          properties:
+            coding:
+              description: Wrapper for the organisation type details.
+              type: array
+              minItems: 1
+              maxItems: 1
+              items:
+                type: object
+                required:
+                  - system
+                  - code
+                  - display
+                properties:
+                  system:
+                    description: Coding system used for the organisation type.
+                    type: string
+                    example: http://terminology.hl7.org/CodeSystem/v2-0443
+                  code:
+                    description: Code for the organisation type
+                    type: string
+                    example: AP
+                  display:
+                    description: Description for the organistion type
+                    type: string
+                    example: AdministeringProvider
+        actor:
+          description: Organisation that performed the immunisation.
+          type: object
+          required:
+            - type
+            - identifier
+          properties:
+            type:
+              description: Type of actor. Always `Organisation`.
+              type: string
+              example: Organisation
+            identifier:
+              description: Organisation identifier.
+              type: object
+              required:
+                - system
+                - value
+              properties:
+                system:
+                  description: Coding system used for the organisation identifier. Always `https://fhir.nhs.uk/Id/ods-organization-code`.
+                  type: string
+                  example: https://fhir.nhs.uk/Id/ods-organization-code
+                value:
+                  description: Organisation's ODS code.
+                  type: string
+                  example: RX809
   reasonCode:
     description: Reasons why the vaccine was administered.
     type: array
@@ -279,7 +344,7 @@ properties:
     items:
       type: object
       required:
-        doseNumberPositiveInt
+        - doseNumberPositiveInt
       properties:
         doseNumberPositiveInt:
           description: Dose number within a series of doses.
