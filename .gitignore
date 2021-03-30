@@ -40,3 +40,6 @@ e2e-report.xml
 
 # Files that are copied before sandbox build
 sandbox/responses/*
+
+# ignore any potential keys
+*.key

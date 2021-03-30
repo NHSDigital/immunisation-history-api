@@ -19,7 +19,7 @@
       <Step>
         <Name>RaiseFault.400BadRequest</Name>
         <Condition>request.headers.NHSD-User-Identity = null</Condition>
-      <Step>
+      </Step>
       <Step>
         <Name>ServiceCallout.GetJWKS</Name>
       </Step>
