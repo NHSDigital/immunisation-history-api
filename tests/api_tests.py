@@ -2,6 +2,7 @@ from typing import List
 from uuid import uuid4
 
 import pytest
+from tests import conftest
 from aiohttp import ClientResponse
 from api_test_utils import env
 from api_test_utils import poll_until
@@ -149,7 +150,9 @@ async def test_immunization_no_jwt_header_provided(api_client: APISessionClient,
 
 @pytest.mark.e2e
 @pytest.mark.asyncio
-async def test_bad_nhs_number(api_client: APISessionClient, authorised_headers):
+async def test_bad_nhs_number(nhs_login_id_token, api_client: APISessionClient, authorised_headers):
+
+    authorised_headers["NHSD-User-Identity"] = nhs_login_id_token
 
     async with api_client.get(
         _valid_uri("90000000009", "90640007"),
@@ -181,3 +184,29 @@ async def test_correlation_id_mirrored_in_resp_when_error(
         assert resp.status == 401
         assert "x-correlation-id" in resp.headers, resp.headers
         assert resp.headers["x-correlation-id"] == correlation_id, resp.headers
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
+async def test_user_restricted_access_not_permitted(nhs_login_id_token,
+                                                    api_client: APISessionClient,
+                                                    test_app,
+                                                    test_product):
+
+    test_product.update_scopes(["urn:nhsd:apim:user-nhs-id:aal3:immunisation-history"])
+    test_app.add_api_product([test_product.name])
+
+    token_response = await conftest.get_token(test_app)
+
+    authorised_headers = {
+        "Authorization": f"Bearer {token_response['access_token']}",
+        "NHSD-User-Identity": nhs_login_id_token
+    }
+
+    async with api_client.get(
+        _valid_uri("9912003888", "90640007"),
+        headers=authorised_headers,
+        allow_retries=True
+    ) as resp:
+        assert resp.status == 401
+        # TODO: Check response

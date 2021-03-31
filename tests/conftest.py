@@ -7,6 +7,7 @@ import pytest
 from api_test_utils.api_test_session_config import APITestSessionConfig
 from api_test_utils.fixtures import api_client   # pylint: disable=unused-import
 from api_test_utils.apigee_api_apps import ApigeeApiDeveloperApps
+from api_test_utils.apigee_api_products import ApigeeApiProducts
 from api_test_utils.oauth_helper import OauthHelper
 from .configuration.environment import ENV
 
@@ -29,9 +30,21 @@ def test_app():
             }
         )
     )
-    app.oauth = OauthHelper(app.client_id, app.client_secret, "")
+    app.oauth = OauthHelper(app.client_id, app.client_secret, app.callback_url)
     yield app
     loop.run_until_complete(app.destroy_app())
+
+
+@pytest.yield_fixture(scope="session")
+def test_product():
+    """Setup & Teardown an product for this api"""
+    product = ApigeeApiProducts()
+    loop = asyncio.new_event_loop()
+    loop.run_until_complete(
+        product.create_new_product()
+    )
+    yield product
+    loop.run_until_complete(product.destroy_product())
 
 
 async def get_token(
