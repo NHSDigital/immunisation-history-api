@@ -1,11 +1,8 @@
 <TargetEndpoint name="immunisation-history-target">
   <FaultRules>
-    <FaultRule name="access_token_expired">
+    <FaultRule name="access_token_invalid">
       <Step>
-        <Name>ExtractVariables.OAuthErrorFaultString</Name>
-      </Step>
-      <Step>
-        <Name>AssignMessage.OAuthPolicyErrorResponse</Name>
+        <Name>RaiseFault.InvalidAccessToken</Name>
       </Step>
       <Condition>oauthV2.OauthV2.VerifyAccessToken.failed</Condition>
     </FaultRule>
