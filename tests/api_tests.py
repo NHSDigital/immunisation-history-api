@@ -133,6 +133,49 @@ async def test_immunization_happy_path(nhs_login_id_token, api_client: APISessio
 
 @pytest.mark.e2e
 @pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "request_data",
+    [
+        # condition 1: invalid iss claim
+        {
+            "expected_status_code": 400,
+            "expected_response": {
+                "severity": "error",
+                "error_code": "value",
+                "error_diagnostics": "Missing or non-matching iss/sub claims in ID Token",
+            },
+            "claims": {
+                "iss": "invalid"
+            }
+        },
+    ],
+)
+async def test_immunisation_id_token_error_scenarios(test_app,
+                                                     api_client: APISessionClient,
+                                                     authorised_headers, request_data: dict):
+    id_token = conftest.nhs_login_id_token(
+        test_app=test_app,
+        id_token_claims=request_data.get("claims"),
+        id_token_headers=request_data.get("headers")
+    )
+
+    authorised_headers["NHSD-User-Identity"] = id_token
+
+    async with api_client.get(
+        _valid_uri("9912003888", "90640007"),
+        headers=authorised_headers,
+        allow_retries=True
+    ) as resp:
+        assert resp.status == request_data["expected_status_code"]
+        body = await resp.json()
+        assert body["resourceType"] == "OperationOutcome"
+        assert body["issue"][0]["severity"] == request_data["expected_response"]["severity"]
+        assert body["issue"][0]["diagnostics"] == request_data["expected_response"]["error_diagnostics"]
+        assert body["issue"][0]["code"] == request_data["expected_response"]["error_code"]
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
 async def test_immunization_no_jwt_header_provided(api_client: APISessionClient, authorised_headers):
 
     async with api_client.get(
