@@ -35,6 +35,7 @@ extends:
     spec_file: ${{ variables.spec_file }}
     secret_file_ids:
       - ptl/app-credentials/jwt_testing/non-prod/JWT_TESTING_PRIVATE_KEY
+      - ptl/app-credentials/jwt_testing/non-prod/ID_TOKEN_NHS_LOGIN_PRIVATE_KEY
     enable_monitoring: true
     enable_status_monitoring: true
     apigee_deployments:

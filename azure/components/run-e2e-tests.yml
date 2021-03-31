@@ -9,6 +9,7 @@ steps:
       export OAUTH_PROXY="oauth2"
       export OAUTH_BASE_URI="https://$(ENVIRONMENT).api.service.nhs.uk"
       export JWT_PRIVATE_KEY_ABSOLUTE_PATH="$(Pipeline.Workspace)/secrets/$(JWT_TESTING_PRIVATE_KEY)"
+      export ID_TOKEN_NHS_LOGIN_PRIVATE_KEY="$(Pipeline.Workspace)/secrets/$(ID_TOKEN_NHS_LOGIN_PRIVATE_KEY)"
       export APIGEE_API_TOKEN="$(secret.AccessToken)"
       make e2etest
     workingDirectory: $(Pipeline.Workspace)/s/$(SERVICE_NAME)/$(SERVICE_ARTIFACT_NAME)

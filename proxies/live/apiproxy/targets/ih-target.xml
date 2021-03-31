@@ -18,7 +18,7 @@
       <!-- Check JWT Header Exists-->
       <Step>
         <Name>RaiseFault.400BadRequest</Name>
-        <Condition>request.headers.NHSD-User-Identity = null</Condition>
+        <Condition>request.header.NHSD-User-Identity = null</Condition>
       </Step>
       <Step>
         <Name>ServiceCallout.GetJWKS</Name>

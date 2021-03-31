@@ -19,5 +19,6 @@ ENV = {
     "product": get_env("APIGEE_PRODUCT"),
     "oauth_proxy": oauth_proxy,
     "oauth_base_uri": oauth_base_uri,
-    "token_url": f"{oauth_base_uri}/{oauth_proxy}/token"
+    "token_url": f"{oauth_base_uri}/{oauth_proxy}/token",
+    "nhs_login_id_token_private_key_path": get_env("ID_TOKEN_NHS_LOGIN_PRIVATE_KEY_ABSOLUTE_PATH")
 }

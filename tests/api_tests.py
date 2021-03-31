@@ -110,10 +110,11 @@ async def test_check_immunization_is_secured(api_client: APISessionClient):
 
 @pytest.mark.e2e
 @pytest.mark.asyncio
-async def test_immunization_happy_path(api_client: APISessionClient, authorised_headers):
+async def test_immunization_happy_path(nhs_login_id_token, api_client: APISessionClient, authorised_headers):
 
     correlation_id = str(uuid4())
     authorised_headers["X-Correlation-ID"] = correlation_id
+    authorised_headers["NHSD-User-Identity"] = nhs_login_id_token
 
     async with api_client.get(
         _valid_uri("9912003888", "90640007"),

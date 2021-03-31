@@ -73,3 +73,43 @@ def valid_access_token(test_app) -> str:
     loop = asyncio.new_event_loop()
     token = loop.run_until_complete(get_token(test_app, grant_type="client_credentials", _jwt=jwt))
     return token["access_token"]
+
+
+@pytest.fixture(scope="session")
+def nhs_login_id_token(test_app, id_token_claims=None, id_token_headers=None) -> str:
+
+    if not id_token_claims:
+        id_token_claims = {
+            'aud': 'tf_-APIM-1',
+            'id_status': 'verified',
+            'token_use': 'id',
+            'auth_time': 1616600683,
+            'iss': 'https://auth.sandpit.signin.nhs.uk',
+            'vot': 'P9.Cp.Cd',
+            'exp': int(time()) + 600,
+            'iat': int(time()) - 10,
+            'vtm': 'https://auth.sandpit.signin.nhs.uk/trustmark/auth.sandpit.signin.nhs.uk',
+            'jti': 'b68ddb28-e440-443d-8725-dfe0da330118'
+        }
+    if not id_token_headers:
+        id_token_headers = {
+            "sub": "49f470a1-cc52-49b7-beba-0f9cec937c46",
+            "aud": "APIM-1",
+            "kid": "nhs-login",
+            "iss": "https://auth.sandpit.signin.nhs.uk",
+            "typ": "JWT",
+            "exp": 1616604574,
+            "iat": 1616600974,
+            "alg": "RS512",
+            "jti": "b68ddb28-e440-443d-8725-dfe0da330118"
+        }
+
+    with open(ENV["nhs_login_id_token_private_key_path"], "r") as f:
+        contents = f.read()
+
+    id_token_jwt = test_app.oauth.create_id_token_jwt(algorithm='RS512',
+                                                      claims=id_token_claims,
+                                                      headers=id_token_headers,
+                                                      signing_key=contents)
+
+    return id_token_jwt
