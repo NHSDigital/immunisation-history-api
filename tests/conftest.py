@@ -119,7 +119,7 @@ def nhs_login_id_token(test_app: ApigeeApiDeveloperApps, id_token_claims: dict =
     }
 
     if id_token_claims is not None:
-        default_id_token_claims = default_id_token_claims.update(id_token_claims)
+        default_id_token_claims = {**default_id_token_claims, **id_token_claims}
 
     default_id_token_headers = {
         "sub": "49f470a1-cc52-49b7-beba-0f9cec937c46",
@@ -134,7 +134,7 @@ def nhs_login_id_token(test_app: ApigeeApiDeveloperApps, id_token_claims: dict =
     }
 
     if id_token_headers is not None:
-        default_id_token_headers = default_id_token_headers.update(default_id_token_headers)
+        default_id_token_headers = {**default_id_token_headers, **id_token_headers}
 
     with open(ENV["nhs_login_id_token_private_key_path"], "r") as f:
         contents = f.read()

@@ -142,10 +142,34 @@ async def test_immunization_happy_path(test_app, api_client: APISessionClient, a
             "expected_response": {
                 "severity": "error",
                 "error_code": "value",
-                "error_diagnostics": "Missing or non-matching iss/sub claims in ID Token",
+                "error_diagnostics": "Missing or invalid 'iss' claim in ID Token",
             },
             "claims": {
                 "iss": "invalid"
+            }
+        },
+        # condition 2: invalid typ header
+        {
+            "expected_status_code": 400,
+            "expected_response": {
+                "severity": "error",
+                "error_code": "value",
+                "error_diagnostics": "Missing or invalid 'typ' header in ID Token - must be 'JWT'",
+            },
+            "headers": {
+                "typ": "invalid"
+            }
+        },
+        # condition 3: invalid identity_proofing_level claim
+        {
+            "expected_status_code": 400,
+            "expected_response": {
+                "severity": "error",
+                "error_code": "value",
+                "error_diagnostics": "Missing or invalid 'identity_proofing_level' claim in ID Token",
+            },
+            "claims": {
+                "identity_proofing_level": "invalid"
             }
         },
     ],
