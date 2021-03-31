@@ -111,11 +111,11 @@ async def test_check_immunization_is_secured(api_client: APISessionClient):
 
 @pytest.mark.e2e
 @pytest.mark.asyncio
-async def test_immunization_happy_path(nhs_login_id_token, api_client: APISessionClient, authorised_headers):
+async def test_immunization_happy_path(test_app, api_client: APISessionClient, authorised_headers):
 
     correlation_id = str(uuid4())
     authorised_headers["X-Correlation-ID"] = correlation_id
-    authorised_headers["NHSD-User-Identity"] = nhs_login_id_token
+    authorised_headers["NHSD-User-Identity"] = conftest.nhs_login_id_token(test_app)
 
     async with api_client.get(
         _valid_uri("9912003888", "90640007"),
@@ -193,9 +193,9 @@ async def test_immunization_no_jwt_header_provided(api_client: APISessionClient,
 
 @pytest.mark.e2e
 @pytest.mark.asyncio
-async def test_bad_nhs_number(nhs_login_id_token, api_client: APISessionClient, authorised_headers):
+async def test_bad_nhs_number(test_app, api_client: APISessionClient, authorised_headers):
 
-    authorised_headers["NHSD-User-Identity"] = nhs_login_id_token
+    authorised_headers["NHSD-User-Identity"] = conftest.nhs_login_id_token(test_app)
 
     async with api_client.get(
         _valid_uri("90000000009", "90640007"),
@@ -203,11 +203,10 @@ async def test_bad_nhs_number(nhs_login_id_token, api_client: APISessionClient, 
         allow_retries=True
     ) as resp:
         assert resp.status == 400
-
         body = await resp.json()
         assert body["resourceType"] == "OperationOutcome", body
         issue = next((i for i in body.get('issue', []) if i.get('severity') == 'error'), None)
-        assert issue.get("diagnostics") == "Missing or invalid NHS number", body
+        assert issue.get("diagnostics") == "Missing required request parameters: [patient.identifier]", body
 
 
 @pytest.mark.e2e
@@ -231,19 +230,17 @@ async def test_correlation_id_mirrored_in_resp_when_error(
 
 @pytest.mark.e2e
 @pytest.mark.asyncio
-async def test_user_restricted_access_not_permitted(nhs_login_id_token,
-                                                    api_client: APISessionClient,
-                                                    test_app,
-                                                    test_product):
+async def test_user_restricted_access_not_permitted(api_client: APISessionClient, test_product_and_app):
+    test_product, test_app = test_product_and_app
 
-    test_product.update_scopes(["urn:nhsd:apim:user-nhs-id:aal3:immunisation-history"])
-    test_app.add_api_product([test_product.name])
+    await test_product.update_scopes(["urn:nhsd:apim:user-nhs-id:aal3:immunisation-history"])
+    await test_app.add_api_product([test_product.name])
 
     token_response = await conftest.get_token(test_app)
 
     authorised_headers = {
         "Authorization": f"Bearer {token_response['access_token']}",
-        "NHSD-User-Identity": nhs_login_id_token
+        "NHSD-User-Identity": conftest.nhs_login_id_token(test_app)
     }
 
     async with api_client.get(

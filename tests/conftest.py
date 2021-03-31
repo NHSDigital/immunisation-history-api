@@ -36,6 +36,20 @@ def test_app():
 
 
 @pytest.yield_fixture(scope="session")
+def test_product_and_app():
+    """Setup & Teardown an product and app for this api"""
+    product = ApigeeApiProducts()
+    app = ApigeeApiDeveloperApps()
+    loop = asyncio.new_event_loop()
+    loop.run_until_complete(product.create_new_product())
+    loop.run_until_complete(app.setup_app())
+    app.oauth = OauthHelper(app.client_id, app.client_secret, app.callback_url)
+    yield product, app
+    loop.run_until_complete(app.destroy_app())
+    loop.run_until_complete(product.destroy_product())
+
+
+@pytest.yield_fixture(scope="session")
 def test_product():
     """Setup & Teardown an product for this api"""
     product = ApigeeApiProducts()
@@ -88,7 +102,7 @@ def valid_access_token(test_app) -> str:
     return token["access_token"]
 
 
-def nhs_login_id_token(test_app, id_token_claims: dict = None, id_token_headers: dict = None) -> str:
+def nhs_login_id_token(test_app: ApigeeApiDeveloperApps, id_token_claims: dict = None, id_token_headers: dict = None) -> str:
 
     default_id_token_claims = {
         'aud': 'tf_-APIM-1',
@@ -104,7 +118,7 @@ def nhs_login_id_token(test_app, id_token_claims: dict = None, id_token_headers:
     }
 
     if id_token_claims is not None:
-        default_id_token_claims.update(id_token_claims)
+        default_id_token_claims = default_id_token_claims.update(id_token_claims)
 
     default_id_token_headers = {
         "sub": "49f470a1-cc52-49b7-beba-0f9cec937c46",
@@ -119,14 +133,14 @@ def nhs_login_id_token(test_app, id_token_claims: dict = None, id_token_headers:
     }
 
     if id_token_headers is not None:
-        default_id_token_headers.update(default_id_token_headers)
+        default_id_token_headers = default_id_token_headers.update(default_id_token_headers)
 
     with open(ENV["nhs_login_id_token_private_key_path"], "r") as f:
         contents = f.read()
 
     id_token_jwt = test_app.oauth.create_id_token_jwt(algorithm='RS512',
-                                                      claims=id_token_claims,
-                                                      headers=id_token_headers,
+                                                      claims=default_id_token_claims,
+                                                      headers=default_id_token_headers,
                                                       signing_key=contents)
 
     return id_token_jwt

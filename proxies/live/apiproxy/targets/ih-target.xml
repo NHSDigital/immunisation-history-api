@@ -4,6 +4,9 @@
       <Step>
         <Name>RaiseFault.InvalidAccessToken</Name>
       </Step>
+      <Step>
+        <Name>AssignMessage.Errors.CatchAllMessage</Name>
+      </Step>
       <Condition>oauthV2.OauthV2.VerifyAccessToken.failed</Condition>
     </FaultRule>
   </FaultRules>
