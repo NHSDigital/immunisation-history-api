@@ -21,6 +21,9 @@
         <Condition>request.header.NHSD-User-Identity = null</Condition>
       </Step>
       <Step>
+        <Name>DecodeJWT.FromNHSDUserIdentityHeader</Name>
+      </Step>
+      <Step>
         <Name>ServiceCallout.GetJWKS</Name>
       </Step>
       <Step>

@@ -140,9 +140,11 @@ async def test_immunization_no_jwt_header_provided(api_client: APISessionClient,
         allow_retries=True
     ) as resp:
         assert resp.status == 400
-        # body = await resp.json()
-        # print(body)
-        # TODO: Check error response once added
+        body = await resp.json()
+        assert body["resourceType"] == "OperationOutcome"
+        assert body["issue"][0]["severity"] == "error"
+        assert body["issue"][0]["diagnostics"] == "Missing value in header 'NHSD-User-Identity'"
+        assert body["issue"][0]["code"] == "value"
 
 
 @pytest.mark.e2e
