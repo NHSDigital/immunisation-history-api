@@ -30,10 +30,8 @@ info:
     The patient demographic details might differ from those held in the [Personal Demographics Service (PDS)](https://digital.nhs.uk/services/demographics).
     To get demographic details from PDS, use the [Personal Demographics Service FHIR API](https://digital.nhs.uk/developer/api-catalogue/personal-demographics-service-fhir).
     
-    Details on how quickly the data is available after the vaccination event are to follow.
-    
     ### Data availability, timing and quality
-    All immunisation history records are verified against the associated patient demographic details to ensure the NHS number is correct before making them available via the API.
+    All immunisation records are verified to ensure the NHS number is correct before making them available via the API.
     
     In most cases this is automatic, and the record is available within 48 hours of the immunisation event, sometimes sooner.
     
