@@ -1,0 +1,18 @@
+<RaiseFault async="false" continueOnError="false" enabled="true" name="RaiseFault.MissingOrInvalidIssClaim">
+    <FaultResponse>
+        <Set>
+            <Payload contentType="text/plain"/>
+            <StatusCode>400</StatusCode>
+            <ReasonPhrase>Bad Request</ReasonPhrase>
+        </Set>
+        <AssignVariable>
+            <Name>ih.error.code</Name>
+            <Value>value</Value>
+        </AssignVariable>
+        <AssignVariable>
+            <Name>ih.error.diagnostics</Name>
+            <Template>Missing or non-matching iss/sub claims in ID Token</Template>
+        </AssignVariable>
+    </FaultResponse>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</RaiseFault>

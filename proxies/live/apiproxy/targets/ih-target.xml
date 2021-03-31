@@ -24,6 +24,11 @@
         <Name>DecodeJWT.FromNHSDUserIdentityHeader</Name>
       </Step>
       <Step>
+        <Name>RaiseFault.MissingOrInvalidIssClaim</Name>
+        <!-- Get issuer value from KVM instead of hard coded value -->
+        <Condition>(jwt.DecodeJWT.FromNHSDUserIdentityHeader.decoded.claim.iss Is null) or (jwt.DecodeJWT.FromNHSDUserIdentityHeader.decoded.claim.iss NotEquals "https://auth.sandpit.signin.nhs.uk")</Condition>
+      </Step>
+      <Step>
         <Name>ServiceCallout.GetJWKS</Name>
       </Step>
       <Step>
