@@ -129,6 +129,21 @@ async def test_immunization_happy_path(api_client: APISessionClient, authorised_
 
 @pytest.mark.e2e
 @pytest.mark.asyncio
+async def test_immunization_no_jwt_header_provided(api_client: APISessionClient, authorised_headers):
+
+    async with api_client.get(
+        _valid_uri("9912003888", "90640007"),
+        headers=authorised_headers,
+        allow_retries=True
+    ) as resp:
+        assert resp.status == 400
+        # body = await resp.json()
+        # print(body)
+        # TODO: Check error response once added
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
 async def test_bad_nhs_number(api_client: APISessionClient, authorised_headers):
 
     async with api_client.get(

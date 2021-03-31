@@ -13,6 +13,7 @@
     <SSLInfo>
       <Enabled>true</Enabled>
     </SSLInfo>
-    <URL>https://this.will.get.set.via.js.policy</URL>
+    <!-- Add to KVM -->
+    <URL>https://auth.sandpit.signin.nhs.uk/.well-known/jwks.json</URL>
   </HTTPTargetConnection>
 </ServiceCallout>

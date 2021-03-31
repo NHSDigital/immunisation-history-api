@@ -62,4 +62,9 @@
     </LoadBalancer>
     <Path>/immunisation-history</Path>
   </HTTPTargetConnection>
+  <DefaultFaultRule>
+    <Step>
+        <Name>AssignMessage.Errors.CatchAllMessage</Name>
+    </Step>
+  </DefaultFaultRule>
 </TargetEndpoint>
