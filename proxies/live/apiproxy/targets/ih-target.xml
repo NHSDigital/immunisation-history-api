@@ -29,6 +29,10 @@
         <Condition>(jwt.DecodeJWT.FromNHSDUserIdentityHeader.decoded.claim.iss Is null) or (jwt.DecodeJWT.FromNHSDUserIdentityHeader.decoded.claim.iss NotEquals "https://auth.sandpit.signin.nhs.uk")</Condition>
       </Step>
       <Step>
+        <Name>RaiseFault.MissingOrInvalidTypHeader</Name>
+        <Condition>(jwt.DecodeJWT.FromNHSDUserIdentityHeader.decoded.header.typ Is null) Or (Not(jwt.DecodeJWT.FromNHSDUserIdentityHeader.decoded.header.typ EqualsCaseInsensitive "jwt"))</Condition>
+      </Step>
+      <Step>
         <Name>ServiceCallout.GetJWKS</Name>
       </Step>
       <Step>

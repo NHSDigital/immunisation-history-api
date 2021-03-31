@@ -114,7 +114,8 @@ def nhs_login_id_token(test_app: ApigeeApiDeveloperApps, id_token_claims: dict =
         'exp': int(time()) + 600,
         'iat': int(time()) - 10,
         'vtm': 'https://auth.sandpit.signin.nhs.uk/trustmark/auth.sandpit.signin.nhs.uk',
-        'jti': 'b68ddb28-e440-443d-8725-dfe0da330118'
+        'jti': 'b68ddb28-e440-443d-8725-dfe0da330118',
+        'identity_proofing_level': 'P9'
     }
 
     if id_token_claims is not None:
