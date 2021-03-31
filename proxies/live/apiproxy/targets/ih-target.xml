@@ -33,6 +33,10 @@
         <Condition>(jwt.DecodeJWT.FromNHSDUserIdentityHeader.decoded.header.typ Is null) Or (Not(jwt.DecodeJWT.FromNHSDUserIdentityHeader.decoded.header.typ EqualsCaseInsensitive "jwt"))</Condition>
       </Step>
       <Step>
+        <Name>RaiseFault.MissingOrInvalidIdentityProofingLevelClaim</Name>
+        <Condition>(jwt.DecodeJWT.FromNHSDUserIdentityHeader.decoded.claim.identity_proofing_level Is null) or (Not(jwt.DecodeJWT.FromNHSDUserIdentityHeader.decoded.claim.identity_proofing_level = "P9"))</Condition>
+      </Step>
+      <Step>
         <Name>ServiceCallout.GetJWKS</Name>
       </Step>
       <Step>

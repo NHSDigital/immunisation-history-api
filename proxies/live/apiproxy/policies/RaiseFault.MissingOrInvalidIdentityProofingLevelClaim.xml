@@ -1,5 +1,5 @@
-<RaiseFault async="false" continueOnError="false" enabled="true" name="RaiseFault.MissingOrInvalidTypHeader">
-  <FaultResponse>
+<RaiseFault async="false" continueOnError="false" enabled="true" name="RaiseFault.MissingOrInvalidIdentityProofingLevelClaim">
+    <FaultResponse>
         <Set>
             <Payload contentType="text/plain"/>
             <StatusCode>400</StatusCode>
@@ -11,8 +11,8 @@
         </AssignVariable>
         <AssignVariable>
             <Name>ih.error.diagnostics</Name>
-            <Template>Missing or invalid 'typ' header in ID Token - must be 'JWT'</Template>
+            <Template>Missing or invalid 'identity_proofing_level' claim in ID Token</Template>
         </AssignVariable>
     </FaultResponse>
-  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
 </RaiseFault>

@@ -11,7 +11,7 @@
         </AssignVariable>
         <AssignVariable>
             <Name>ih.error.diagnostics</Name>
-            <Template>Missing or non-matching iss/sub claims in ID Token</Template>
+            <Template>Missing or invalid 'iss' claim in ID Token</Template>
         </AssignVariable>
     </FaultResponse>
     <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
