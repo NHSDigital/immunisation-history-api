@@ -1,0 +1,18 @@
+<RaiseFault async="false" continueOnError="false" enabled="true" name="RaiseFault.MissingNHSDUserIdentityheader">
+    <FaultResponse>
+        <Set>
+            <Payload contentType="text/plain"/>
+            <StatusCode>400</StatusCode>
+            <ReasonPhrase>Bad Request</ReasonPhrase>
+        </Set>
+        <AssignVariable>
+            <Name>ih.error.code</Name>
+            <Value>value</Value>
+        </AssignVariable>
+        <AssignVariable>
+            <Name>ih.error.diagnostics</Name>
+            <Template>Missing value in header 'NHSD-User-Identity'</Template>
+        </AssignVariable>
+    </FaultResponse>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</RaiseFault>

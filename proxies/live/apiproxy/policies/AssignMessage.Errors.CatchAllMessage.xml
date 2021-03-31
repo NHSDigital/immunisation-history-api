@@ -1,25 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <AssignMessage async="false" continueOnError="false" enabled="true" name="AssignMessage.Errors.CatchAllMessage">
-  <Set>
-    <Payload contentType="application/json" variablePrefix="%" variableSuffix="#">{
-  "resourceType": "OperationOutcome",
-  "issue": [
-    {
-      "severity": "error",
-      "code": "%error.status.code#",
-      "details": {
-        "coding": [
+    <Set>
+        <Payload contentType="application/json">
           {
-            "code": "%error.status.code#",
-            "display": "%error.reason.phrase#"
+            "resourceType": "OperationOutcome",
+            "issue": [
+              {
+                "severity": "error",
+                "code": "{ih.error.code}",
+                "diagnostics": "{ih.error.diagnostics}"
+              }
+            ]
           }
-        ]
-      },
-      "diagnostics": "%error.content#"
-    }
-  ]
-}</Payload>
-    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
-    <AssignTo createNew="false" transport="https" type="request"/>
-  </Set>
+        </Payload>
+        <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+        <AssignTo createNew="false" transport="https" type="request"/>
+    </Set>
 </AssignMessage>

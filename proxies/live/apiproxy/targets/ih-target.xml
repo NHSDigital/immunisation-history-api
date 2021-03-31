@@ -15,9 +15,9 @@
       <Step>
         <Name>OauthV2.VerifyAccessToken</Name>
       </Step>
-      <!-- Check JWT Header Exists-->
+      <!-- Check NHS User Identity JWT Header Exists-->
       <Step>
-        <Name>RaiseFault.400BadRequest</Name>
+        <Name>RaiseFault.MissingNHSDUserIdentityheader</Name>
         <Condition>request.header.NHSD-User-Identity = null</Condition>
       </Step>
       <Step>
