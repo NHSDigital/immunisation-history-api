@@ -22,7 +22,7 @@
       </Step>
       <Step>
          <Name>RaiseFault.MissingOrInvalidIssClaim</Name>
-         <Condition>(jwt.DecodeJWT.FromNHSDUserIdentityHeader.decoded.claim.iss Is null) or (jwt.DecodeJWT.FromNHSDUserIdentityHeader.decoded.claim.iss NotEquals "https://auth.sandpit.signin.nhs.uk")</Condition>
+         <Condition>(jwt.DecodeJWT.FromNHSDUserIdentityHeader.decoded.claim.iss Is null) or (jwt.DecodeJWT.FromNHSDUserIdentityHeader.decoded.claim.iss NotEquals apigee.issuer)</Condition>
       </Step>
       <Step>
          <Name>RaiseFault.MissingOrInvalidTypHeader</Name>

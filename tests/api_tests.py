@@ -1,6 +1,6 @@
 from typing import List
 from uuid import uuid4
-
+from time import time
 import pytest
 from tests import conftest
 from aiohttp import ClientResponse
@@ -170,6 +170,19 @@ async def test_immunization_happy_path(test_app, api_client: APISessionClient, a
             },
             "claims": {
                 "identity_proofing_level": "invalid"
+            }
+        },
+        # condition 4: jwt expired
+        {
+            "expected_status_code": 401,
+            "expected_response": {
+                "severity": "error",
+                "error_code": "value",
+                "error_diagnostics": "Missing or invalid 'identity_proofing_level' claim in ID Token",
+            },
+            "claims": {
+                "exp": int(time()) - 10,  # Set JWT as already expired
+                "iat": int(time()) - 10
             }
         },
     ],
