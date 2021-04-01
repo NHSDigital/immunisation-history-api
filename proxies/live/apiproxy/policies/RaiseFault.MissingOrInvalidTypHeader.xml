@@ -1,18 +1,21 @@
 <RaiseFault async="false" continueOnError="false" enabled="true" name="RaiseFault.MissingOrInvalidTypHeader">
   <FaultResponse>
         <Set>
-            <Payload contentType="text/plain"/>
+            <Payload contentType="application/json">
+            {
+                "resourceType": "OperationOutcome",
+                "issue": [
+                {
+                    "severity": "error",
+                    "code": "value",
+                    "diagnostics": "Missing or invalid 'typ' header in ID Token - must be 'JWT'"
+                }
+                ]
+            }
+            </Payload>
             <StatusCode>400</StatusCode>
             <ReasonPhrase>Bad Request</ReasonPhrase>
         </Set>
-        <AssignVariable>
-            <Name>ih.error.code</Name>
-            <Value>value</Value>
-        </AssignVariable>
-        <AssignVariable>
-            <Name>ih.error.diagnostics</Name>
-            <Template>Missing or invalid 'typ' header in ID Token - must be 'JWT'</Template>
-        </AssignVariable>
     </FaultResponse>
   <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
 </RaiseFault>

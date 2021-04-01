@@ -4,9 +4,6 @@
             <Step>
                 <Name>KeyValueMapOperations.GetVariables</Name>
             </Step>
-            <Step>
-                <Name>AssignMessage.Errors.Default</Name>
-            </Step>
         </Request>
     </PreFlow>
     <Flows>
