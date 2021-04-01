@@ -6,6 +6,12 @@
       </Step>
       <Condition>oauthV2.OauthV2.VerifyAccessToken.failed</Condition>
     </FaultRule>
+    <FaultRule name="expired_jwt">
+      <Condition>(JWT.failed Equals true) And (fault.name Equals "TokenExpired")</Condition>
+      <Step>
+        <Name>AssignMessage.ExpiredJWTError</Name>
+      </Step>
+    </FaultRule>
   </FaultRules>
   <PreFlow>
     <Request>
