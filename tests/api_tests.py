@@ -138,7 +138,7 @@ async def test_immunization_happy_path(test_app, api_client: APISessionClient, a
     [
         # condition 1: invalid iss claim
         {
-            "expected_status_code": 400,
+            "expected_status_code": 401,
             "expected_response": {
                 "severity": "error",
                 "error_code": "value",
@@ -150,7 +150,7 @@ async def test_immunization_happy_path(test_app, api_client: APISessionClient, a
         },
         # condition 2: invalid typ header
         {
-            "expected_status_code": 400,
+            "expected_status_code": 401,
             "expected_response": {
                 "severity": "error",
                 "error_code": "value",
@@ -162,7 +162,7 @@ async def test_immunization_happy_path(test_app, api_client: APISessionClient, a
         },
         # condition 3: invalid identity_proofing_level claim
         {
-            "expected_status_code": 400,
+            "expected_status_code": 401,
             "expected_response": {
                 "severity": "error",
                 "error_code": "value",
@@ -185,6 +185,16 @@ async def test_immunization_happy_path(test_app, api_client: APISessionClient, a
                 "iat": int(time()) - 10
             }
         },
+        # condition 5: invalid id token
+        {
+            "expected_status_code": 401,
+            "expected_response": {
+                "severity": "error",
+                "error_code": "value",
+                "error_diagnostics": "Malformed JWT in 'NHSD-User-Identity' header",
+            },
+            "id_token": "invalid"
+        },
     ],
 )
 async def test_immunisation_id_token_error_scenarios(test_app,
@@ -196,7 +206,10 @@ async def test_immunisation_id_token_error_scenarios(test_app,
         id_token_headers=request_data.get("headers")
     )
 
-    authorised_headers["NHSD-User-Identity"] = id_token
+    if request_data.get("id_token") is not None:
+        authorised_headers["NHSD-User-Identity"] = request_data.get("id_token")
+    else:
+        authorised_headers["NHSD-User-Identity"] = id_token
 
     async with api_client.get(
         _valid_uri("9912003888", "90640007"),
