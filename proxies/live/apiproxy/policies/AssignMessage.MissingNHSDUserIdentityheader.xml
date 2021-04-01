@@ -1,4 +1,4 @@
-<AssignMessage async="false" continueOnError="false" enabled="true" name="AssignMessage.MissingOrInvalidTypHeader">
+<AssignMessage async="false" continueOnError="false" enabled="true" name="AssignMessage.MissingNHSDUserIdentityheader">
   <Set>
     <Payload contentType="application/json">
       {
