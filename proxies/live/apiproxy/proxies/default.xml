@@ -1,11 +1,13 @@
 <ProxyEndpoint name="default">
     <PreFlow>
-        <Step>
-            <Name>KeyValueMapOperations.GetVariables</Name>
-        </Step>
-        <Step>
-            <Name>AssignMessage.Errors.Default</Name>
-        </Step>
+        <Request>
+            <Step>
+                <Name>KeyValueMapOperations.GetVariables</Name>
+            </Step>
+            <Step>
+                <Name>AssignMessage.Errors.Default</Name>
+            </Step>
+        </Request>
     </PreFlow>
     <Flows>
         <Flow name="AddPayloadToPing">

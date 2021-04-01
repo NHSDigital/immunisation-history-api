@@ -3,6 +3,10 @@
     <Source>request.header.NHSD-User-Identity</Source>
     <Algorithm>RS512</Algorithm>
     <PublicKey>
-        <JWKS ref="calloutResponse"/>
+        <JWKS ref="jwks_callout_response.content"/>
     </PublicKey>
+    <!--<Issuer ref="servicecallout.ServiceCallout.NHSLoginGetJWKS.target.url"/>-->
+    <AdditionalClaims>
+        <Claim name="identity_proofing_level">P9</Claim>
+    </AdditionalClaims>
 </VerifyJWT>
