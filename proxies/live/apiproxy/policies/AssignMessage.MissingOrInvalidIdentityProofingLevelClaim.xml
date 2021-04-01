@@ -7,7 +7,7 @@
           {
               "severity": "error",
               "code": "value",
-              "diagnostics": "Missing value in header 'NHSD-User-Identity'"
+              "diagnostics": "Missing or invalid 'identity_proofing_level' claim in ID Token"
           }
           ]
       }

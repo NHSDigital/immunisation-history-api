@@ -233,7 +233,7 @@ async def test_immunization_no_jwt_header_provided(api_client: APISessionClient,
         headers=authorised_headers,
         allow_retries=True
     ) as resp:
-        assert resp.status == 400
+        assert resp.status == 401
         body = await resp.json()
         assert body["resourceType"] == "OperationOutcome"
         assert body["issue"][0]["severity"] == "error"

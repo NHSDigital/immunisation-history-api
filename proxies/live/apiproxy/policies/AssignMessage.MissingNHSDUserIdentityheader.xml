@@ -7,7 +7,7 @@
           {
               "severity": "error",
               "code": "value",
-              "diagnostics": "Missing or invalid 'typ' header in ID Token - must be 'JWT'"
+              "diagnostics": "Missing value in header 'NHSD-User-Identity'"
           }
           ]
       }

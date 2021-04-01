@@ -7,7 +7,7 @@
       <Condition>oauthV2.OauthV2.VerifyAccessToken.failed</Condition>
     </FaultRule>
     <FaultRule name="expired_jwt">
-      <Condition>(JWT.failed Equals true) And (fault.name Equals "TokenExpired")</Condition>
+      <Condition>(JWT.failed Equals true) And (error.message Equals "Invalid token: policy(VerifyJWT.FromExternalIdToken)")</Condition>
       <Step>
         <Name>AssignMessage.ExpiredJWTError</Name>
       </Step>
