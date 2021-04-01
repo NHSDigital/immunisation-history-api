@@ -12,6 +12,13 @@
         <Name>AssignMessage.ExpiredJWTError</Name>
       </Step>
     </FaultRule>
+    <FaultRule name="failed_decoding_jwt">
+      <Condition>(JWT.failed Equals true) And (fault.name Equals "FailedToDecode")</Condition>
+      <Step>
+        <!-- DecodeJWT will throw this error where the JWT's *header* is invalid -->
+        <Name>AssignMessage.FailedToDecodeJWTError</Name>
+      </Step>
+    </FaultRule>
   </FaultRules>
   <PreFlow>
     <Request>

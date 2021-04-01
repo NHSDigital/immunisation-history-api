@@ -178,7 +178,7 @@ async def test_immunization_happy_path(test_app, api_client: APISessionClient, a
             "expected_response": {
                 "severity": "error",
                 "error_code": "value",
-                "error_diagnostics": "Missing or invalid 'identity_proofing_level' claim in ID Token",
+                "error_diagnostics": "Invalid exp claim in JWT - JWT has expired",
             },
             "claims": {
                 "exp": int(time()) - 10,  # Set JWT as already expired
@@ -286,4 +286,8 @@ async def test_user_restricted_access_not_permitted(api_client: APISessionClient
         allow_retries=True
     ) as resp:
         assert resp.status == 401
-        # TODO: Check response
+        body = await resp.json()
+        assert body["resourceType"] == "OperationOutcome"
+        assert body["issue"][0]["severity"] == "error"
+        assert body["issue"][0]["diagnostics"] == "Provided access token is invalid"
+        assert body["issue"][0]["code"] == "forbidden"
