@@ -109,7 +109,7 @@ def nhs_login_id_token(test_app: ApigeeApiDeveloperApps, id_token_claims: dict =
         'id_status': 'verified',
         'token_use': 'id',
         'auth_time': 1616600683,
-        'iss': 'https://auth.sandpit.signin.nhs.uk',
+        'iss': 'https://internal-dev.api.service.nhs.uk',  # Points to internal dev -> testing JWKS
         'vot': 'P9.Cp.Cd',
         'exp': int(time()) + 600,
         'iat': int(time()) - 10,
@@ -125,7 +125,7 @@ def nhs_login_id_token(test_app: ApigeeApiDeveloperApps, id_token_claims: dict =
         "sub": "49f470a1-cc52-49b7-beba-0f9cec937c46",
         "aud": "APIM-1",
         "kid": "nhs-login",
-        "iss": "https://auth.sandpit.signin.nhs.uk",
+        "iss": "https://internal-dev.api.service.nhs.uk",  # Points to internal dev -> testing JWKS
         "typ": "JWT",
         "exp": 1616604574,
         "iat": 1616600974,

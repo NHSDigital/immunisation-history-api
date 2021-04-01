@@ -64,9 +64,4 @@
     <RouteRule name="immunisation-history-target">
         <TargetEndpoint>immunisation-history-target</TargetEndpoint>
     </RouteRule>
-    <DefaultFaultRule>
-        <Step>
-            <Name>AssignMessage.Errors.CatchAllMessage</Name>
-        </Step>
-    </DefaultFaultRule>
 </ProxyEndpoint>
