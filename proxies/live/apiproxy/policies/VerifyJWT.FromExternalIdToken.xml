@@ -5,7 +5,7 @@
     <PublicKey>
         <JWKS ref="jwks_callout_response.content"/>
     </PublicKey>
-    <!--<Issuer ref="servicecallout.ServiceCallout.NHSLoginGetJWKS.target.url"/>-->
+    <Issuer ref="apigee.issuer"/>
     <AdditionalClaims>
         <Claim name="identity_proofing_level">P9</Claim>
     </AdditionalClaims>
