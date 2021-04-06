@@ -49,7 +49,6 @@
       <Step>
         <Name>SpikeArrest</Name>
       </Step>
-
     </Request>
   </PreFlow>
   <HTTPTargetConnection>
