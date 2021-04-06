@@ -6,7 +6,7 @@
           "issue": [
           {
               "severity": "error",
-              "code": "value",
+              "code": "processing",
               "diagnostics": "Missing or invalid 'iss' claim in ID Token"
           }
           ]

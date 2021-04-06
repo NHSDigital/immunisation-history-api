@@ -6,7 +6,7 @@
           "issue": [
           {
               "severity": "error",
-              "code": "value",
+              "code": "processing",
               "diagnostics": "Missing value in header 'NHSD-User-Identity'"
           }
           ]

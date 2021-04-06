@@ -6,7 +6,7 @@
           "issue": [
           {
               "severity": "error",
-              "code": "value",
+              "code": "processing",
               "diagnostics": "Invalid exp claim in JWT - JWT has expired"
           }
           ]

@@ -6,7 +6,7 @@
           "issue": [
           {
               "severity": "error",
-              "code": "value",
+              "code": "processing",
               "diagnostics": "Malformed JWT in 'NHSD-User-Identity' header"
           }
           ]

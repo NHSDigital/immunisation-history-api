@@ -6,7 +6,7 @@
           "issue": [
           {
               "severity": "error",
-              "code": "value",
+              "code": "processing",
               "diagnostics": "Missing or invalid 'typ' header in ID Token - must be 'JWT'"
           }
           ]
