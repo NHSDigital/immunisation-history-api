@@ -38,14 +38,18 @@
 <!--        <Name>AssignMessage.RenameQuotaVarsFromVerifyAPIKeyPolicyClientId</Name>-->
 <!--      </Step>-->
       <Step>
+        <Name>Javascript.AddClientRPDetailsHeader</Name>
+      </Step>
+      <Step>
+        <Name>AssignMessage.AddUserIdHeader</Name>
+      </Step>
+      <Step>
         <Name>Quota</Name>
       </Step>
       <Step>
         <Name>SpikeArrest</Name>
       </Step>
-      <Step>
-        <Name>Javascript.AddClientRPDetailsHeader</Name>
-      </Step>
+
     </Request>
   </PreFlow>
   <HTTPTargetConnection>
