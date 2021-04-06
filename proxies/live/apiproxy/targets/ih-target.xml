@@ -79,6 +79,9 @@
       <Step>
         <Name>SpikeArrest</Name>
       </Step>
+      <Step>
+        <Name>Javascript.AddClientRPDetailsHeader</name>
+      </Step>
     </Request>
   </PreFlow>
   <HTTPTargetConnection>
