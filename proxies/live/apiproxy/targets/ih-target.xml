@@ -80,9 +80,6 @@
         <Name>AssignMessage.AddUserIdHeader</Name>
       </Step>
       <Step>
-        <Name>Javascript.AddClientRPDetailsHeader</Name>
-      </Step>
-      <Step>
         <Name>Quota</Name>
       </Step>
       <Step>
