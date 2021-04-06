@@ -143,7 +143,7 @@ async def test_bad_nhs_number(api_client: APISessionClient, authorised_headers):
         body = await resp.json()
         assert body["resourceType"] == "OperationOutcome", body
         issue = next((i for i in body.get('issue', []) if i.get('severity') == 'error'), None)
-        assert issue.get("diagnostics") == "Missing or invalid NHS number", body
+        assert issue.get("diagnostics") == "Missing required request parameters: [patient.identifier]", body
 
 
 @pytest.mark.e2e
