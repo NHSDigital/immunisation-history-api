@@ -1,7 +1,6 @@
 from typing import List
 from uuid import uuid4
-from time import time
-import asyncio
+from time import time, sleep
 import pytest
 from tests import conftest
 from aiohttp import ClientResponse
@@ -201,7 +200,7 @@ async def test_immunization_happy_path(test_app, api_client: APISessionClient, a
 async def test_immunisation_id_token_error_scenarios(test_app,
                                                      api_client: APISessionClient,
                                                      authorised_headers, request_data: dict):
-    await asyncio.sleep(1)  # Add delay to tests to avoid 429 on service callout
+    sleep(1)  # Add delay to tests to avoid 429 on service callout
     id_token = conftest.nhs_login_id_token(
         test_app=test_app,
         id_token_claims=request_data.get("claims"),
