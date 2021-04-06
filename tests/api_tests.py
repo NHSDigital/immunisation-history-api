@@ -141,7 +141,7 @@ async def test_immunization_happy_path(test_app, api_client: APISessionClient, a
             "expected_status_code": 401,
             "expected_response": {
                 "severity": "error",
-                "error_code": "value",
+                "error_code": "processing",
                 "error_diagnostics": "Missing or invalid 'iss' claim in ID Token",
             },
             "claims": {
@@ -153,7 +153,7 @@ async def test_immunization_happy_path(test_app, api_client: APISessionClient, a
             "expected_status_code": 401,
             "expected_response": {
                 "severity": "error",
-                "error_code": "value",
+                "error_code": "processing",
                 "error_diagnostics": "Missing or invalid 'typ' header in ID Token - must be 'JWT'",
             },
             "headers": {
@@ -165,7 +165,7 @@ async def test_immunization_happy_path(test_app, api_client: APISessionClient, a
             "expected_status_code": 401,
             "expected_response": {
                 "severity": "error",
-                "error_code": "value",
+                "error_code": "processing",
                 "error_diagnostics": "Missing or invalid 'identity_proofing_level' claim in ID Token",
             },
             "claims": {
@@ -177,7 +177,7 @@ async def test_immunization_happy_path(test_app, api_client: APISessionClient, a
             "expected_status_code": 401,
             "expected_response": {
                 "severity": "error",
-                "error_code": "value",
+                "error_code": "processing",
                 "error_diagnostics": "Invalid exp claim in JWT - JWT has expired",
             },
             "claims": {
@@ -190,7 +190,7 @@ async def test_immunization_happy_path(test_app, api_client: APISessionClient, a
             "expected_status_code": 401,
             "expected_response": {
                 "severity": "error",
-                "error_code": "value",
+                "error_code": "processing",
                 "error_diagnostics": "Malformed JWT in 'NHSD-User-Identity' header",
             },
             "id_token": "invalid"
@@ -238,7 +238,7 @@ async def test_immunization_no_jwt_header_provided(api_client: APISessionClient,
         assert body["resourceType"] == "OperationOutcome"
         assert body["issue"][0]["severity"] == "error"
         assert body["issue"][0]["diagnostics"] == "Missing value in header 'NHSD-User-Identity'"
-        assert body["issue"][0]["code"] == "value"
+        assert body["issue"][0]["code"] == "processing"
 
 
 @pytest.mark.e2e
