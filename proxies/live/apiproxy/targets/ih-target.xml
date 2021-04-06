@@ -48,6 +48,12 @@
         <Name>AssignMessage.FailedToDecodeJWTError</Name>
       </Step>
     </FaultRule>
+    <FaultRule name="serivce_callout_ratelimited">
+      <Condition>(jwks_callout_response.status.code Equals 429)</Condition>
+      <Step>
+        <Name>AssignMessage.ServiceCalloutRatelimited</Name>
+      </Step>
+    </FaultRule>
   </FaultRules>
   <PreFlow>
     <Request>
