@@ -229,6 +229,8 @@ async def test_immunisation_id_token_error_scenarios(test_app,
 @pytest.mark.asyncio
 async def test_immunization_no_jwt_header_provided(api_client: APISessionClient, authorised_headers):
 
+    sleep(1)  # Add delay to tests to avoid 429 on service callout
+
     async with api_client.get(
         _valid_uri("9912003888", "90640007"),
         headers=authorised_headers,
@@ -245,6 +247,8 @@ async def test_immunization_no_jwt_header_provided(api_client: APISessionClient,
 @pytest.mark.e2e
 @pytest.mark.asyncio
 async def test_bad_nhs_number(test_app, api_client: APISessionClient, authorised_headers):
+
+    sleep(1)  # Add delay to tests to avoid 429 on service callout
 
     authorised_headers["NHSD-User-Identity"] = conftest.nhs_login_id_token(test_app)
 
@@ -282,6 +286,8 @@ async def test_correlation_id_mirrored_in_resp_when_error(
 @pytest.mark.e2e
 @pytest.mark.asyncio
 async def test_user_restricted_access_not_permitted(api_client: APISessionClient, test_product_and_app):
+    sleep(1)  # Add delay to tests to avoid 429 on service callout
+
     test_product, test_app = test_product_and_app
 
     await test_product.update_scopes(["urn:nhsd:apim:user-nhs-id:aal3:immunisation-history"])
