@@ -1,0 +1,18 @@
+<AssignMessage async="false" continueOnError="false" enabled="true" name="AssignMessage.MissingOrInvalidIdentityProofingLevelClaim">
+  <Set>
+    <Payload contentType="application/json">
+      {
+          "resourceType": "OperationOutcome",
+          "issue": [
+          {
+              "severity": "error",
+              "code": "processing",
+              "diagnostics": "Missing or invalid 'identity_proofing_level' claim in ID Token"
+          }
+          ]
+      }
+    </Payload>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <AssignTo createNew="false" transport="http" type="response" />
+</AssignMessage>

@@ -1,7 +1,8 @@
 from typing import List
 from uuid import uuid4
-
+from time import time, sleep
 import pytest
+from tests import conftest
 from aiohttp import ClientResponse
 from api_test_utils import env
 from api_test_utils import poll_until
@@ -110,10 +111,11 @@ async def test_check_immunization_is_secured(api_client: APISessionClient):
 
 @pytest.mark.e2e
 @pytest.mark.asyncio
-async def test_immunization_happy_path(api_client: APISessionClient, authorised_headers):
+async def test_immunization_happy_path(test_app, api_client: APISessionClient, authorised_headers):
 
     correlation_id = str(uuid4())
     authorised_headers["X-Correlation-ID"] = correlation_id
+    authorised_headers["NHSD-User-Identity"] = conftest.nhs_login_id_token(test_app)
 
     async with api_client.get(
         _valid_uri("9912003888", "90640007"),
@@ -131,7 +133,120 @@ async def test_immunization_happy_path(api_client: APISessionClient, authorised_
 
 @pytest.mark.e2e
 @pytest.mark.asyncio
-async def test_bad_nhs_number(api_client: APISessionClient, authorised_headers):
+@pytest.mark.parametrize(
+    "request_data",
+    [
+        # condition 1: invalid iss claim
+        {
+            "expected_status_code": 401,
+            "expected_response": {
+                "severity": "error",
+                "error_code": "processing",
+                "error_diagnostics": "Missing or invalid 'iss' claim in ID Token",
+            },
+            "claims": {
+                "iss": "invalid"
+            }
+        },
+        # condition 2: invalid typ header
+        {
+            "expected_status_code": 401,
+            "expected_response": {
+                "severity": "error",
+                "error_code": "processing",
+                "error_diagnostics": "Missing or invalid 'typ' header in ID Token - must be 'JWT'",
+            },
+            "headers": {
+                "typ": "invalid"
+            }
+        },
+        # condition 3: invalid identity_proofing_level claim
+        {
+            "expected_status_code": 401,
+            "expected_response": {
+                "severity": "error",
+                "error_code": "processing",
+                "error_diagnostics": "Missing or invalid 'identity_proofing_level' claim in ID Token",
+            },
+            "claims": {
+                "identity_proofing_level": "invalid"
+            }
+        },
+        # condition 4: jwt expired
+        {
+            "expected_status_code": 401,
+            "expected_response": {
+                "severity": "error",
+                "error_code": "processing",
+                "error_diagnostics": "Invalid exp claim in JWT - JWT has expired",
+            },
+            "claims": {
+                "exp": int(time()) - 10,  # Set JWT as already expired
+                "iat": int(time()) - 10
+            }
+        },
+        # condition 5: invalid id token
+        {
+            "expected_status_code": 401,
+            "expected_response": {
+                "severity": "error",
+                "error_code": "processing",
+                "error_diagnostics": "Malformed JWT in 'NHSD-User-Identity' header",
+            },
+            "id_token": "invalid"
+        },
+    ],
+)
+async def test_immunisation_id_token_error_scenarios(test_app,
+                                                     api_client: APISessionClient,
+                                                     authorised_headers, request_data: dict):
+    sleep(1)  # Add delay to tests to avoid 429 on service callout
+    id_token = conftest.nhs_login_id_token(
+        test_app=test_app,
+        id_token_claims=request_data.get("claims"),
+        id_token_headers=request_data.get("headers")
+    )
+
+    if request_data.get("id_token") is not None:
+        authorised_headers["NHSD-User-Identity"] = request_data.get("id_token")
+    else:
+        authorised_headers["NHSD-User-Identity"] = id_token
+
+    async with api_client.get(
+        _valid_uri("9912003888", "90640007"),
+        headers=authorised_headers,
+        allow_retries=True
+    ) as resp:
+        assert resp.status == request_data["expected_status_code"]
+        body = await resp.json()
+        assert body["resourceType"] == "OperationOutcome"
+        assert body["issue"][0]["severity"] == request_data["expected_response"]["severity"]
+        assert body["issue"][0]["diagnostics"] == request_data["expected_response"]["error_diagnostics"]
+        assert body["issue"][0]["code"] == request_data["expected_response"]["error_code"]
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
+async def test_immunization_no_jwt_header_provided(api_client: APISessionClient, authorised_headers):
+
+    async with api_client.get(
+        _valid_uri("9912003888", "90640007"),
+        headers=authorised_headers,
+        allow_retries=True
+    ) as resp:
+        assert resp.status == 401
+        body = await resp.json()
+        assert body["resourceType"] == "OperationOutcome"
+        assert body["issue"][0]["severity"] == "error"
+        assert body["issue"][0]["diagnostics"] == "Missing value in header 'NHSD-User-Identity'"
+        assert body["issue"][0]["code"] == "processing"
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
+async def test_bad_nhs_number(test_app, api_client: APISessionClient, authorised_headers):
+
+    authorised_headers["NHSD-User-Identity"] = conftest.nhs_login_id_token(test_app)
 
     async with api_client.get(
         _valid_uri("90000000009", "90640007"),
@@ -139,7 +254,6 @@ async def test_bad_nhs_number(api_client: APISessionClient, authorised_headers):
         allow_retries=True
     ) as resp:
         assert resp.status == 400
-
         body = await resp.json()
         assert body["resourceType"] == "OperationOutcome", body
         issue = next((i for i in body.get('issue', []) if i.get('severity') == 'error'), None)
@@ -163,3 +277,31 @@ async def test_correlation_id_mirrored_in_resp_when_error(
         assert resp.status == 401
         assert "x-correlation-id" in resp.headers, resp.headers
         assert resp.headers["x-correlation-id"] == correlation_id, resp.headers
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
+async def test_user_restricted_access_not_permitted(api_client: APISessionClient, test_product_and_app):
+    test_product, test_app = test_product_and_app
+
+    await test_product.update_scopes(["urn:nhsd:apim:user-nhs-id:aal3:immunisation-history"])
+    await test_app.add_api_product([test_product.name])
+
+    token_response = await conftest.get_token(test_app)
+
+    authorised_headers = {
+        "Authorization": f"Bearer {token_response['access_token']}",
+        "NHSD-User-Identity": conftest.nhs_login_id_token(test_app)
+    }
+
+    async with api_client.get(
+        _valid_uri("9912003888", "90640007"),
+        headers=authorised_headers,
+        allow_retries=True
+    ) as resp:
+        assert resp.status == 401
+        body = await resp.json()
+        assert body["resourceType"] == "OperationOutcome"
+        assert body["issue"][0]["severity"] == "error"
+        assert body["issue"][0]["diagnostics"] == "Provided access token is invalid"
+        assert body["issue"][0]["code"] == "forbidden"

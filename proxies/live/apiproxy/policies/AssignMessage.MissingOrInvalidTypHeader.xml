@@ -1,0 +1,18 @@
+<AssignMessage async="false" continueOnError="false" enabled="true" name="AssignMessage.MissingOrInvalidTypHeader">
+  <Set>
+    <Payload contentType="application/json">
+      {
+          "resourceType": "OperationOutcome",
+          "issue": [
+          {
+              "severity": "error",
+              "code": "processing",
+              "diagnostics": "Missing or invalid 'typ' header in ID Token - must be 'JWT'"
+          }
+          ]
+      }
+    </Payload>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <AssignTo createNew="false" transport="http" type="response" />
+</AssignMessage>

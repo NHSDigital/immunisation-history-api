@@ -1,0 +1,18 @@
+<AssignMessage async="false" continueOnError="false" enabled="true" name="AssignMessage.FailedToDecodeJWTError">
+  <Set>
+    <Payload contentType="application/json">
+      {
+          "resourceType": "OperationOutcome",
+          "issue": [
+          {
+              "severity": "error",
+              "code": "processing",
+              "diagnostics": "Malformed JWT in 'NHSD-User-Identity' header"
+          }
+          ]
+      }
+    </Payload>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <AssignTo createNew="false" transport="http" type="response" />
+</AssignMessage>

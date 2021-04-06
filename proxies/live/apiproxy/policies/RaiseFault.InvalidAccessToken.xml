@@ -1,0 +1,21 @@
+<RaiseFault async="false" continueOnError="false" enabled="true" name="RaiseFault.InvalidAccessToken">
+    <FaultResponse>
+        <Set>
+            <Payload contentType="application/json">
+            {
+                "resourceType": "OperationOutcome",
+                "issue": [
+                {
+                    "severity": "error",
+                    "code": "forbidden",
+                    "diagnostics": "Provided access token is invalid"
+                }
+                ]
+            }
+            </Payload>
+            <StatusCode>401</StatusCode>
+            <ReasonPhrase>Access Denied</ReasonPhrase>
+        </Set>
+    </FaultResponse>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</RaiseFault>

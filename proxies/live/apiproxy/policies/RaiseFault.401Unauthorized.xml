@@ -9,6 +9,14 @@
             <StatusCode>401</StatusCode>
             <ReasonPhrase>Access Denied</ReasonPhrase>
         </Set>
+        <AssignVariable>
+            <Name>ih.error.code</Name>
+            <Value>forbidden</Value>
+        </AssignVariable>
+        <AssignVariable>
+            <Name>ih.error.diagnostics</Name>
+            <Value>Invalid Api Key</Value>
+        </AssignVariable>
     </FaultResponse>
     <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
 </RaiseFault>

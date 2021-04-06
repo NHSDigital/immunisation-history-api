@@ -1,0 +1,18 @@
+<KeyValueMapOperations
+    async="false"
+    continueOnError="false"
+    enabled="true"
+    name="KeyValueMapOperations.GetVariables"
+    mapIdentifier="ih-variables"
+  >
+  <Get assignTo="private.apigee.jwks_path" index="1">
+    <Key>
+        <Parameter>jwks_path</Parameter>
+    </Key>
+  </Get>
+  <Get assignTo="apigee.issuer" index="1">
+    <Key>
+        <Parameter>issuer</Parameter>
+    </Key>
+  </Get>
+</KeyValueMapOperations>

@@ -1,0 +1,18 @@
+<AssignMessage async="false" continueOnError="false" enabled="true" name="AssignMessage.ExpiredJWTError">
+  <Set>
+    <Payload contentType="application/json">
+        {
+          "resourceType": "OperationOutcome",
+          "issue": [
+          {
+              "severity": "error",
+              "code": "processing",
+              "diagnostics": "Invalid exp claim in JWT - JWT has expired"
+          }
+          ]
+        }
+    </Payload>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <AssignTo createNew="false" transport="http" type="response" />
+</AssignMessage>
