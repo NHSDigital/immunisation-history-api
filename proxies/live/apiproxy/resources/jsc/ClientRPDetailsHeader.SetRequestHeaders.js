@@ -1,6 +1,6 @@
 var developerAppName = context.getVariable('developer.app.name');
-var developerAppId = context.getVariable('developer.app.id')
-var clientIP = context.getVariable('client.ip')
+var developerAppId = context.getVariable('developer.app.id');
+var clientIP = context.getVariable('client.ip');
 
 var clientRpDetailsHeader = {
     "developer.app.name": developerAppName,
