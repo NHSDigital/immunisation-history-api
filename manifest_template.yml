@@ -12,12 +12,12 @@ APIGEE_ENVIRONMENTS:
     display_name: Internal QA Sandbox
   - name: ref
     display_name: Reference
-    ratelimit: '60000pm'
-    quota: '60000'
+    ratelimit: '210000pm'
+    quota: '210000'
   - name: prod
     display_name: Production
-    ratelimit: '60000pm'
-    quota: '60000'
+    ratelimit: '210000pm'
+    quota: '210000'
   - name: sandbox
     display_name: Sandbox
   - name: int
