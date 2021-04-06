@@ -7,7 +7,7 @@
       <Condition>oauthV2.OauthV2.VerifyAccessToken.failed</Condition>
     </FaultRule>
     <FaultRule name="expired_jwt">
-      <Condition>(JWT.failed Equals true) And (error.message Equals "Invalid token: policy(VerifyJWT.FromExternalIdToken)")</Condition>
+      <Condition>(JWT.failed Equals true) And (error.message Equals "The Token has expired: policy(VerifyJWT.FromExternalIdToken)")</Condition>
       <Step>
         <Name>AssignMessage.ExpiredJWTError</Name>
       </Step>
@@ -15,7 +15,6 @@
     <FaultRule name="failed_decoding_jwt">
       <Condition>(JWT.failed Equals true) And (fault.name Equals "FailedToDecode")</Condition>
       <Step>
-        <!-- DecodeJWT will throw this error where the JWT's *header* is invalid -->
         <Name>AssignMessage.FailedToDecodeJWTError</Name>
       </Step>
     </FaultRule>
@@ -46,7 +45,7 @@
     <FaultRule name="id_token_invalid">
       <Condition>(JWT.failed Equals true) AND (error.message Equals "Invalid token: policy(VerifyJWT.FromExternalIdToken)")</Condition>
       <Step>
-        <Name>AssignMessage.InvalidIDToken</Name>
+        <Name>AssignMessage.FailedToDecodeJWTError</Name>
       </Step>
     </FaultRule>
   </FaultRules>
