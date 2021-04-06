@@ -126,7 +126,6 @@ async def test_immunization_happy_path(test_app, api_client: APISessionClient, a
         body = await resp.json()
         assert "x-correlation-id" in resp.headers, resp.headers
         assert resp.headers["x-correlation-id"] == correlation_id
-        assert resp.headers["NHSD-Client-RP-Details"]
         assert body["resourceType"] == "Bundle", body
         # no data for this nhs number ...
         assert len(body["entry"]) == 0, body
