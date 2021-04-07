@@ -79,7 +79,7 @@ async function immunization(req, res, next) {
         }
     });
     if (patientIdentifier == null || patientIdentifier == "") {
-        res.json(errResponse);
+        res.status(400).json(errResponse);
     } else if (patientIdentifier == "9912003888") {
         res.json(getResponse);
     } else {
