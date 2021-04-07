@@ -16,7 +16,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "{{base_url}}/FHIR/R4/Immunization?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|9912003888&code:below=90640007",
+					"raw": "{{base_url}}/FHIR/R4/Immunization?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|9912003888&procedure-code:below=90640007",
 					"host": [
 						"{{base_url}}"
 					],
@@ -31,7 +31,7 @@
 							"value": "https://fhir.nhs.uk/Id/nhs-number|9912003888"
 						},
 						{
-							"key": "code:below",
+							"key": "procedure-code:below",
 							"value": "90640007"
 						}
 					]
@@ -49,7 +49,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "{{base_url}}/FHIR/R4/Immunization?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|9000000009&code:below=90640007",
+					"raw": "{{base_url}}/FHIR/R4/Immunization?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|9000000009&procedure-code:below=90640007",
 					"host": [
 						"{{base_url}}"
 					],
@@ -64,7 +64,7 @@
 							"value": "https://fhir.nhs.uk/Id/nhs-number|9000000009"
 						},
 						{
-							"key": "code:below",
+							"key": "procedure-code:below",
 							"value": "90640007"
 						}
 					]
@@ -82,7 +82,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "{{base_url}}/FHIR/R4/Immunization?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|&code:below=90640007",
+					"raw": "{{base_url}}/FHIR/R4/Immunization?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|&procedure-code:below=90640007",
 					"host": [
 						"{{base_url}}"
 					],
@@ -97,7 +97,7 @@
 							"value": "https://fhir.nhs.uk/Id/nhs-number|"
 						},
 						{
-							"key": "code:below",
+							"key": "procedure-code:below",
 							"value": "90640007"
 						}
 					]
@@ -130,7 +130,7 @@
 	],
 	"variable": [
 		{
-			"id": "c9638aec-01f0-46dd-a87b-1a340e0b7220",
+			"id": "1d3e13c4-f78b-4013-8938-f58f88bb4691",
 			"key": "base_url",
 			"value": "https://sandbox.api.service.nhs.uk/immunisation-history",
 			"type": "string"
