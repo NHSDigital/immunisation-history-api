@@ -22,6 +22,8 @@ APIGEE_ENVIRONMENTS:
     display_name: Sandbox
   - name: int
     display_name: Integration Testing
+    ratelimit: '210000pm'
+    quota: '210000'
 ---
 meta:
   api:
