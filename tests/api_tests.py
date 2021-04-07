@@ -207,6 +207,18 @@ async def test_immunization_happy_path(test_app, api_client: APISessionClient, a
                 "kid": "invalid"
             }
         },
+        # condition 6: catch all error message
+        {
+            "expected_status_code": 401,
+            "expected_response": {
+                "severity": "error",
+                "error_code": "processing",
+                "error_diagnostics": "Failed to verify JWT",
+            },
+            "headers": {
+                "alg": "invalid"
+            }
+        },
     ],
 )
 async def test_immunisation_id_token_error_scenarios(test_app,
