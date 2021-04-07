@@ -1,4 +1,4 @@
-<AssignMessage async="false" continueOnError="false" enabled="true" name="AssignMessage.NoMatchingPublicKey">
+<AssignMessage async="false" continueOnError="false" enabled="true" name="AssignMessage.CatachAllJWTError">
   <Set>
     <Payload contentType="application/json">
       {
@@ -7,7 +7,7 @@
           {
               "severity": "error",
               "code": "processing",
-              "diagnostics": "Could not find a matching Public Key"
+              "diagnostics": "Failed to verify JWT"
           }
           ]
       }
