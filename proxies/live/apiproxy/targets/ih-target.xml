@@ -48,6 +48,12 @@
         <Name>AssignMessage.FailedToDecodeJWTError</Name>
       </Step>
     </FaultRule>
+    <FaultRule name="no_matching_publickey">
+      <Condition>(JWT.failed Equals true) AND (error.message Equals "Could not find a matching Public Key: policy(VerifyJWT.FromExternalIdToken)")</Condition>
+      <Step>
+        <Name>AssignMessage.NoMatchingPublicKey</Name>
+      </Step>
+    </FaultRule>
   </FaultRules>
   <PreFlow>
     <Request>
