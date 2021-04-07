@@ -1,0 +1,139 @@
+{
+	"info": {
+		"_postman_id": "67d4bbb2-b452-43a7-86af-d1eca060664f",
+		"name": "Immunisation History Sandbox",
+		"description": "Sandbox example requests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "History Found",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{base_url}}/FHIR/R4/Immunization?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|9912003888&code:below=90640007",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"FHIR",
+						"R4",
+						"Immunization"
+					],
+					"query": [
+						{
+							"key": "patient.identifier",
+							"value": "https://fhir.nhs.uk/Id/nhs-number|9912003888"
+						},
+						{
+							"key": "code:below",
+							"value": "90640007"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "No History Found",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{base_url}}/FHIR/R4/Immunization?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|9000000009&code:below=90640007",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"FHIR",
+						"R4",
+						"Immunization"
+					],
+					"query": [
+						{
+							"key": "patient.identifier",
+							"value": "https://fhir.nhs.uk/Id/nhs-number|9000000009"
+						},
+						{
+							"key": "code:below",
+							"value": "90640007"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bad Request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{base_url}}/FHIR/R4/Immunization?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|&code:below=90640007",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"FHIR",
+						"R4",
+						"Immunization"
+					],
+					"query": [
+						{
+							"key": "patient.identifier",
+							"value": "https://fhir.nhs.uk/Id/nhs-number|"
+						},
+						{
+							"key": "code:below",
+							"value": "90640007"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "2ac4878d-e408-4477-b7c3-f55707460168",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "6e833f8b-dec9-4f1a-b482-e2580c8886b7",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "c9638aec-01f0-46dd-a87b-1a340e0b7220",
+			"key": "base_url",
+			"value": "https://sandbox.api.service.nhs.uk/immunisation-history",
+			"type": "string"
+		}
+	]
+}
