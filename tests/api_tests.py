@@ -207,7 +207,7 @@ async def test_immunization_happy_path(test_app, api_client: APISessionClient, a
                 "kid": "invalid"
             }
         },
-        # condition 6: catch all error message
+        # condition 7: catch all error message
         {
             "expected_status_code": 401,
             "expected_response": {
