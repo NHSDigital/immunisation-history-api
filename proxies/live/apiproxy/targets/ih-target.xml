@@ -82,6 +82,10 @@
         <Condition>jwks = null Or jwksUpdated = false</Condition>
       </Step>
       <Step>
+        <Name>AssignMessage.JWKS</Name>
+        <Condition>jwks = null Or jwksUpdated = false</Condition>
+      </Step>
+      <Step>
         <Name>VerifyJWT.FromExternalIdToken</Name>
       </Step>
       <Step>
