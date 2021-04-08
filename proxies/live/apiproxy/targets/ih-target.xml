@@ -67,6 +67,9 @@
         <Name>OauthV2.VerifyAccessToken</Name>
       </Step>
       <Step>
+        <Name>DecodeJWT.FromNHSDUserIdentityHeader</Name>
+      </Step>
+      <Step>
         <Name>LookupCache.JWKS</Name>
       </Step>
       <Step>

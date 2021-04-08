@@ -1,6 +1,6 @@
 jwksString = context.getVariable('jwks');
 jwksObj = JSON.parse(jwksString);
-kid = context.getVariable('jwt.DecodeJWT.FromExternalIdToken.decoded.header.kid');
+kid = context.getVariable('jwt.DecodeJWT.FromNHSDUserIdentityHeader.decoded.header.kid');
 
 jwksUpdated = false;
 
