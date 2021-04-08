@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Javascript async="false" continueOnError="false" enabled="true" timeLimit="200" name="JavaScript.ValidateClaimFromExternalIdToken">
+    <DisplayName>JavaScript.ValidateClaimFromExternalIdToken</DisplayName>
+    <Properties/>
+    <ResourceURL>jsc://validate-claim-external-id-token.js</ResourceURL>
+</Javascript>
