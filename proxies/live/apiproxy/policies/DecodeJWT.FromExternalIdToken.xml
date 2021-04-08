@@ -1,0 +1,4 @@
+<DecodeJWT async="false" continueOnError="false" enabled="true" name="DecodeJWT.FromExternalIdToken">
+  <DisplayName>Decode JWT</DisplayName>
+  <Source>request.header.NHSD-User-Identity</Source>
+</DecodeJWT>
