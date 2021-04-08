@@ -37,7 +37,7 @@
       </Step>
     </FaultRule>
     <FaultRule name="missing_nhsd_user_identity_header">
-      <Condition>(JWT.failed Equals true) AND (error.message Equals "Failed to Resolve Variable : policy(VerifyJWT.FromExternalIdToken) variable(request.header.NHSD-User-Identity)")</Condition>
+      <Condition>(JWT.failed Equals true) AND (error.message Equals "Failed to Resolve Variable : policy(DecodeJWT.FromNHSDUserIdentityHeader) variable(request.header.NHSD-User-Identity)")</Condition>
       <Step>
         <Name>AssignMessage.MissingNHSDUserIdentityheader</Name>
       </Step>
@@ -67,7 +67,7 @@
         <Name>OauthV2.VerifyAccessToken</Name>
       </Step>
       <Step>
-        <Name>DecodeJWT.FromNHSDUserIdentityHeader</Name>
+        <Name>DecodeJWT.FromExternalIdToken</Name>
       </Step>
       <Step>
         <Name>LookupCache.JWKS</Name>
