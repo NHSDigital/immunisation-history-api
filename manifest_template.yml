@@ -14,6 +14,8 @@ APIGEE_ENVIRONMENTS:
     display_name: Reference
     ratelimit: '210000pm'
     quota: '210000'
+  - name: dev
+    display_name: External Development
   - name: sandbox
     display_name: Sandbox
   - name: int
