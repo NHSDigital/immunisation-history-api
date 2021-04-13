@@ -94,6 +94,7 @@ extends:
         depends_on:
           - internal_qa
           - internal_qa_sandbox
+        secret_file_ids: []
         post_deploy:
           - template: ./templates/run-tests.yml
             parameters:
