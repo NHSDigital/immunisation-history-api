@@ -2,6 +2,7 @@
 import asyncio
 from time import time
 from uuid import uuid4
+import os
 
 import pytest
 from api_test_utils.api_test_session_config import APITestSessionConfig
@@ -9,7 +10,17 @@ from api_test_utils.fixtures import api_client  # pylint: disable=unused-import
 from api_test_utils.apigee_api_apps import ApigeeApiDeveloperApps
 from api_test_utils.apigee_api_products import ApigeeApiProducts
 from api_test_utils.oauth_helper import OauthHelper
-from .configuration.environment import ENV
+
+
+def get_env(variable_name: str) -> str:
+    """Returns a environment variable"""
+    try:
+        var = os.environ[variable_name]
+        if not var:
+            raise RuntimeError(f"Variable is null, Check {variable_name}.")
+        return var
+    except KeyError:
+        raise RuntimeError(f"Variable is not set, Check {variable_name}.")
 
 
 @pytest.fixture(scope="session")
@@ -24,7 +35,7 @@ def test_app():
     loop = asyncio.new_event_loop()
     loop.run_until_complete(
         app.setup_app(
-            api_products=[ENV["product"]],
+            api_products=[get_env("APIGEE_PRODUCT")],
             custom_attributes={
                 "jwks-resource-url": "https://raw.githubusercontent.com/NHSDigital/identity-service-jwks/main/jwks/internal-dev/9baed6f4-1361-4a8e-8531-1f8426e3aba8.json"  # noqa
             },
@@ -82,6 +93,9 @@ async def get_token(
 
 @pytest.fixture(scope="session")
 def valid_access_token(test_app) -> str:
+    oauth_proxy = get_env("OAUTH_PROXY")
+    oauth_base_uri = get_env("OAUTH_BASE_URI")
+    token_url = f"{oauth_base_uri}/{oauth_proxy}/token"
 
     jwt = test_app.oauth.create_jwt(
         **{
@@ -90,7 +104,7 @@ def valid_access_token(test_app) -> str:
                 "sub": test_app.client_id,
                 "iss": test_app.client_id,
                 "jti": str(uuid4()),
-                "aud": ENV["token_url"],
+                "aud": token_url,
                 "exp": int(time()) + 60,
             },
         }
@@ -146,7 +160,9 @@ def nhs_login_id_token(
     if id_token_headers is not None:
         default_id_token_headers = {**default_id_token_headers, **id_token_headers}
 
-    with open(ENV["nhs_login_id_token_private_key_path"], "r") as f:
+    nhs_login_id_token_private_key_path = get_env("ID_TOKEN_NHS_LOGIN_PRIVATE_KEY_ABSOLUTE_PATH")
+
+    with open(nhs_login_id_token_private_key_path, "r") as f:
         contents = f.read()
 
     id_token_jwt = test_app.oauth.create_id_token_jwt(
