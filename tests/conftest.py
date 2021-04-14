@@ -123,13 +123,8 @@ def nhs_login_id_token(
         "birthdate": "1939-09-26",
         "nhs_number": "9912003888",
         "nonce": "randomnonce",
-        "vtm": "https://auth.aos.signin.nhs.uk/trustmark/auth.aos.signin.nhs.uk",
-        "id_status": "verified",
-        "token_use": "id",
         "surname": "CARTHY",
-        "auth_time": 1617272144,
         "vot": "P9.Cp.Cd",
-        "identity_proofing_level": "P9",
         "family_name": "CARTHY",
     }
 
