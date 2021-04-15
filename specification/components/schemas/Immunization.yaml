@@ -89,7 +89,7 @@ properties:
           type: string
           example: "1324761000000100"
   status:
-    description: Status of the immunisation.
+    description: Status of the immunisation event. This is *not* an indication of patient immunity, only whether the immunisation was completed or not.
     type: string
     enum:
       - completed
