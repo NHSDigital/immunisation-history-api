@@ -70,8 +70,7 @@
                             "identifier": {
                                 "system": "https://fhir.nhs.uk/Id/ods-organization-code",
                                 "value": "C4B2A"
-                            },
-                            "display": "ELLAND ROAD STADIUM - COVID VACCINATION CENTRE"
+                            }
                         }
                     }
                 ],
