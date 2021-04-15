@@ -17,7 +17,7 @@ resources:
       branches:
         exclude:
           - master
-          - refs/heads/master
+          - refs/heads/edge
           - refs/tags/v*
 
 pool:
