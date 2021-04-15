@@ -240,7 +240,7 @@ paths:
             | ----------- | -------------------------- | --------------------------------------------- |
             | 400         | `processing`               | Missing or invalid NHS number |
             | 400         | `processing`               | Missing or invalid parent SNOMED code |
-            | 400         | `processing`               | Missing or invalid ID token |
+            | 401         | `processing`               | Missing or invalid ID token |
             | 401         | `processing`               | Missing or invalid OAuth 2.0 bearer token |
             | 401         | `processing`               | NHS number in request doesn't match NHS number in ID token |
             
