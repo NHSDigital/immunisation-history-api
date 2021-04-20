@@ -89,46 +89,11 @@ properties:
           type: string
           example: "1324761000000100"
   status:
-    description: Status of the immunisation event. This is *not* an indication of patient immunity, only whether the immunisation was completed or not.
+    description: Status of the immunisation event. This is *not* an indication of patient immunity, only whether the immunisation was completed or not. Currently we only return details of completed immunisations.
     type: string
     enum:
       - completed
-      - entered-in-error
-      - not-done
     example: "completed"
-  statusReason:
-    description: Reason immunisation was not done. Only present if `status`=`not-done`.
-    type: array
-    minItems: 1
-    maxItems: 1
-    items:
-      type: object
-      required:
-        - coding
-      properties:
-        coding:
-          type: array
-          minItems: 1
-          maxItems: 1
-          items:
-            type: object
-            required:
-              - system
-              - code
-              - display
-            properties:
-              system:
-                description: Coding system for reason immunisation not done. Always SNOMED.
-                type: string
-                example: http://snomed.info/sct
-              code:
-                description: SNOMED code for the reason immunisation not done.
-                type: string
-                example: 1324721000000108
-              display:
-                description: Description of the reason immunisation not done.
-                type: string
-                example: SARS-CoV-2 (severe acute respiratory syndrome coronavirus 2) vaccination dose declined
   vaccineCode:
     description: Vaccine product administered.
     type: object
