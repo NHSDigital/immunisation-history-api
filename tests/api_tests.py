@@ -335,3 +335,31 @@ async def test_user_restricted_access_not_permitted(api_client: APISessionClient
         assert body["issue"][0]["severity"] == "error"
         assert body["issue"][0]["diagnostics"] == "Provided access token is invalid"
         assert body["issue"][0]["code"] == "forbidden"
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
+async def test_token_exchange_happy_path(api_client: APISessionClient, test_product_and_app):
+    test_product, test_app = test_product_and_app
+
+    await test_app.set_custom_attributes(
+        {
+            "jwks-resource-url": "https://raw.githubusercontent.com/NHSDigital/identity-service-jwks/main/jwks/internal-dev/9baed6f4-1361-4a8e-8531-1f8426e3aba8.json"  # noqa
+        }
+    )
+    await test_product.update_scopes(
+        ["urn:nhsd:apim:app:level3:immunisation-history", "urn:nhsd:apim:user-nhs-id:aal3:immunisation-history"]
+    )
+    await test_app.add_api_product([test_product.name])
+
+    id_token_jwt = test_app.oauth.create_id_token_jwt()
+    client_assertion_jwt = test_app.oauth.create_jwt(kid="test-1")
+
+    # token exchange
+    response = await test_app.oauth.get_token_response(
+        grant_type="token_exchange",
+        _jwt=client_assertion_jwt,
+        id_token_jwt=id_token_jwt,
+    )
+    print(response)
+    assert response["status_code"] == 200

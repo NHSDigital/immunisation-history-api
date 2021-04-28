@@ -129,10 +129,10 @@ def nhs_login_id_token(
         "auth_time": 1616600683,
         "iss": "https://internal-dev.api.service.nhs.uk",  # Points to internal dev -> testing JWKS
         "vot": "P9.Cp.Cd",
-        "exp": int(time()) + 600,
+        "exp": int(time()) + 300,
         "iat": int(time()) - 10,
         "vtm": "https://auth.sandpit.signin.nhs.uk/trustmark/auth.sandpit.signin.nhs.uk",
-        "jti": "b68ddb28-e440-443d-8725-dfe0da330118",
+        "jti": str(uuid4()),
         "identity_proofing_level": "P9",
         "birthdate": "1939-09-26",
         "nhs_number": "9912003888",
@@ -146,15 +146,9 @@ def nhs_login_id_token(
         default_id_token_claims = {**default_id_token_claims, **id_token_claims}
 
     default_id_token_headers = {
-        "sub": "49f470a1-cc52-49b7-beba-0f9cec937c46",
-        "aud": "APIM-1",
-        "kid": "nhs-login",
-        "iss": "https://internal-dev.api.service.nhs.uk",  # Points to internal dev -> testing JWKS
+        "kid": "test-1",
         "typ": "JWT",
-        "exp": 1616604574,
-        "iat": 1616600974,
         "alg": "RS512",
-        "jti": "b68ddb28-e440-443d-8725-dfe0da330118",
     }
 
     if id_token_headers is not None:
