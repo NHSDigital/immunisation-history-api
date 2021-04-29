@@ -46,14 +46,24 @@ def test_app():
     loop.run_until_complete(app.destroy_app())
 
 
-@pytest.yield_fixture(scope="session")
+@pytest.yield_fixture()
 def test_product_and_app():
     """Setup & Teardown an product and app for this api"""
     product = ApigeeApiProducts()
     app = ApigeeApiDeveloperApps()
     loop = asyncio.new_event_loop()
     loop.run_until_complete(product.create_new_product())
-    loop.run_until_complete(app.setup_app())
+    loop.run_until_complete(product.update_scopes(
+        ["urn:nhsd:apim:app:level3:immunisation-history", "urn:nhsd:apim:user-nhs-login:P9:immunisation-history"]
+    ))
+    loop.run_until_complete(
+        app.setup_app(
+            api_products=[product.name],
+            custom_attributes={
+                "jwks-resource-url": "https://raw.githubusercontent.com/NHSDigital/identity-service-jwks/main/jwks/internal-dev/9baed6f4-1361-4a8e-8531-1f8426e3aba8.json" # noqa
+            },
+        )
+    )
     app.oauth = OauthHelper(app.client_id, app.client_secret, app.callback_url)
     yield product, app
     loop.run_until_complete(app.destroy_app())
