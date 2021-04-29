@@ -1,127 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <TargetEndpoint name="immunisation-history-target">
-  <FaultRules>
-    <FaultRule name="access_token_invalid">
-      <Step>
-        <Name>RaiseFault.InvalidAccessToken</Name>
-      </Step>
-      <Condition>oauthV2.OauthV2.VerifyAccessToken.failed</Condition>
-    </FaultRule>
-    <FaultRule name="expired_jwt">
-      <Condition>(JWT.failed Equals true) And (error.message Equals "The Token has expired: policy(VerifyJWT.FromExternalIdToken)")</Condition>
-      <Step>
-        <Name>AssignMessage.ExpiredJWTError</Name>
-      </Step>
-    </FaultRule>
-    <FaultRule name="failed_decoding_jwt">
-      <Condition>(JWT.failed Equals true) And (fault.name Equals "FailedToDecode")</Condition>
-      <Step>
-        <Name>AssignMessage.FailedToDecodeJWTError</Name>
-      </Step>
-    </FaultRule>
-    <FaultRule name="missing_invalid-iss">
-      <Condition>(JWT.failed Equals true) AND (error.message Equals "Invalid Claim: policy(VerifyJWT.FromExternalIdToken) claim(iss)")</Condition>
-      <Step>
-        <Name>AssignMessage.MissingOrInvalidIssClaim</Name>
-      </Step>
-    </FaultRule>
-    <FaultRule name="missing_invalid_identity_proofing_level">
-      <Condition>(JWT.failed Equals true) AND (error.message Equals "Invalid Claim: policy(VerifyJWT.FromExternalIdToken) claim(identity_proofing_level)")</Condition>
-      <Step>
-        <Name>AssignMessage.MissingOrInvalidIdentityProofingLevelClaim</Name>
-      </Step>
-    </FaultRule>
-    <FaultRule name="missing_invalid_typ_header">
-      <Condition>(JWT.failed Equals true) AND (error.message Equals "Invalid Claim: policy(VerifyJWT.FromExternalIdToken) claim(typ)")</Condition>
-      <Step>
-        <Name>AssignMessage.MissingOrInvalidTypHeader</Name>
-      </Step>
-    </FaultRule>
-    <FaultRule name="missing_nhsd_user_identity_header">
-      <Condition>(JWT.failed Equals true) AND (error.message Equals "Failed to Resolve Variable : policy(DecodeJWT.FromExternalIdToken) variable(request.header.NHSD-User-Identity)")</Condition>
-      <Step>
-        <Name>AssignMessage.MissingNHSDUserIdentityheader</Name>
-      </Step>
-    </FaultRule>
-    <FaultRule name="id_token_invalid">
-      <Condition>(JWT.failed Equals true) AND (error.message Equals "Invalid token: policy(VerifyJWT.FromExternalIdToken)")</Condition>
-      <Step>
-        <Name>AssignMessage.FailedToDecodeJWTError</Name>
-      </Step>
-    </FaultRule>
-    <FaultRule name="no_matching_publickey">
-      <Condition>(JWT.failed Equals true) AND (error.message Equals "Could not find a matching Public Key: policy(VerifyJWT.FromExternalIdToken)")</Condition>
-      <Step>
-        <Name>AssignMessage.NoMatchingPublicKey</Name>
-      </Step>
-    </FaultRule>
-    <FaultRule name="catchall_jwt_error">
-      <Condition>(JWT.failed Equals true)</Condition>
-      <Step>
-        <Name>AssignMessage.CatchAllJWTError</Name>
-      </Step>
-    </FaultRule>
-  </FaultRules>
-  <PreFlow>
-    <Request>
-      <Step>
-        <Name>OauthV2.VerifyAccessToken</Name>
-      </Step>
-      <Step>
-        <Name>DecodeJWT.FromExternalIdToken</Name>
-      </Step>
-      <Step>
-        <Name>LookupCache.JWKS</Name>
-      </Step>
-      <Step>
-        <Name>JavaScript.ValidateClaimFromExternalIdToken</Name>
-        <Condition>jwks != null</Condition>
-      </Step>
-      <Step>
-        <Name>ServiceCallout.NHSLoginGetJWKS</Name>
-        <Condition>jwks = null Or jwksUpdated = false</Condition>
-      </Step>
-      <Step>
-        <Name>PopulateCache.JWKS</Name>
-        <Condition>jwks = null Or jwksUpdated = false</Condition>
-      </Step>
-      <Step>
-        <Name>AssignMessage.JWKS</Name>
-        <Condition>jwks = null Or jwksUpdated = false</Condition>
-      </Step>
-      <Step>
-        <Name>VerifyJWT.FromExternalIdToken</Name>
-      </Step>
-      <Step>
-        <Name>Quota</Name>
-      </Step>
-      <Step> 
-        <Name>SpikeArrest</Name>   
-      </Step>
-      <!-- Set flow variable 'access-mode' by inspecting the token's scopes.
+    <FaultRules>
+        <FaultRule name="access_token_invalid">
+            <Step>
+                <Name>RaiseFault.InvalidAccessToken</Name>
+            </Step>
+            <Condition>oauthV2.OauthV2.VerifyAccessToken.failed</Condition>
+        </FaultRule>
+        <FaultRule name="expired_jwt">
+            <Condition>(JWT.failed Equals true) And (error.message Equals "The Token has expired: policy(VerifyJWT.FromExternalIdToken)")</Condition>
+            <Step>
+                <Name>AssignMessage.ExpiredJWTError</Name>
+            </Step>
+        </FaultRule>
+        <FaultRule name="failed_decoding_jwt">
+            <Condition>(JWT.failed Equals true) And (fault.name Equals "FailedToDecode")</Condition>
+            <Step>
+                <Name>AssignMessage.FailedToDecodeJWTError</Name>
+            </Step>
+        </FaultRule>
+        <FaultRule name="missing_invalid-iss">
+            <Condition>(JWT.failed Equals true) AND (error.message Equals "Invalid Claim: policy(VerifyJWT.FromExternalIdToken) claim(iss)")</Condition>
+            <Step>
+                <Name>AssignMessage.MissingOrInvalidIssClaim</Name>
+            </Step>
+        </FaultRule>
+        <FaultRule name="missing_invalid_identity_proofing_level">
+            <Condition>(JWT.failed Equals true) AND (error.message Equals "Invalid Claim: policy(VerifyJWT.FromExternalIdToken) claim(identity_proofing_level)")</Condition>
+            <Step>
+                <Name>AssignMessage.MissingOrInvalidIdentityProofingLevelClaim</Name>
+            </Step>
+        </FaultRule>
+        <FaultRule name="missing_invalid_typ_header">
+            <Condition>(JWT.failed Equals true) AND (error.message Equals "Invalid Claim: policy(VerifyJWT.FromExternalIdToken) claim(typ)")</Condition>
+            <Step>
+                <Name>AssignMessage.MissingOrInvalidTypHeader</Name>
+            </Step>
+        </FaultRule>
+        <FaultRule name="missing_nhsd_user_identity_header">
+            <Condition>(JWT.failed Equals true) AND (error.message Equals "Failed to Resolve Variable : policy(DecodeJWT.FromExternalIdToken) variable(request.header.NHSD-User-Identity)")</Condition>
+            <Step>
+                <Name>AssignMessage.MissingNHSDUserIdentityheader</Name>
+            </Step>
+        </FaultRule>
+        <FaultRule name="id_token_invalid">
+            <Condition>(JWT.failed Equals true) AND (error.message Equals "Invalid token: policy(VerifyJWT.FromExternalIdToken)")</Condition>
+            <Step>
+                <Name>AssignMessage.FailedToDecodeJWTError</Name>
+            </Step>
+        </FaultRule>
+        <FaultRule name="no_matching_publickey">
+            <Condition>(JWT.failed Equals true) AND (error.message Equals "Could not find a matching Public Key: policy(VerifyJWT.FromExternalIdToken)")</Condition>
+            <Step>
+                <Name>AssignMessage.NoMatchingPublicKey</Name>
+            </Step>
+        </FaultRule>
+        <FaultRule name="catchall_jwt_error">
+            <Condition>(JWT.failed Equals true)</Condition>
+            <Step>
+                <Name>AssignMessage.CatchAllJWTError</Name>
+            </Step>
+        </FaultRule>
+    </FaultRules>
+    <PreFlow>
+        <Request>
+            <Step>
+                <Name>OauthV2.VerifyAccessToken</Name>
+            </Step>
+            <Step>
+                <Name>DecodeJWT.FromExternalIdToken</Name>
+                <Condition>accesstoken.grant_type != "urn:ietf:params:oauth:grant-type:token-exchange"</Condition>
+            </Step>
+            <Step>
+                <Name>LookupCache.JWKS</Name>
+                <Condition>accesstoken.grant_type != "urn:ietf:params:oauth:grant-type:token-exchange"</Condition>
+            </Step>
+            <Step>
+                <Name>JavaScript.ValidateClaimFromExternalIdToken</Name>
+                <Condition>accesstoken.grant_type != "urn:ietf:params:oauth:grant-type:token-exchange" and jwks != null</Condition>
+            </Step>
+            <Step>
+                <Name>ServiceCallout.NHSLoginGetJWKS</Name>
+                <Condition>accesstoken.grant_type != "urn:ietf:params:oauth:grant-type:token-exchange" and (jwks = null Or jwksUpdated = false)</Condition>
+            </Step>
+            <Step>
+                <Name>PopulateCache.JWKS</Name>
+                <Condition>accesstoken.grant_type != "urn:ietf:params:oauth:grant-type:token-exchange" and (jwks = null Or jwksUpdated = false)</Condition>
+            </Step>
+            <Step>
+                <Name>AssignMessage.JWKS</Name>
+                <Condition>accesstoken.grant_type != "urn:ietf:params:oauth:grant-type:token-exchange" and (jwks = null Or jwksUpdated = false)</Condition>
+            </Step>
+            <Step>
+                <Name>VerifyJWT.FromExternalIdToken</Name>
+                <Condition>accesstoken.grant_type != "urn:ietf:params:oauth:grant-type:token-exchange"</Condition>
+            </Step>
+            <!-- Set flow variable 'access-mode' by inspecting the token's scopes.
       First set to least-privilege (application restricted) then look for scopes indicating higher privilege, overwriting as appropriate.
       'scope' is a space-separated string of scopes, determined by the Application's API Product assignments.
       Follow pattern used in AssignMessage.SetAccessModeUserRestricted condition. See Apigee docs for JavaRegex gotchas (uses '.match()' behaviour matching whole string only). -->
-      <Step>
-        <Name>AssignMessage.SetAccessModeApplicationRestricted</Name>
-      </Step>
-      <Step>
-        <Name>Javascript.AddClientRPDetailsHeader</Name>
-      </Step>
-      <Step>
-        <Name>Quota</Name>
-      </Step>
-      <Step>
-        <Name>SpikeArrest</Name>
-      </Step>
-    </Request>
-  </PreFlow>
-  <HTTPTargetConnection>
-    <SSLInfo>
-      <Enabled>true</Enabled>
-    </SSLInfo>
-    <LoadBalancer>
-      <Server name="immunisation-history" />
-    </LoadBalancer>
-    <Path>/immunisation-history</Path>
-  </HTTPTargetConnection>
+            <Step>
+                <Name>AssignMessage.SetAccessModeApplicationRestricted</Name>
+            </Step>
+            <Step>
+                <Name>Javascript.AddClientRPDetailsHeader</Name>
+            </Step>
+            <Step>
+                <Name>Quota</Name>
+            </Step>
+            <Step>
+                <Name>SpikeArrest</Name>
+            </Step>
+        </Request>
+    </PreFlow>
+    <HTTPTargetConnection>
+        <SSLInfo>
+            <Enabled>true</Enabled>
+        </SSLInfo>
+        <LoadBalancer>
+            <Server name="immunisation-history"/>
+        </LoadBalancer>
+        <Path>/immunisation-history</Path>
+    </HTTPTargetConnection>
 </TargetEndpoint>
