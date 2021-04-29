@@ -342,6 +342,5 @@ async def test_user_restricted_access_not_permitted(api_client: APISessionClient
 async def test_token_exchange_happy_path(api_client: APISessionClient, test_product_and_app):
 
     test_product, test_app = test_product_and_app
-
-    token = await conftest.get_token_nhs_login_token_exchange(test_app)
-    print(token)
+    token_response = await conftest.get_token_nhs_login_token_exchange(test_app)
+    print(token_response)
