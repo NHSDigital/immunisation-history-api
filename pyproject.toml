@@ -15,7 +15,6 @@ keywords = ["healthcare", "uk", "nhs"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-api-test-utils = {url = "https://github.com/NHSDigital/apim-test-utils/releases/download/v1.1.2-alpha/api_test_utils-1.1.2a0-py3-none-any.whl"}
 
 
 [tool.poetry.dev-dependencies]

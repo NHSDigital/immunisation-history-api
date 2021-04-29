@@ -128,7 +128,7 @@ def nhs_login_id_token(
         "token_use": "id",
         "auth_time": 1616600683,
         "iss": "https://internal-dev.api.service.nhs.uk",  # Points to internal dev -> testing JWKS
-        "vot": "P9.Cp.Cd",
+        "sub": "https://internal-dev.api.service.nhs.uk",
         "exp": int(time()) + 300,
         "iat": int(time()) - 10,
         "vtm": "https://auth.sandpit.signin.nhs.uk/trustmark/auth.sandpit.signin.nhs.uk",
@@ -146,7 +146,7 @@ def nhs_login_id_token(
         default_id_token_claims = {**default_id_token_claims, **id_token_claims}
 
     default_id_token_headers = {
-        "kid": "test-1",
+        "kid": "nhs-login",
         "typ": "JWT",
         "alg": "RS512",
     }
@@ -167,3 +167,22 @@ def nhs_login_id_token(
     )
 
     return id_token_jwt
+
+
+async def get_token_nhs_login_token_exchange(test_app: ApigeeApiDeveloperApps):
+    """Call identity server to get an access token"""
+    client_assertion_jwt = test_app.oauth.create_jwt(kid="test-1")
+    id_token_jwt = nhs_login_id_token(test_app)
+    # When
+    token_resp = await test_app.oauth.get_token_response(
+        grant_type="token_exchange",
+        data={
+            "grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
+            "subject_token_type": "urn:ietf:params:oauth:token-type:id_token",
+            "client_assertion_type": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+            "subject_token": id_token_jwt,
+            "client_assertion": client_assertion_jwt,
+        },
+    )
+    assert token_resp["status_code"] == 200
+    return token_resp["body"]

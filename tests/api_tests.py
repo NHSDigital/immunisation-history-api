@@ -340,6 +340,7 @@ async def test_user_restricted_access_not_permitted(api_client: APISessionClient
 @pytest.mark.e2e
 @pytest.mark.asyncio
 async def test_token_exchange_happy_path(api_client: APISessionClient, test_product_and_app):
+
     test_product, test_app = test_product_and_app
 
     await test_app.set_custom_attributes(
@@ -348,18 +349,22 @@ async def test_token_exchange_happy_path(api_client: APISessionClient, test_prod
         }
     )
     await test_product.update_scopes(
-        ["urn:nhsd:apim:app:level3:immunisation-history", "urn:nhsd:apim:user-nhs-id:aal3:immunisation-history"]
+        ["urn:nhsd:apim:app:level3:immunisation-history", "urn:nhsd:apim:user-nhs-login:P9:immunisation-history"]
     )
     await test_app.add_api_product([test_product.name])
 
-    id_token_jwt = test_app.oauth.create_id_token_jwt()
     client_assertion_jwt = test_app.oauth.create_jwt(kid="test-1")
-
-    # token exchange
-    response = await test_app.oauth.get_token_response(
+    id_token_jwt = conftest.nhs_login_id_token(test_app)
+    # When
+    token_resp = await test_app.oauth.get_token_response(
         grant_type="token_exchange",
-        _jwt=client_assertion_jwt,
-        id_token_jwt=id_token_jwt,
+        data={
+            "grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
+            "subject_token_type": "urn:ietf:params:oauth:token-type:id_token",
+            "client_assertion_type": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+            "subject_token": id_token_jwt,
+            "client_assertion": client_assertion_jwt,
+        },
     )
-    print(response)
-    assert response["status_code"] == 200
+    assert token_resp["status_code"] == 200
+
