@@ -1,0 +1,9 @@
+<AssignMessage async="false" continueOnError="false" enabled="true" name="AssignMessage.AddIssuerHeader">
+  <Add>
+      <Headers>
+          <Header name="NHSD-Client-RP-Details">{"app-id": verifyapikey.VerifyAPIKey.developer.app.id, "app-name": verifyapikey.VerifyAPIKey.developer.app.name,"client-ip": client.ip }</Header>
+      </Headers>
+  </Add>
+  <IgnoreUnresolvedVariables>false</IgnoreUnresolvedVariables>
+  <AssignTo createNew="false" transport="http" type="request"/>
+</AssignMessage>
