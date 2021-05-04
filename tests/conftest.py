@@ -183,8 +183,17 @@ async def get_token_nhs_login_token_exchange(test_app: ApigeeApiDeveloperApps,
                                              subject_token_claims: dict = None,
                                              client_assertion_jwt: dict = None):
     """Call identity server to get an access token"""
-    client_assertion_jwt = test_app.oauth.create_jwt(kid="test-1")
-    id_token_jwt = nhs_login_id_token(test_app=test_app)
+    if client_assertion_jwt is not None:
+        client_assertion_jwt = test_app.oauth.create_jwt(kid="test-1",
+                                                         claims=client_assertion_jwt)
+    else:
+        client_assertion_jwt = test_app.oauth.create_jwt(kid="test-1")
+
+    if subject_token_claims is not None:
+        id_token_jwt = nhs_login_id_token(test_app=test_app,
+                                          id_token_claims=subject_token_claims)
+    else:
+        id_token_jwt = nhs_login_id_token(test_app=test_app)
 
     # When
     token_resp = await test_app.oauth.get_token_response(
