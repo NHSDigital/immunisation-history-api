@@ -1,4 +1,0 @@
-<DecodeJWT async="false" continueOnError="false" enabled="true" name="DecodeJWT.FromAccessToken">
-  <DisplayName>Decode JWT</DisplayName>
-  <Source>accesstoken.id_token</Source>
-</DecodeJWT>

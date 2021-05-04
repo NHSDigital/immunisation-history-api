@@ -406,3 +406,33 @@ async def test_token_exchange_invalid_identity_proofing_level_scope(api_client: 
                 ],
             "resourceType": "OperationOutcome"
         }
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
+async def test_token_exchange_both_header_and_exchange(api_client: APISessionClient,
+                                                       test_product_and_app,
+                                                       authorised_headers):
+    test_product, test_app = test_product_and_app
+    correlation_id = str(uuid4())
+    authorised_headers["X-Correlation-ID"] = correlation_id
+    authorised_headers["NHSD-User-Identity"] = conftest.nhs_login_id_token(test_app)
+
+    # Use token exchange token in conjunction with JWT header
+    token_response = await conftest.get_token_nhs_login_token_exchange(test_app)
+    token = token_response["access_token"]
+
+    authorised_headers["Authorization"] = f"Bearer {token}"
+
+    async with api_client.get(
+        _valid_uri("9912003888", "90640007"),
+        headers=authorised_headers,
+        allow_retries=True
+    ) as resp:
+        assert resp.status == 200
+        body = await resp.json()
+        assert "x-correlation-id" in resp.headers, resp.headers
+        assert resp.headers["x-correlation-id"] == correlation_id
+        assert body["resourceType"] == "Bundle", body
+        # no data for this nhs number ...
+        assert len(body["entry"]) == 0, body
