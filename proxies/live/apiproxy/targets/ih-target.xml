@@ -67,6 +67,17 @@
             <Step>
                 <Name>OauthV2.VerifyAccessToken</Name>
             </Step>
+            <!-- Token Exhchange Flow -->
+            <!-- If the token was retrieved via token exchange, assign the jwt from the token attributes to the NHSD-User-Identity Header -->
+            <Step>
+                <Name>AssignMessage.AddUserIdHeader</Name>
+                <Condition>accesstoken.grant_type = "urn:ietf:params:oauth:grant-type:token-exchange"</Condition>
+            </Step>
+            <Step>
+                <Name>DecodeJWT.FromAccessToken</Name>
+                <Condition>accesstoken.grant_type = "urn:ietf:params:oauth:grant-type:token-exchange"</Condition>
+            </Step>
+            <!-- JWT Header Flow -->
             <Step>
                 <Name>DecodeJWT.FromExternalIdToken</Name>
                 <Condition>accesstoken.grant_type != "urn:ietf:params:oauth:grant-type:token-exchange"</Condition>
@@ -97,11 +108,6 @@
             </Step>
             <Step>
                 <Name>Javascript.AddClientRPDetailsHeader</Name>
-            </Step>
-            <!-- If the token was retrieved via token exchange, assign the jwt from the token attributes to the NHSD-User-Identity Header -->
-            <Step>
-                <Name>AssignMessage.AddUserIdHeader</Name>
-                <Condition>accesstoken.grant_type = "urn:ietf:params:oauth:grant-type:token-exchange"</Condition>
             </Step>
             <Step>
                 <Name>Quota</Name>
