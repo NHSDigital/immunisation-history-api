@@ -363,3 +363,31 @@ async def test_token_exchange_happy_path(api_client: APISessionClient, test_prod
         assert body["resourceType"] == "Bundle", body
         # no data for this nhs number ...
         assert len(body["entry"]) == 0, body
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
+async def test_token_exchange_error_scenarios(api_client: APISessionClient, test_product_and_app):
+
+    test_product, test_app = test_product_and_app
+    token_response = await conftest.get_token_nhs_login_token_exchange(test_app)
+    token = token_response["access_token"]
+
+    correlation_id = str(uuid4())
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "X-Correlation-ID": correlation_id
+    }
+
+    async with api_client.get(
+        _valid_uri("9912003888", "90640007"),
+        headers=headers,
+        allow_retries=True
+    ) as resp:
+        assert resp.status == 200
+        body = await resp.json()
+        assert "x-correlation-id" in resp.headers, resp.headers
+        assert resp.headers["x-correlation-id"] == correlation_id
+        assert body["resourceType"] == "Bundle", body
+        # no data for this nhs number ...
+        assert len(body["entry"]) == 0, body

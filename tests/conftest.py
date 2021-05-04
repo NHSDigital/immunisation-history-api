@@ -179,10 +179,13 @@ def nhs_login_id_token(
     return id_token_jwt
 
 
-async def get_token_nhs_login_token_exchange(test_app: ApigeeApiDeveloperApps):
+async def get_token_nhs_login_token_exchange(test_app: ApigeeApiDeveloperApps,
+                                             subject_token_claims: dict = None,
+                                             client_assertion_jwt: dict = None):
     """Call identity server to get an access token"""
     client_assertion_jwt = test_app.oauth.create_jwt(kid="test-1")
-    id_token_jwt = nhs_login_id_token(test_app)
+    id_token_jwt = nhs_login_id_token(test_app=test_app)
+
     # When
     token_resp = await test_app.oauth.get_token_response(
         grant_type="token_exchange",
