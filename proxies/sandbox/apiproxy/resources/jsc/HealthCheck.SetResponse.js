@@ -19,8 +19,7 @@ const timeout = (healthcheck_status_code === null && healthcheck_failed) ? "true
 
 const final_status = (healthcheck_status !== "pass") ? "fail" : "pass";
 
-// context.setVariable("status.response", JSON.stringify(response));
-context.setVariable("response.content", JSON.stringify( {
+const resp = {
     "status" : final_status,
     "version" : "{{ DEPLOYED_VERSION }}" ,
     "revision" : apiproxy_revision,
@@ -35,6 +34,8 @@ context.setVariable("response.content", JSON.stringify( {
             "links" : {"self": healthcheck_request_url}
         }
     }
-}));
+};
 
+context.setVariable("status.response", JSON.stringify(resp));
+context.setVariable("response.content", JSON.stringify(resp));
 context.setVariable("response.header.Content-Type", "application/json");
