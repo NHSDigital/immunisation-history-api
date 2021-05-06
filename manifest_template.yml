@@ -54,6 +54,7 @@ apigee:
           - identity-service-{{ ENV.name }}
         scopes:
           - 'urn:nhsd:apim:app:level3:{{ SERVICE_NAME }}'
+          - 'urn:nhsd:apim:user-nhs-login:P9:{{ SERVICE_NAME }}'
         quota: {{ ENV.quota | default('300') }}
         quotaInterval: '1'
         quotaTimeUnit: minute

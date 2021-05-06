@@ -46,14 +46,24 @@ def test_app():
     loop.run_until_complete(app.destroy_app())
 
 
-@pytest.yield_fixture(scope="session")
+@pytest.yield_fixture()
 def test_product_and_app():
     """Setup & Teardown an product and app for this api"""
     product = ApigeeApiProducts()
     app = ApigeeApiDeveloperApps()
     loop = asyncio.new_event_loop()
     loop.run_until_complete(product.create_new_product())
-    loop.run_until_complete(app.setup_app())
+    loop.run_until_complete(product.update_scopes(
+        ["urn:nhsd:apim:app:level3:immunisation-history", "urn:nhsd:apim:user-nhs-login:P9:immunisation-history"]
+    ))
+    loop.run_until_complete(
+        app.setup_app(
+            api_products=[product.name],
+            custom_attributes={
+                "jwks-resource-url": "https://raw.githubusercontent.com/NHSDigital/identity-service-jwks/main/jwks/internal-dev/9baed6f4-1361-4a8e-8531-1f8426e3aba8.json" # noqa
+            },
+        )
+    )
     app.oauth = OauthHelper(app.client_id, app.client_secret, app.callback_url)
     yield product, app
     loop.run_until_complete(app.destroy_app())
@@ -128,11 +138,11 @@ def nhs_login_id_token(
         "token_use": "id",
         "auth_time": 1616600683,
         "iss": "https://internal-dev.api.service.nhs.uk",  # Points to internal dev -> testing JWKS
-        "vot": "P9.Cp.Cd",
-        "exp": int(time()) + 600,
+        "sub": "https://internal-dev.api.service.nhs.uk",
+        "exp": int(time()) + 300,
         "iat": int(time()) - 10,
         "vtm": "https://auth.sandpit.signin.nhs.uk/trustmark/auth.sandpit.signin.nhs.uk",
-        "jti": "b68ddb28-e440-443d-8725-dfe0da330118",
+        "jti": str(uuid4()),
         "identity_proofing_level": "P9",
         "birthdate": "1939-09-26",
         "nhs_number": "9912003888",
@@ -146,15 +156,9 @@ def nhs_login_id_token(
         default_id_token_claims = {**default_id_token_claims, **id_token_claims}
 
     default_id_token_headers = {
-        "sub": "49f470a1-cc52-49b7-beba-0f9cec937c46",
-        "aud": "APIM-1",
         "kid": "nhs-login",
-        "iss": "https://internal-dev.api.service.nhs.uk",  # Points to internal dev -> testing JWKS
         "typ": "JWT",
-        "exp": 1616604574,
-        "iat": 1616600974,
         "alg": "RS512",
-        "jti": "b68ddb28-e440-443d-8725-dfe0da330118",
     }
 
     if id_token_headers is not None:
@@ -173,3 +177,35 @@ def nhs_login_id_token(
     )
 
     return id_token_jwt
+
+
+async def get_token_nhs_login_token_exchange(test_app: ApigeeApiDeveloperApps,
+                                             subject_token_claims: dict = None,
+                                             client_assertion_jwt: dict = None):
+    """Call identity server to get an access token"""
+    if client_assertion_jwt is not None:
+        client_assertion_jwt = test_app.oauth.create_jwt(kid="test-1",
+                                                         claims=client_assertion_jwt)
+    else:
+        client_assertion_jwt = test_app.oauth.create_jwt(kid="test-1")
+
+    if subject_token_claims is not None:
+        id_token_jwt = nhs_login_id_token(test_app=test_app,
+                                          id_token_claims=subject_token_claims)
+    else:
+        id_token_jwt = nhs_login_id_token(test_app=test_app)
+
+    # When
+    token_resp = await test_app.oauth.get_token_response(
+        grant_type="token_exchange",
+        data={
+            "grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
+            "subject_token_type": "urn:ietf:params:oauth:token-type:id_token",
+            "client_assertion_type": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+            "subject_token": id_token_jwt,
+            "client_assertion": client_assertion_jwt,
+        },
+    )
+    assert token_resp["status_code"] == 200
+    assert list(token_resp["body"].keys()) == ["access_token", "expires_in", "token_type", "issued_token_type"]
+    return token_resp["body"]

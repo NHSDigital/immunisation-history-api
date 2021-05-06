@@ -1,4 +1,4 @@
 <OAuthV2 async="false" continueOnError="false" enabled="true" name="OauthV2.VerifyAccessToken">
   <Operation>VerifyAccessToken</Operation>
-  <Scope>urn:nhsd:apim:app:level3:immunisation-history</Scope>
+  <Scope>urn:nhsd:apim:app:level3:immunisation-history urn:nhsd:apim:user-nhs-login:P9:immunisation-history</Scope>
 </OAuthV2>
