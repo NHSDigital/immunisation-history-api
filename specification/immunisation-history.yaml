@@ -85,7 +85,7 @@ info:
     
     ## Security and authorisation
     This API is [user-restricted](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation#user-restricted-apis),
-    meaning an end user must be present, authenticated and authorised.
+    meaning an end user must be present and authenticated.
 
     Specifically, it uses the following security pattern:
     - [User-restricted RESTful APIs - NHS login separate authentication and authorisation](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation/user-restricted-restful-apis-nhs-login-separate-authentication-and-authorisation)
@@ -93,9 +93,8 @@ info:
     Note that:
     - the end user must be a citizen
     - the calling application must strongly authenticate the end user using NHS login
-    - specifically, the end user must have their identity verified to 'high' (P9) level
-    - the calling application must pass the user's NHS login identity token in the `NHSD-User-Identity` header when calling the API
-    - the NHS number in the request must match the NHS number of the authenticated citizen
+    - the end user must have their identity verified to 'high' (P9) level
+    - the NHS number in the request must match the NHS number in the NHS login account
 
     ## Environments and testing
     | Environment       | Base URL                                                               |
@@ -191,7 +190,7 @@ paths:
         - name: Authorization
           in: header
           description: |
-            An OAuth 2.0 bearer token, obtained using our [signed JWT authentication pattern](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation/application-restricted-restful-apis-signed-jwt-authentication).
+            An OAuth 2.0 bearer token, obtained using our [NHS login pattern](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation/user-restricted-restful-apis-nhs-login-separate-authentication-and-authorisation).
           required: true
           schema:
             type: string
@@ -231,7 +230,7 @@ paths:
             | 400         | `processing`               | Missing or invalid parent SNOMED code |
             | 401         | `processing`               | Missing or invalid ID token |
             | 401         | `processing`               | Missing or invalid OAuth 2.0 bearer token |
-            | 401         | `processing`               | NHS number in request doesn't match NHS number in ID token |
+            | 401         | `processing`               | NHS number in request doesn't match NHS number in NHS login account |
             
             For details see the `diagnostics` field.
             
