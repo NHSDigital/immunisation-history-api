@@ -84,18 +84,18 @@ info:
     For more details see [Network access for APIs](https://digital.nhs.uk/developer/guides-and-documentation/network-access-for-apis).
     
     ## Security and authorisation
-    This API is [application-restricted](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation#application-restricted-apis),
-    meaning we authenticate the calling application but not the end user.
-    
+    This API is [user-restricted](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation#user-restricted-apis),
+    meaning an end user must be present, authenticated and authorised.
+
     Specifically, it uses the following security pattern:
-    - [Application-restricted RESTful API - signed JWT authentication](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation/application-restricted-restful-apis-signed-jwt-authentication)
+    - [User-restricted RESTful APIs - NHS login separate authentication and authorisation](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation/user-restricted-restful-apis-nhs-login-separate-authentication-and-authorisation)
 
     Note that:
     - the end user must be a citizen
     - the calling application must strongly authenticate the end user using NHS login
     - specifically, the end user must have their identity verified to 'high' (P9) level
     - the calling application must pass the user's NHS login identity token in the `NHSD-User-Identity` header when calling the API
-    - the NHS number in the identity token must match the NHS number for which data is being requested
+    - the NHS number in the request must match the NHS number of the authenticated citizen
 
     ## Environments and testing
     | Environment       | Base URL                                                               |
@@ -197,17 +197,6 @@ paths:
             type: string
             format: '^Bearer\ [[:ascii:]]+$'
             example: 'Bearer g1112R_ccQ1Ebbb4gtHBP1aaaNM'            
-        - name: NHSD-User-Identity
-          in: header
-          description: |
-            Open ID Connect ID token for the end user citizen, as obtained from NHS login.
-            Must be a signed JWT in the format `xxxxx.yyyyy.zzzzz`.
-            Must be valid i.e. not expired.
-            Must be for a user who has had their identity verified to 'high' (P9) level.
-          required: true
-          schema:
-            type: string
-            example: xxxxx.yyyyy.zzzzz
         - name: X-Correlation-ID
           in: header
           required: false
