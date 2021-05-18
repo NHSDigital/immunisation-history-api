@@ -120,7 +120,7 @@
           <Properties>
             <Property name="keepalive.timeout.millis">20000</Property>
           </Properties>
-          <Server name="immunisation-history"/>
+            <Server name="immunisation-history"/>
         </LoadBalancer>
         <Path>/immunisation-history</Path>
     </HTTPTargetConnection>
