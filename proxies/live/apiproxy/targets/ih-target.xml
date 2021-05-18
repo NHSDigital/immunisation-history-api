@@ -117,11 +117,11 @@
             <Enabled>true</Enabled>
         </SSLInfo>
         <LoadBalancer>
-          <Properties>
-            <Property name="keepalive.timeout.millis">20000</Property>
-          </Properties>
             <Server name="immunisation-history"/>
         </LoadBalancer>
+        <Properties>
+          <Property name="keepalive.timeout.millis">20000</Property>
+        </Properties>
         <Path>/immunisation-history</Path>
     </HTTPTargetConnection>
 </TargetEndpoint>
