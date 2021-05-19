@@ -7,6 +7,6 @@
         <SSLInfo>
             <Enabled>true</Enabled>
         </SSLInfo>
-        <Path>https://httpbin.org/status/200</Path>
+        <URL>https://httpbin.org/status/200</URL>
     </HTTPTargetConnection>
 </ServiceCallout>
