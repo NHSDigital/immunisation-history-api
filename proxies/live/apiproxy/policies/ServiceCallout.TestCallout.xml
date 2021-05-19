@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ServiceCallout async="false" continueOnError="false" enabled="true" name="ServiceCallout.TestCallout">
+    <Response>test_callout_response</Response>
+    <!-- This is the default (55 seconds). Including it to make explicit. -->
+    <Timeout>55000</Timeout>
+    <HTTPTargetConnection>
+        <SSLInfo>
+            <Enabled>true</Enabled>
+        </SSLInfo>
+        <Path>https://httpbin.org/status/400</Path>
+    </HTTPTargetConnection>
+</ServiceCallout>
