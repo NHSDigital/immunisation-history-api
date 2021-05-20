@@ -42,4 +42,4 @@ e2e-report.xml
 sandbox/responses/*
 
 # ignore any potential keys
-*.key
+*.key*
