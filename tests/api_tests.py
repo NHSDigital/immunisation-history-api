@@ -393,7 +393,7 @@ async def test_token_exchange_invalid_identity_proofing_level_scope(api_client: 
         allow_retries=True
     ) as resp:
         assert resp.status == 401
-        body = await resp.json()
+        # body = await resp.json()
         assert "x-correlation-id" in resp.headers, resp.headers
         assert resp.headers["x-correlation-id"] == correlation_id
         # assert body == {
@@ -511,7 +511,7 @@ async def test_p5_without_allowed_proofing_level_attribute(test_app, api_client:
         allow_retries=True
     ) as resp:
         assert resp.status == 401
-        body = await resp.json()
+        # body = await resp.json()
         assert "x-correlation-id" in resp.headers, resp.headers
         assert resp.headers["x-correlation-id"] == correlation_id
         # assert body == {
@@ -529,7 +529,9 @@ async def test_p5_without_allowed_proofing_level_attribute(test_app, api_client:
 
 @pytest.mark.e2e
 @pytest.mark.asyncio
-async def test_p5_with_higher_proofing_level_attribute_specified(test_app, api_client: APISessionClient, authorised_headers):
+async def test_p5_with_higher_proofing_level_attribute_specified(
+    test_app, api_client: APISessionClient, authorised_headers
+):
 
     await test_app.set_custom_attributes({'nhs-login-allowed-proofing-level': 'P9'})
 
@@ -543,7 +545,7 @@ async def test_p5_with_higher_proofing_level_attribute_specified(test_app, api_c
         allow_retries=True
     ) as resp:
         assert resp.status == 401
-        body = await resp.json()
+        # body = await resp.json()
         assert "x-correlation-id" in resp.headers, resp.headers
         assert resp.headers["x-correlation-id"] == correlation_id
         # assert body == {
@@ -557,5 +559,3 @@ async def test_p5_with_higher_proofing_level_attribute_specified(test_app, api_c
         #         ],
         #     "resourceType": "OperationOutcome"
         # }
-
-
