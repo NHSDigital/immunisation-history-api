@@ -60,7 +60,7 @@ def test_product_and_app():
         app.setup_app(
             api_products=[product.name],
             custom_attributes={
-                "jwks-resource-url": "https://raw.githubusercontent.com/NHSDigital/identity-service-jwks/main/jwks/internal-dev/9baed6f4-1361-4a8e-8531-1f8426e3aba8.json" # noqa
+                "jwks-resource-url": "https://raw.githubusercontent.com/NHSDigital/identity-service-jwks/main/jwks/internal-dev/9baed6f4-1361-4a8e-8531-1f8426e3aba8.json"  # noqa
             },
         )
     )
@@ -130,6 +130,7 @@ def nhs_login_id_token(
     test_app: ApigeeApiDeveloperApps,
     id_token_claims: dict = None,
     id_token_headers: dict = None,
+    allowed_proof: str = None
 ) -> str:
 
     default_id_token_claims = {
@@ -159,6 +160,7 @@ def nhs_login_id_token(
         "kid": "nhs-login",
         "typ": "JWT",
         "alg": "RS512",
+        "nhs-login-allowed-proofing-level":  allowed_proof
     }
 
     if id_token_headers is not None:

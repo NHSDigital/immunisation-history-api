@@ -436,3 +436,119 @@ async def test_token_exchange_both_header_and_exchange(api_client: APISessionCli
         assert body["resourceType"] == "Bundle", body
         # no data for this nhs number ...
         assert len(body["entry"]) == 0, body
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
+async def test_p5_without_allowed_proofing_level(api_client: APISessionClient, test_product_and_app):
+
+    test_product, test_app = test_product_and_app
+    await test_product.update_scopes(
+        ["urn:nhsd:apim:user-nhs-login:P5:immunisation-history"]
+    )
+    subject_token_claims = {
+        "identity_proofing_level": "P5"
+    }
+    token_response = await conftest.get_token_nhs_login_token_exchange(test_app,
+                                                                       subject_token_claims=subject_token_claims)
+    token = token_response["access_token"]
+
+    correlation_id = str(uuid4())
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "X-Correlation-ID": correlation_id,
+        "NHSD-Client-RP-Details": "{}"
+    }
+
+    async with api_client.get(
+        _valid_uri("9912003888", "90640007"),
+        headers=headers,
+        allow_retries=True
+    ) as resp:
+        assert resp.status == 401
+        body = await resp.json()
+        assert "x-correlation-id" in resp.headers, resp.headers
+        assert resp.headers["x-correlation-id"] == correlation_id
+        assert body == {
+            "issue":
+                [
+                    {
+                        "severity": "error",
+                        "diagnostics": "Provided access token is invalid",
+                        "code": "forbidden"
+                    }
+                ],
+            "resourceType": "OperationOutcome"
+        }
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
+async def test_p5_without_allowed_proofing_level(api_client: APISessionClient, test_product_and_app):
+
+    test_product, test_app = test_product_and_app
+    await test_product.update_scopes(
+        ["urn:nhsd:apim:user-nhs-login:P5:immunisation-history"]
+    )
+    subject_token_claims = {
+        "identity_proofing_level": "P5"
+    }
+    token_response = await conftest.get_token_nhs_login_token_exchange(test_app,
+                                                                       subject_token_claims=subject_token_claims, allowed_proof='Foo')
+    token = token_response["access_token"]
+
+    correlation_id = str(uuid4())
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "X-Correlation-ID": correlation_id,
+    }
+
+    async with api_client.get(
+        _valid_uri("9912003888", "90640007"),
+        headers=headers,
+        allow_retries=True
+    ) as resp:
+        assert resp.status == 401
+        body = await resp.json()
+        assert "x-correlation-id" in resp.headers, resp.headers
+        assert resp.headers["x-correlation-id"] == correlation_id
+        assert body == {
+            "issue":
+                [
+                    {
+                        "severity": "error",
+                        "diagnostics": "Provided access token is invalid",
+                        "code": "forbidden"
+                    }
+                ],
+            "resourceType": "OperationOutcome"
+        }
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
+async def test_p5_with_allowed_proofing_level(api_client: APISessionClient, test_product_and_app):
+
+    test_product, test_app = test_product_and_app
+    await test_product.update_scopes(
+        ["urn:nhsd:apim:user-nhs-login:P5:immunisation-history"]
+    )
+    subject_token_claims = {
+        "identity_proofing_level": "P5"
+    }
+    token_response = await conftest.get_token_nhs_login_token_exchange(test_app,
+                                                                       subject_token_claims=subject_token_claims, allowed_proof='P5')
+    token = token_response["access_token"]
+
+    correlation_id = str(uuid4())
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "X-Correlation-ID": correlation_id,
+    }
+
+    async with api_client.get(
+        _valid_uri("9912003888", "90640007"),
+        headers=headers,
+        allow_retries=True
+    ) as resp:
+        assert resp.status == 200
