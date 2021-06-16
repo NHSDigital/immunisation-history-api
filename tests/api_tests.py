@@ -364,6 +364,7 @@ async def test_token_exchange_happy_path(api_client: APISessionClient, test_prod
         # no data for this nhs number ...
         assert len(body["entry"]) == 0, body
 
+# This test I don't think is required someone review?
 
 # @pytest.mark.e2e
 # @pytest.mark.asyncio
@@ -512,17 +513,6 @@ async def test_p5_without_allowed_proofing_level(api_client: APISessionClient, t
         body = await resp.json()
         assert "x-correlation-id" in resp.headers, resp.headers
         assert resp.headers["x-correlation-id"] == correlation_id
-        assert body == {
-            "issue":
-                [
-                    {
-                        "severity": "error",
-                        "diagnostics": "Provided access token is invalid",
-                        "code": "forbidden"
-                    }
-                ],
-            "resourceType": "OperationOutcome"
-        }
 
 
 @pytest.mark.e2e
