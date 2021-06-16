@@ -130,7 +130,7 @@ def nhs_login_id_token(
     test_app: ApigeeApiDeveloperApps,
     id_token_claims: dict = None,
     id_token_headers: dict = None,
-    allowed_proof: str = None
+    allowed_proof: str = 'P9'
 ) -> str:
 
     default_id_token_claims = {
