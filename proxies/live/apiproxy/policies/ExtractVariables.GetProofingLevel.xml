@@ -2,7 +2,7 @@
   <!-- The source element points to the variable populated by AccessEntity policy.
   The format is <policy-type>.<policy-name>.
   In this case, the variable contains the whole developer profile. -->
-  <Source>AccessEntity.GetApp</Source>
+  <Source>AccessEntity.AccessEntity.GetApp</Source>
   <VariablePrefix>developer.app</VariablePrefix>
   <XMLPayload>
     <Variable name="nhs-login-allowed-proofing-level" type="string">
