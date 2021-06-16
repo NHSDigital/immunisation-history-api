@@ -1,0 +1,4 @@
+<AccessEntity name="AccessEntity.GetApp">
+  <EntityType  value="app"/>
+  <EntityIdentifier ref="developer.app.id" type="appid"/>
+</AccessEntity>

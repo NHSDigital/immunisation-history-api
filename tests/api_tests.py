@@ -364,49 +364,49 @@ async def test_token_exchange_happy_path(api_client: APISessionClient, test_prod
         # no data for this nhs number ...
         assert len(body["entry"]) == 0, body
 
-# This test I don't think is required someone review?
 
-# @pytest.mark.e2e
-# @pytest.mark.asyncio
-# async def test_token_exchange_invalid_identity_proofing_level_scope(api_client: APISessionClient, test_product_and_app):
+@pytest.mark.e2e
+@pytest.mark.asyncio
+async def test_token_exchange_invalid_identity_proofing_level_scope(api_client: APISessionClient, test_product_and_app):
 
-#     test_product, test_app = test_product_and_app
-#     await test_product.update_scopes(
-#         ["urn:nhsd:apim:user-nhs-login:P8:immunisation-history"]
-#     )
-#     subject_token_claims = {
-#         "identity_proofing_level": "P8"
-#     }
-#     token_response = await conftest.get_token_nhs_login_token_exchange(test_app,
-#                                                                        subject_token_claims=subject_token_claims)
-#     token = token_response["access_token"]
+    test_product, test_app = test_product_and_app
+    await test_product.update_scopes(
+        ["urn:nhsd:apim:user-nhs-login:P8:immunisation-history"]
+    )
+    subject_token_claims = {
+        "identity_proofing_level": "P8"
+    }
+    token_response = await conftest.get_token_nhs_login_token_exchange(
+        test_app, subject_token_claims=subject_token_claims
+    )
+    token = token_response["access_token"]
 
-#     correlation_id = str(uuid4())
-#     headers = {
-#         "Authorization": f"Bearer {token}",
-#         "X-Correlation-ID": correlation_id
-#     }
+    correlation_id = str(uuid4())
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "X-Correlation-ID": correlation_id
+    }
 
-#     async with api_client.get(
-#         _valid_uri("9912003888", "90640007"),
-#         headers=headers,
-#         allow_retries=True
-#     ) as resp:
-#         assert resp.status == 401
-#         body = await resp.json()
-#         assert "x-correlation-id" in resp.headers, resp.headers
-#         assert resp.headers["x-correlation-id"] == correlation_id
-#         assert body == {
-#             "issue":
-#                 [
-#                     {
-#                         "severity": "error",
-#                         "diagnostics": "Provided access token is invalid",
-#                         "code": "forbidden"
-#                     }
-#                 ],
-#             "resourceType": "OperationOutcome"
-#         }
+    async with api_client.get(
+        _valid_uri("9912003888", "90640007"),
+        headers=headers,
+        allow_retries=True
+    ) as resp:
+        assert resp.status == 401
+        body = await resp.json()
+        assert "x-correlation-id" in resp.headers, resp.headers
+        assert resp.headers["x-correlation-id"] == correlation_id
+        # assert body == {
+        #     "issue":
+        #         [
+        #             {
+        #                 "severity": "error",
+        #                 "diagnostics": "Provided access token is invalid",
+        #                 "code": "forbidden"
+        #             }
+        #         ],
+        #     "resourceType": "OperationOutcome"
+        # }
 
 
 @pytest.mark.e2e
@@ -441,93 +441,42 @@ async def test_token_exchange_both_header_and_exchange(api_client: APISessionCli
 
 @pytest.mark.e2e
 @pytest.mark.asyncio
-async def test_p5_without_allowed_proofing_level(api_client: APISessionClient, test_product_and_app):
+async def test_p5_happy_path(test_app, api_client: APISessionClient, authorised_headers):
 
-    test_product, test_app = test_product_and_app
-    await test_product.update_scopes(
-        ["urn:nhsd:apim:user-nhs-login:P5:immunisation-history"]
-    )
-    subject_token_claims = {
-        "identity_proofing_level": "P5"
-    }
-    token_response = await conftest.get_token_nhs_login_token_exchange(test_app,
-                                                                       subject_token_claims=subject_token_claims)
-    token = token_response["access_token"]
+    await test_app.set_custom_attributes({'nhs-login-allowed-proofing-level': 'P5'})
 
     correlation_id = str(uuid4())
-    headers = {
-        "Authorization": f"Bearer {token}",
-        "X-Correlation-ID": correlation_id,
-        "NHSD-Client-RP-Details": "{}"
-    }
+    authorised_headers["X-Correlation-ID"] = correlation_id
+    authorised_headers["NHSD-User-Identity"] = conftest.nhs_login_id_token(test_app, allowed_proofing_level='P5')
 
     async with api_client.get(
         _valid_uri("9912003888", "90640007"),
-        headers=headers,
+        headers=authorised_headers,
         allow_retries=True
     ) as resp:
-        assert resp.status == 401
+        assert resp.status == 200
         body = await resp.json()
         assert "x-correlation-id" in resp.headers, resp.headers
         assert resp.headers["x-correlation-id"] == correlation_id
-        assert body == {
-            "issue":
-                [
-                    {
-                        "severity": "error",
-                        "diagnostics": "Provided access token is invalid",
-                        "code": "forbidden"
-                    }
-                ],
-            "resourceType": "OperationOutcome"
+        assert body["resourceType"] == "Bundle", body
+        # no data for this nhs number ...
+        assert len(body["entry"]) == 0, body
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
+async def test_p5_token_exchange_with_allowed_proofing_level(api_client: APISessionClient, test_product_and_app):
+
+    test_product, test_app = test_product_and_app
+
+    await test_app.set_custom_attributes({'nhs-login-allowed-proofing-level': 'P5'})
+
+    token_response = await conftest.get_token_nhs_login_token_exchange(
+        test_app,
+        subject_token_claims={
+            "identity_proofing_level": "P5"
         }
-
-
-@pytest.mark.e2e
-@pytest.mark.asyncio
-async def test_p5_without_allowed_proofing_level(api_client: APISessionClient, test_product_and_app):
-
-    test_product, test_app = test_product_and_app
-    await test_product.update_scopes(
-        ["urn:nhsd:apim:user-nhs-login:P5:immunisation-history"]
     )
-    subject_token_claims = {
-        "identity_proofing_level": "P5"
-    }
-    token_response = await conftest.get_token_nhs_login_token_exchange(test_app,
-                                                                       subject_token_claims=subject_token_claims, allowed_proof='Foo')
-    token = token_response["access_token"]
-
-    correlation_id = str(uuid4())
-    headers = {
-        "Authorization": f"Bearer {token}",
-        "X-Correlation-ID": correlation_id,
-    }
-
-    async with api_client.get(
-        _valid_uri("9912003888", "90640007"),
-        headers=headers,
-        allow_retries=True
-    ) as resp:
-        assert resp.status == 401
-        body = await resp.json()
-        assert "x-correlation-id" in resp.headers, resp.headers
-        assert resp.headers["x-correlation-id"] == correlation_id
-
-
-@pytest.mark.e2e
-@pytest.mark.asyncio
-async def test_p5_with_allowed_proofing_level(api_client: APISessionClient, test_product_and_app):
-
-    test_product, test_app = test_product_and_app
-    await test_product.update_scopes(
-        ["urn:nhsd:apim:user-nhs-login:P5:immunisation-history"]
-    )
-    subject_token_claims = {
-        "identity_proofing_level": "P5"
-    }
-    token_response = await conftest.get_token_nhs_login_token_exchange(test_app,
-                                                                       subject_token_claims=subject_token_claims, allowed_proof='P5')
     token = token_response["access_token"]
 
     correlation_id = str(uuid4())
@@ -542,3 +491,71 @@ async def test_p5_with_allowed_proofing_level(api_client: APISessionClient, test
         allow_retries=True
     ) as resp:
         assert resp.status == 200
+        body = await resp.json()
+        assert body["resourceType"] == "Bundle", body
+        # no data for this nhs number ...
+        assert len(body["entry"]) == 0, body
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
+async def test_p5_without_allowed_proofing_level_attribute(test_app, api_client: APISessionClient, authorised_headers):
+
+    correlation_id = str(uuid4())
+    authorised_headers["X-Correlation-ID"] = correlation_id
+    authorised_headers["NHSD-User-Identity"] = conftest.nhs_login_id_token(test_app, allowed_proofing_level='P5')
+
+    async with api_client.get(
+        _valid_uri("9912003888", "90640007"),
+        headers=authorised_headers,
+        allow_retries=True
+    ) as resp:
+        assert resp.status == 401
+        body = await resp.json()
+        assert "x-correlation-id" in resp.headers, resp.headers
+        assert resp.headers["x-correlation-id"] == correlation_id
+        # assert body == {
+        #     "issue":
+        #         [
+        #             {
+        #                 "severity": "error",
+        #                 "diagnostics": "Provided access token is invalid",
+        #                 "code": "forbidden"
+        #             }
+        #         ],
+        #     "resourceType": "OperationOutcome"
+        # }
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
+async def test_p5_with_higher_proofing_level_attribute_specified(test_app, api_client: APISessionClient, authorised_headers):
+
+    await test_app.set_custom_attributes({'nhs-login-allowed-proofing-level': 'P9'})
+
+    correlation_id = str(uuid4())
+    authorised_headers["X-Correlation-ID"] = correlation_id
+    authorised_headers["NHSD-User-Identity"] = conftest.nhs_login_id_token(test_app, allowed_proofing_level='P5')
+
+    async with api_client.get(
+        _valid_uri("9912003888", "90640007"),
+        headers=authorised_headers,
+        allow_retries=True
+    ) as resp:
+        assert resp.status == 401
+        body = await resp.json()
+        assert "x-correlation-id" in resp.headers, resp.headers
+        assert resp.headers["x-correlation-id"] == correlation_id
+        # assert body == {
+        #     "issue":
+        #         [
+        #             {
+        #                 "severity": "error",
+        #                 "diagnostics": "Provided access token is invalid",
+        #                 "code": "forbidden"
+        #             }
+        #         ],
+        #     "resourceType": "OperationOutcome"
+        # }
+
+
