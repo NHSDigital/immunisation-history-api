@@ -1,4 +1,4 @@
-<ExtractVariables name="ExtractVariables.GetProofingLevel">
+<ExtractVariables name="ExtractVariables.GetProofingLevel" continueOnError="true">
   <!-- The source element points to the variable populated by AccessEntity policy.
   The format is <policy-type>.<policy-name>.
   In this case, the variable contains the whole developer profile. -->
