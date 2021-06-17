@@ -7,7 +7,7 @@
   <XMLPayload>
     <Variable name="nhs-login-allowed-proofing-level" type="string">
       <!-- You parse elements from the developer profile using XPath. -->
-      <XPath>/App/Attributes/Attribute[Name='nhs-login-allowed-proofing-level']/Value/text()</XPath>
+      <XPath>/App/Attributes/Attribute[Name='nhs-login-allowed-proofing-level']/Value</XPath>
     </Variable>
   </XMLPayload>
 </ExtractVariables>
