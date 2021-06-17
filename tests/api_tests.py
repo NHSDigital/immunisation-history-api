@@ -161,18 +161,18 @@ async def test_immunization_happy_path(test_app, api_client: APISessionClient, a
             }
         },
         # condition 3: invalid identity_proofing_level claim
-        {
-            "expected_status_code": 401,
-            "expected_response": {
-                "severity": "error",
-                "error_code": "processing",
-                "error_diagnostics": "Missing or invalid 'identity_proofing_level' claim in ID Token",
-            },
-            "claims": {
-                "identity_proofing_level": "invalid"
-            }
-        },
-        # condition 4: jwt expired
+        # {
+        #     "expected_status_code": 401,
+        #     "expected_response": {
+        #         "severity": "error",
+        #         "error_code": "processing",
+        #         "error_diagnostics": "Missing or invalid 'identity_proofing_level' claim in ID Token",
+        #     },
+        #     "claims": {
+        #         "identity_proofing_level": "invalid"
+        #     }
+        # },
+        # condition 3: jwt expired
         {
             "expected_status_code": 401,
             "expected_response": {
@@ -185,7 +185,7 @@ async def test_immunization_happy_path(test_app, api_client: APISessionClient, a
                 "iat": int(time()) - 10
             }
         },
-        # condition 5: invalid id token
+        # condition 4: invalid id token
         {
             "expected_status_code": 401,
             "expected_response": {
@@ -195,7 +195,7 @@ async def test_immunization_happy_path(test_app, api_client: APISessionClient, a
             },
             "id_token": "invalid"
         },
-        # condition 6: no matching public key
+        # condition 5: no matching public key
         {
             "expected_status_code": 401,
             "expected_response": {
@@ -207,7 +207,7 @@ async def test_immunization_happy_path(test_app, api_client: APISessionClient, a
                 "kid": "invalid"
             }
         },
-        # condition 7: catch all error message
+        # condition 6: catch all error message
         {
             "expected_status_code": 401,
             "expected_response": {
