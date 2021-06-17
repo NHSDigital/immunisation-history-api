@@ -3,7 +3,7 @@
   The format is <policy-type>.<policy-name>.
   In this case, the variable contains the whole developer profile. -->
   <Source>AccessEntity.AccessEntity.GetApp</Source>
-  <VariablePrefix>developer.app</VariablePrefix>
+<!--  <VariablePrefix>developer.app</VariablePrefix>-->
   <XMLPayload>
     <Variable name="nhs-login-allowed-proofing-level" type="string">
       <!-- You parse elements from the developer profile using XPath. -->

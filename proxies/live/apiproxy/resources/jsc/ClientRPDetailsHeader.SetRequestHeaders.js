@@ -1,7 +1,7 @@
 var developerAppName = context.getVariable('developer.app.name');
 var developerAppId = context.getVariable('developer.app.id');
 var clientIP = context.getVariable('client.ip');
-var allowedProofingLevel = context.getVariable('developer.app.nhs-login-allowed-proofing-level');
+var allowedProofingLevel = context.getVariable('nhs-login-allowed-proofing-level');
 
 var clientRpDetailsHeader = {
     "developer.app.name": developerAppName,
