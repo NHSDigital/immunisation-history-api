@@ -108,6 +108,9 @@
               <Name>ExtractVariables.GetProofingLevel</Name>
             </Step>
             <Step>
+                <Name>Javascript.SetDefaultAllowedProofingLevel</Name>
+            </Step>
+            <Step>
                 <Name>Javascript.AddClientRPDetailsHeader</Name>
             </Step>
             <Step>
