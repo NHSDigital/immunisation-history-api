@@ -54,13 +54,17 @@ def test_product_and_app():
     loop = asyncio.new_event_loop()
     loop.run_until_complete(product.create_new_product())
     loop.run_until_complete(product.update_scopes(
-        ["urn:nhsd:apim:app:level3:immunisation-history", "urn:nhsd:apim:user-nhs-login:P9:immunisation-history"]
+        [
+            "urn:nhsd:apim:app:level3:immunisation-history",
+            "urn:nhsd:apim:user-nhs-login:P9:immunisation-history",
+            "urn:nhsd:apim:user-nhs-login:P5:immunisation-history"
+        ]
     ))
     loop.run_until_complete(
         app.setup_app(
             api_products=[product.name],
             custom_attributes={
-                "jwks-resource-url": "https://raw.githubusercontent.com/NHSDigital/identity-service-jwks/main/jwks/internal-dev/9baed6f4-1361-4a8e-8531-1f8426e3aba8.json" # noqa
+                "jwks-resource-url": "https://raw.githubusercontent.com/NHSDigital/identity-service-jwks/main/jwks/internal-dev/9baed6f4-1361-4a8e-8531-1f8426e3aba8.json"  # noqa
             },
         )
     )
@@ -130,6 +134,7 @@ def nhs_login_id_token(
     test_app: ApigeeApiDeveloperApps,
     id_token_claims: dict = None,
     id_token_headers: dict = None,
+    allowed_proofing_level: str = 'P9'
 ) -> str:
 
     default_id_token_claims = {
@@ -143,7 +148,7 @@ def nhs_login_id_token(
         "iat": int(time()) - 10,
         "vtm": "https://auth.sandpit.signin.nhs.uk/trustmark/auth.sandpit.signin.nhs.uk",
         "jti": str(uuid4()),
-        "identity_proofing_level": "P9",
+        "identity_proofing_level": allowed_proofing_level,
         "birthdate": "1939-09-26",
         "nhs_number": "9912003888",
         "nonce": "randomnonce",
@@ -158,7 +163,7 @@ def nhs_login_id_token(
     default_id_token_headers = {
         "kid": "nhs-login",
         "typ": "JWT",
-        "alg": "RS512",
+        "alg": "RS512"
     }
 
     if id_token_headers is not None:
@@ -190,8 +195,9 @@ async def get_token_nhs_login_token_exchange(test_app: ApigeeApiDeveloperApps,
         client_assertion_jwt = test_app.oauth.create_jwt(kid="test-1")
 
     if subject_token_claims is not None:
-        id_token_jwt = nhs_login_id_token(test_app=test_app,
-                                          id_token_claims=subject_token_claims)
+        id_token_jwt = nhs_login_id_token(
+            test_app=test_app, id_token_claims=subject_token_claims
+        )
     else:
         id_token_jwt = nhs_login_id_token(test_app=test_app)
 
