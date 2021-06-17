@@ -1,7 +1,8 @@
 from typing import List
 from uuid import uuid4
-from time import time, sleep
+from time import time
 import pytest
+import asyncio
 from tests import conftest
 from aiohttp import ClientResponse
 from api_test_utils import env
@@ -41,6 +42,18 @@ def authorised_headers(valid_access_token):
 ALLOWED_PROOFING_LEVEL_ATTR = 'nhs-login-allowed-proofing-level'
 
 
+async def _wait_till_custom_attr_is(app: ApigeeApiDeveloperApps, attribute: str,  required_value: str = None):
+
+    while True:
+        current_attrs = (await app.get_custom_attributes()).get('attribute', [])
+        current_attrs = {attr['name']: attr['value'] for attr in current_attrs}
+
+        if current_attrs.get(attribute, None) == required_value:
+            return
+
+        await asyncio.sleep(1)
+
+
 async def _set_app_allowed_proofing_level(app: ApigeeApiDeveloperApps, proofing_level: str = None):
 
     current_attrs = (await app.get_custom_attributes()).get('attribute', [])
@@ -49,11 +62,13 @@ async def _set_app_allowed_proofing_level(app: ApigeeApiDeveloperApps, proofing_
     if proofing_level is None:
         if ALLOWED_PROOFING_LEVEL_ATTR in current_attrs:
             await app.delete_custom_attribute(ALLOWED_PROOFING_LEVEL_ATTR)
+            await _wait_till_custom_attr_is(app, ALLOWED_PROOFING_LEVEL_ATTR, None)
         return
 
     current_attrs[ALLOWED_PROOFING_LEVEL_ATTR] = proofing_level
 
     await app.set_custom_attributes(current_attrs)
+    await _wait_till_custom_attr_is(app, ALLOWED_PROOFING_LEVEL_ATTR, proofing_level)
 
 
 @pytest.mark.e2e
@@ -118,7 +133,6 @@ async def test_wait_for_status(
         until=is_deployed,
         timeout=deploy_timeout,
     )
-
 
 
 @pytest.mark.e2e
@@ -244,7 +258,7 @@ async def test_immunization_happy_path(test_app, api_client: APISessionClient, a
 async def test_immunisation_id_token_error_scenarios(test_app,
                                                      api_client: APISessionClient,
                                                      authorised_headers, request_data: dict):
-    sleep(1)  # Add delay to tests to avoid 429 on service callout
+    await asyncio.sleep(1)  # Add delay to tests to avoid 429 on service callout
     id_token = conftest.nhs_login_id_token(
         test_app=test_app,
         id_token_claims=request_data.get("claims"),
@@ -273,7 +287,7 @@ async def test_immunisation_id_token_error_scenarios(test_app,
 @pytest.mark.asyncio
 async def test_immunization_no_jwt_header_provided(api_client: APISessionClient, authorised_headers):
 
-    sleep(1)  # Add delay to tests to avoid 429 on service callout
+    await asyncio.sleep(1)  # Add delay to tests to avoid 429 on service callout
 
     async with api_client.get(
         _valid_uri("9912003888", "90640007"),
@@ -292,7 +306,7 @@ async def test_immunization_no_jwt_header_provided(api_client: APISessionClient,
 @pytest.mark.asyncio
 async def test_bad_nhs_number(test_app, api_client: APISessionClient, authorised_headers):
 
-    sleep(1)  # Add delay to tests to avoid 429 on service callout
+    await asyncio.sleep(1)  # Add delay to tests to avoid 429 on service callout
 
     authorised_headers["NHSD-User-Identity"] = conftest.nhs_login_id_token(test_app)
 
@@ -330,7 +344,8 @@ async def test_correlation_id_mirrored_in_resp_when_error(
 @pytest.mark.e2e
 @pytest.mark.asyncio
 async def test_user_restricted_access_not_permitted(api_client: APISessionClient, test_product_and_app):
-    sleep(1)  # Add delay to tests to avoid 429 on service callout
+
+    await asyncio.sleep(1)  # Add delay to tests to avoid 429 on service callout
 
     test_product, test_app = test_product_and_app
 
@@ -458,6 +473,7 @@ async def test_token_exchange_both_header_and_exchange(api_client: APISessionCli
         # no data for this nhs number ...
         assert len(body["entry"]) == 0, body
 
+
 @pytest.mark.e2e
 @pytest.mark.asyncio
 async def test_p5_happy_path(test_app, api_client: APISessionClient, authorised_headers):
@@ -489,8 +505,6 @@ async def test_p5_token_exchange_with_allowed_proofing_level(api_client: APISess
     test_product, test_app = test_product_and_app
 
     await _set_app_allowed_proofing_level(test_app, 'P5')
-
-
 
     token_response = await conftest.get_token_nhs_login_token_exchange(
         test_app,
