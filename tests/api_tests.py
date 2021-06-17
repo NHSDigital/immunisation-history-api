@@ -8,6 +8,7 @@ from api_test_utils import env
 from api_test_utils import poll_until
 from api_test_utils.api_session_client import APISessionClient
 from api_test_utils.api_test_session_config import APITestSessionConfig
+from api_test_utils.apigee_api_apps import ApigeeApiDeveloperApps
 
 
 def dict_path(raw, path: List[str]):
@@ -22,6 +23,37 @@ def dict_path(raw, path: List[str]):
         return res
 
     return dict_path(res, path[1:])
+
+
+def _base_valid_uri(nhs_number) -> str:
+    return f"FHIR/R4/Immunization?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|{nhs_number}"
+
+
+def _valid_uri(nhs_number, procedure_code) -> str:
+    return _base_valid_uri(nhs_number) + f"&procedure-code:below={procedure_code}"
+
+
+@pytest.fixture(scope='function')
+def authorised_headers(valid_access_token):
+    return {"Authorization": f"Bearer {valid_access_token}"}
+
+
+ALLOWED_PROOFING_LEVEL_ATTR = 'nhs-login-allowed-proofing-level'
+
+
+async def _set_app_allowed_proofing_level(app: ApigeeApiDeveloperApps, proofing_level: str = None):
+
+    current_attrs = (await app.get_custom_attributes()).get('attribute', [])
+    current_attrs = {attr['name']: attr['value'] for attr in current_attrs if attr['name'] != 'DisplayName'}
+
+    if proofing_level is None:
+        if ALLOWED_PROOFING_LEVEL_ATTR in current_attrs:
+            await app.delete_custom_attribute(ALLOWED_PROOFING_LEVEL_ATTR)
+        return
+
+    current_attrs[ALLOWED_PROOFING_LEVEL_ATTR] = proofing_level
+
+    await app.set_custom_attributes(current_attrs)
 
 
 @pytest.mark.e2e
@@ -87,18 +119,6 @@ async def test_wait_for_status(
         timeout=deploy_timeout,
     )
 
-
-def _base_valid_uri(nhs_number) -> str:
-    return f"FHIR/R4/Immunization?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|{nhs_number}"
-
-
-def _valid_uri(nhs_number, procedure_code) -> str:
-    return _base_valid_uri(nhs_number) + f"&procedure-code:below={procedure_code}"
-
-
-@pytest.fixture(scope='function')
-def authorised_headers(valid_access_token):
-    return {"Authorization": f"Bearer {valid_access_token}"}
 
 
 @pytest.mark.e2e
@@ -438,12 +458,11 @@ async def test_token_exchange_both_header_and_exchange(api_client: APISessionCli
         # no data for this nhs number ...
         assert len(body["entry"]) == 0, body
 
-
 @pytest.mark.e2e
 @pytest.mark.asyncio
 async def test_p5_happy_path(test_app, api_client: APISessionClient, authorised_headers):
 
-    await test_app.set_custom_attributes({'nhs-login-allowed-proofing-level': 'P5'})
+    await _set_app_allowed_proofing_level(test_app, 'P5')
 
     correlation_id = str(uuid4())
     authorised_headers["X-Correlation-ID"] = correlation_id
@@ -469,7 +488,9 @@ async def test_p5_token_exchange_with_allowed_proofing_level(api_client: APISess
 
     test_product, test_app = test_product_and_app
 
-    await test_app.set_custom_attributes({'nhs-login-allowed-proofing-level': 'P5'})
+    await _set_app_allowed_proofing_level(test_app, 'P5')
+
+
 
     token_response = await conftest.get_token_nhs_login_token_exchange(
         test_app,
@@ -533,7 +554,7 @@ async def test_p5_with_higher_proofing_level_attribute_specified(
     test_app, api_client: APISessionClient, authorised_headers
 ):
 
-    await test_app.set_custom_attributes({'nhs-login-allowed-proofing-level': 'P9'})
+    await _set_app_allowed_proofing_level(test_app, 'P9')
 
     correlation_id = str(uuid4())
     authorised_headers["X-Correlation-ID"] = correlation_id
