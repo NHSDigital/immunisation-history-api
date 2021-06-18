@@ -1,13 +1,15 @@
 from typing import List
 from uuid import uuid4
-from time import time, sleep
+from time import time
 import pytest
+import asyncio
 from tests import conftest
 from aiohttp import ClientResponse
 from api_test_utils import env
 from api_test_utils import poll_until
 from api_test_utils.api_session_client import APISessionClient
 from api_test_utils.api_test_session_config import APITestSessionConfig
+from api_test_utils.apigee_api_apps import ApigeeApiDeveloperApps
 
 
 def dict_path(raw, path: List[str]):
@@ -22,6 +24,51 @@ def dict_path(raw, path: List[str]):
         return res
 
     return dict_path(res, path[1:])
+
+
+def _base_valid_uri(nhs_number) -> str:
+    return f"FHIR/R4/Immunization?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|{nhs_number}"
+
+
+def _valid_uri(nhs_number, procedure_code) -> str:
+    return _base_valid_uri(nhs_number) + f"&procedure-code:below={procedure_code}"
+
+
+@pytest.fixture(scope='function')
+def authorised_headers(valid_access_token):
+    return {"Authorization": f"Bearer {valid_access_token}"}
+
+
+ALLOWED_PROOFING_LEVEL_ATTR = 'nhs-login-allowed-proofing-level'
+
+
+async def _wait_till_custom_attr_is(app: ApigeeApiDeveloperApps, attribute: str,  required_value: str = None):
+
+    while True:
+        current_attrs = (await app.get_custom_attributes()).get('attribute', [])
+        current_attrs = {attr['name']: attr['value'] for attr in current_attrs}
+
+        if current_attrs.get(attribute, None) == required_value:
+            return
+
+        await asyncio.sleep(1)
+
+
+async def _set_app_allowed_proofing_level(app: ApigeeApiDeveloperApps, proofing_level: str = None):
+
+    current_attrs = (await app.get_custom_attributes()).get('attribute', [])
+    current_attrs = {attr['name']: attr['value'] for attr in current_attrs if attr['name'] != 'DisplayName'}
+
+    if proofing_level is None:
+        if ALLOWED_PROOFING_LEVEL_ATTR in current_attrs:
+            await app.delete_custom_attribute(ALLOWED_PROOFING_LEVEL_ATTR)
+            await _wait_till_custom_attr_is(app, ALLOWED_PROOFING_LEVEL_ATTR, None)
+        return
+
+    current_attrs[ALLOWED_PROOFING_LEVEL_ATTR] = proofing_level
+
+    await app.set_custom_attributes(current_attrs)
+    await _wait_till_custom_attr_is(app, ALLOWED_PROOFING_LEVEL_ATTR, proofing_level)
 
 
 @pytest.mark.e2e
@@ -86,19 +133,6 @@ async def test_wait_for_status(
         until=is_deployed,
         timeout=deploy_timeout,
     )
-
-
-def _base_valid_uri(nhs_number) -> str:
-    return f"FHIR/R4/Immunization?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|{nhs_number}"
-
-
-def _valid_uri(nhs_number, procedure_code) -> str:
-    return _base_valid_uri(nhs_number) + f"&procedure-code:below={procedure_code}"
-
-
-@pytest.fixture(scope='function')
-def authorised_headers(valid_access_token):
-    return {"Authorization": f"Bearer {valid_access_token}"}
 
 
 @pytest.mark.e2e
@@ -224,7 +258,7 @@ async def test_immunization_happy_path(test_app, api_client: APISessionClient, a
 async def test_immunisation_id_token_error_scenarios(test_app,
                                                      api_client: APISessionClient,
                                                      authorised_headers, request_data: dict):
-    sleep(1)  # Add delay to tests to avoid 429 on service callout
+    await asyncio.sleep(1)  # Add delay to tests to avoid 429 on service callout
     id_token = conftest.nhs_login_id_token(
         test_app=test_app,
         id_token_claims=request_data.get("claims"),
@@ -253,7 +287,7 @@ async def test_immunisation_id_token_error_scenarios(test_app,
 @pytest.mark.asyncio
 async def test_immunization_no_jwt_header_provided(api_client: APISessionClient, authorised_headers):
 
-    sleep(1)  # Add delay to tests to avoid 429 on service callout
+    await asyncio.sleep(1)  # Add delay to tests to avoid 429 on service callout
 
     async with api_client.get(
         _valid_uri("9912003888", "90640007"),
@@ -272,7 +306,7 @@ async def test_immunization_no_jwt_header_provided(api_client: APISessionClient,
 @pytest.mark.asyncio
 async def test_bad_nhs_number(test_app, api_client: APISessionClient, authorised_headers):
 
-    sleep(1)  # Add delay to tests to avoid 429 on service callout
+    await asyncio.sleep(1)  # Add delay to tests to avoid 429 on service callout
 
     authorised_headers["NHSD-User-Identity"] = conftest.nhs_login_id_token(test_app)
 
@@ -310,7 +344,8 @@ async def test_correlation_id_mirrored_in_resp_when_error(
 @pytest.mark.e2e
 @pytest.mark.asyncio
 async def test_user_restricted_access_not_permitted(api_client: APISessionClient, test_product_and_app):
-    sleep(1)  # Add delay to tests to avoid 429 on service callout
+
+    await asyncio.sleep(1)  # Add delay to tests to avoid 429 on service callout
 
     test_product, test_app = test_product_and_app
 
@@ -443,7 +478,7 @@ async def test_token_exchange_both_header_and_exchange(api_client: APISessionCli
 @pytest.mark.asyncio
 async def test_p5_happy_path(test_app, api_client: APISessionClient, authorised_headers):
 
-    await test_app.set_custom_attributes({'nhs-login-allowed-proofing-level': 'P5'})
+    await _set_app_allowed_proofing_level(test_app, 'P5')
 
     correlation_id = str(uuid4())
     authorised_headers["X-Correlation-ID"] = correlation_id
@@ -463,38 +498,38 @@ async def test_p5_happy_path(test_app, api_client: APISessionClient, authorised_
         assert len(body["entry"]) == 0, body
 
 
-# @pytest.mark.e2e
-# @pytest.mark.asyncio
-# async def test_p5_token_exchange_with_allowed_proofing_level(api_client: APISessionClient, test_product_and_app):
-#
-#     test_product, test_app = test_product_and_app
-#
-#     await test_app.set_custom_attributes({'nhs-login-allowed-proofing-level': 'P5'})
-#
-#     token_response = await conftest.get_token_nhs_login_token_exchange(
-#         test_app,
-#         subject_token_claims={
-#             "identity_proofing_level": "P5"
-#         }
-#     )
-#     token = token_response["access_token"]
-#
-#     correlation_id = str(uuid4())
-#     headers = {
-#         "Authorization": f"Bearer {token}",
-#         "X-Correlation-ID": correlation_id,
-#     }
-#
-#     async with api_client.get(
-#         _valid_uri("9912003888", "90640007"),
-#         headers=headers,
-#         allow_retries=True
-#     ) as resp:
-#         assert resp.status == 200
-#         body = await resp.json()
-#         assert body["resourceType"] == "Bundle", body
-#         # no data for this nhs number ...
-#         assert len(body["entry"]) == 0, body
+@pytest.mark.e2e
+@pytest.mark.asyncio
+async def test_p5_token_exchange_with_allowed_proofing_level(api_client: APISessionClient, test_product_and_app):
+
+    test_product, test_app = test_product_and_app
+
+    await _set_app_allowed_proofing_level(test_app, 'P5')
+
+    token_response = await conftest.get_token_nhs_login_token_exchange(
+        test_app,
+        subject_token_claims={
+            "identity_proofing_level": "P5"
+        }
+    )
+    token = token_response["access_token"]
+
+    correlation_id = str(uuid4())
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "X-Correlation-ID": correlation_id,
+    }
+
+    async with api_client.get(
+        _valid_uri("9912003888", "90640007"),
+        headers=headers,
+        allow_retries=True
+    ) as resp:
+        assert resp.status == 200
+        body = await resp.json()
+        assert body["resourceType"] == "Bundle", body
+        # no data for this nhs number ...
+        assert len(body["entry"]) == 0, body
 
 
 @pytest.mark.e2e
@@ -533,7 +568,7 @@ async def test_p5_with_higher_proofing_level_attribute_specified(
     test_app, api_client: APISessionClient, authorised_headers
 ):
 
-    await test_app.set_custom_attributes({'nhs-login-allowed-proofing-level': 'P9'})
+    await _set_app_allowed_proofing_level(test_app, 'P9')
 
     correlation_id = str(uuid4())
     authorised_headers["X-Correlation-ID"] = correlation_id
