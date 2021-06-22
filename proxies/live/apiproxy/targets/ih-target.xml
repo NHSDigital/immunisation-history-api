@@ -102,6 +102,12 @@
                 <Condition>accesstoken.grant_type != "urn:ietf:params:oauth:grant-type:token-exchange"</Condition>
             </Step>
             <Step>
+              <Name>AccessEntity.GetApp</Name>
+            </Step>
+            <Step>
+              <Name>ExtractVariables.GetProofingLevel</Name>
+            </Step>
+            <Step>
                 <Name>Javascript.AddClientRPDetailsHeader</Name>
             </Step>
             <Step>

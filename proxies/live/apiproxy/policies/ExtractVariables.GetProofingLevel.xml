@@ -1,0 +1,13 @@
+<ExtractVariables name="ExtractVariables.GetProofingLevel" continueOnError="true">
+  <!-- The source element points to the variable populated by AccessEntity policy.
+  The format is <policy-type>.<policy-name>.
+  In this case, the variable contains the whole developer profile. -->
+  <Source>AccessEntity.AccessEntity.GetApp</Source>
+<!--  <VariablePrefix>developer.app</VariablePrefix>-->
+  <XMLPayload>
+    <Variable name="nhs-login-allowed-proofing-level" type="string">
+      <!-- You parse elements from the developer profile using XPath. -->
+      <XPath>/App/Attributes/Attribute[Name='nhs-login-allowed-proofing-level']/Value</XPath>
+    </Variable>
+  </XMLPayload>
+</ExtractVariables>

@@ -6,9 +6,6 @@
         <JWKS ref="jwks"/>
     </PublicKey>
     <Issuer ref="apigee.issuer"/>
-    <AdditionalClaims>
-        <Claim name="identity_proofing_level">P9</Claim>
-    </AdditionalClaims>
     <AdditionalHeaders>
         <Claim name="typ">JWT</Claim>
     </AdditionalHeaders>
