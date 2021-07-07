@@ -161,8 +161,7 @@ async def test_immunization_happy_path(test_app, api_client: APISessionClient, a
         assert "x-correlation-id" in resp.headers, resp.headers
         assert resp.headers["x-correlation-id"] == correlation_id
         assert body["resourceType"] == "Bundle", body
-        # no data for this nhs number ...
-        assert len(body["entry"]) == 0, body
+        assert len(body["entry"]) == 3, body
 
 
 @pytest.mark.e2e
@@ -396,8 +395,7 @@ async def test_token_exchange_happy_path(api_client: APISessionClient, test_prod
         assert "x-correlation-id" in resp.headers, resp.headers
         assert resp.headers["x-correlation-id"] == correlation_id
         assert body["resourceType"] == "Bundle", body
-        # no data for this nhs number ...
-        assert len(body["entry"]) == 0, body
+        assert len(body["entry"]) == 3, body
 
 
 @pytest.mark.e2e
@@ -471,31 +469,7 @@ async def test_token_exchange_both_header_and_exchange(api_client: APISessionCli
         assert resp.headers["x-correlation-id"] == correlation_id
         assert body["resourceType"] == "Bundle", body
         # no data for this nhs number ...
-        assert len(body["entry"]) == 0, body
-
-
-@pytest.mark.e2e
-@pytest.mark.asyncio
-async def test_p5_happy_path(test_app, api_client: APISessionClient, authorised_headers):
-
-    await _set_app_allowed_proofing_level(test_app, 'P5')
-
-    correlation_id = str(uuid4())
-    authorised_headers["X-Correlation-ID"] = correlation_id
-    authorised_headers["NHSD-User-Identity"] = conftest.nhs_login_id_token(test_app, allowed_proofing_level='P5')
-
-    async with api_client.get(
-        _valid_uri("9912003888", "90640007"),
-        headers=authorised_headers,
-        allow_retries=True
-    ) as resp:
-        assert resp.status == 200
-        body = await resp.json()
-        assert "x-correlation-id" in resp.headers, resp.headers
-        assert resp.headers["x-correlation-id"] == correlation_id
-        assert body["resourceType"] == "Bundle", body
-        # no data for this nhs number ...
-        assert len(body["entry"]) == 0, body
+        assert len(body["entry"]) == 3, body
 
 
 @pytest.mark.e2e
@@ -528,8 +502,7 @@ async def test_p5_token_exchange_with_allowed_proofing_level(api_client: APISess
         assert resp.status == 200
         body = await resp.json()
         assert body["resourceType"] == "Bundle", body
-        # no data for this nhs number ...
-        assert len(body["entry"]) == 0, body
+        assert len(body["entry"]) == 3, body
 
 
 @pytest.mark.e2e
@@ -594,3 +567,26 @@ async def test_p5_with_higher_proofing_level_attribute_specified(
         #         ],
         #     "resourceType": "OperationOutcome"
         # }
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
+async def test_p5_happy_path(test_app, api_client: APISessionClient, authorised_headers):
+
+    await _set_app_allowed_proofing_level(test_app, 'P5')
+
+    correlation_id = str(uuid4())
+    authorised_headers["X-Correlation-ID"] = correlation_id
+    authorised_headers["NHSD-User-Identity"] = conftest.nhs_login_id_token(test_app, allowed_proofing_level='P5')
+
+    async with api_client.get(
+        _valid_uri("9912003888", "90640007"),
+        headers=authorised_headers,
+        allow_retries=True
+    ) as resp:
+        assert resp.status == 200
+        body = await resp.json()
+        assert "x-correlation-id" in resp.headers, resp.headers
+        assert resp.headers["x-correlation-id"] == correlation_id
+        assert body["resourceType"] == "Bundle", body
+        assert len(body["entry"]) == 3, body
