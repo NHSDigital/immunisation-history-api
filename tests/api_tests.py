@@ -39,6 +39,11 @@ def authorised_headers(valid_access_token):
     return {"Authorization": f"Bearer {valid_access_token}"}
 
 
+@pytest.fixture(scope='function')
+def authorised_headers_p5(valid_access_token_p5):
+    return {"Authorization": f"Bearer {valid_access_token_p5}"}
+
+
 ALLOWED_PROOFING_LEVEL_ATTR = 'nhs-login-allowed-proofing-level'
 
 
@@ -541,7 +546,7 @@ async def test_p5_with_higher_proofing_level_attribute_specified(
     test_app, api_client: APISessionClient, authorised_headers
 ):
 
-    await _set_app_allowed_proofing_level(test_app, 'P9')
+    # await _set_app_allowed_proofing_level(test_app, 'P9')
 
     correlation_id = str(uuid4())
     authorised_headers["X-Correlation-ID"] = correlation_id
@@ -571,17 +576,17 @@ async def test_p5_with_higher_proofing_level_attribute_specified(
 
 @pytest.mark.e2e
 @pytest.mark.asyncio
-async def test_p5_happy_path(test_app, api_client: APISessionClient, authorised_headers):
+async def test_p5_happy_path(test_app_p5, api_client: APISessionClient, authorised_headers_p5):
 
-    await _set_app_allowed_proofing_level(test_app, 'P5')
+    # await _set_app_allowed_proofing_level(test_app_p5, 'P5')
 
     correlation_id = str(uuid4())
-    authorised_headers["X-Correlation-ID"] = correlation_id
-    authorised_headers["NHSD-User-Identity"] = conftest.nhs_login_id_token(test_app, allowed_proofing_level='P5')
-
+    authorised_headers_p5["X-Correlation-ID"] = correlation_id
+    authorised_headers_p5["NHSD-User-Identity"] = conftest.nhs_login_id_token(test_app_p5, allowed_proofing_level='P5')
+    current_attrs = (await test_app_p5.get_custom_attributes()).get('attribute', [])
     async with api_client.get(
         _valid_uri("9912003888", "90640007"),
-        headers=authorised_headers,
+        headers=authorised_headers_p5,
         allow_retries=True
     ) as resp:
         assert resp.status == 200

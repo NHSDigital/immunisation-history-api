@@ -3,6 +3,7 @@ import asyncio
 from time import time
 from uuid import uuid4
 import os
+from attr import attributes
 
 import pytest
 from api_test_utils.api_test_session_config import APITestSessionConfig
@@ -29,7 +30,13 @@ def api_test_config() -> APITestSessionConfig:
 
 
 _BASE_CUSTOM_ATTRIBUTES = {
-    "jwks-resource-url": "https://raw.githubusercontent.com/NHSDigital/identity-service-jwks/main/jwks/internal-dev/9baed6f4-1361-4a8e-8531-1f8426e3aba8.json"  # noqa
+    "jwks-resource-url": "https://raw.githubusercontent.com/NHSDigital/identity-service-jwks/main/jwks/internal-dev/9baed6f4-1361-4a8e-8531-1f8426e3aba8.json",
+    "nhs-login-allowed-proofing-level": "P9"  # noqa
+}
+
+_BASE_CUSTOM_ATTRIBUTES_P5 = {
+    "jwks-resource-url": "https://raw.githubusercontent.com/NHSDigital/identity-service-jwks/main/jwks/internal-dev/9baed6f4-1361-4a8e-8531-1f8426e3aba8.json",  # noqa
+    "nhs-login-allowed-proofing-level": "P5"
 }
 
 
@@ -37,6 +44,7 @@ _BASE_CUSTOM_ATTRIBUTES = {
 def base_test_app():
     """Setup & Teardown an app-restricted app for this api"""
     app = ApigeeApiDeveloperApps()
+
     loop = asyncio.new_event_loop()
     loop.run_until_complete(
         app.setup_app(
@@ -49,16 +57,40 @@ def base_test_app():
     loop.run_until_complete(app.destroy_app())
 
 
-def _reset_app_custom_attributes(app, loop=None):
-    loop = loop or asyncio.new_event_loop()
+@pytest.fixture(scope="session")
+def base_test_app_p5():
+    """Setup & Teardown an app-restricted app for this api"""
+    app = ApigeeApiDeveloperApps()
+
+    loop = asyncio.new_event_loop()
     loop.run_until_complete(
-        app.set_custom_attributes(_BASE_CUSTOM_ATTRIBUTES)
+        app.setup_app(
+            api_products=[get_env("APIGEE_PRODUCT")],
+            custom_attributes=_BASE_CUSTOM_ATTRIBUTES_P5
+        )
     )
+    app.oauth = OauthHelper(app.client_id, app.client_secret, app.callback_url)
+    yield app
+    loop.run_until_complete(app.destroy_app())
+
+
+# def _reset_app_custom_attributes(app, loop=None):
+#     loop = loop or asyncio.new_event_loop()
+#     loop.run_until_complete(
+#         app.set_custom_attributes(_BASE_CUSTOM_ATTRIBUTES_P5)
+#     )
+
 
 @pytest.fixture()
 def test_app(base_test_app):
-    _reset_app_custom_attributes(base_test_app)
+    # _reset_app_custom_attributes(base_test_app)
     yield base_test_app
+
+
+@pytest.fixture()
+def test_app_p5(base_test_app_p5):
+    # _reset_app_custom_attributes(base_test_app_p5)
+    yield base_test_app_p5
 
 
 @pytest.fixture()
@@ -126,7 +158,7 @@ def valid_access_token(base_test_app) -> str:
 
     loop = asyncio.new_event_loop()
 
-    _reset_app_custom_attributes(base_test_app, loop)
+    #_reset_app_custom_attributes(base_test_app, loop)
 
     jwt = base_test_app.oauth.create_jwt(
         **{
@@ -143,6 +175,35 @@ def valid_access_token(base_test_app) -> str:
 
     token = loop.run_until_complete(
         get_token(base_test_app, grant_type="client_credentials", _jwt=jwt)
+    )
+    return token["access_token"]
+
+
+@pytest.fixture(scope="session")
+def valid_access_token_p5(base_test_app_p5) -> str:
+    oauth_proxy = get_env("OAUTH_PROXY")
+    oauth_base_uri = get_env("OAUTH_BASE_URI")
+    token_url = f"{oauth_base_uri}/{oauth_proxy}/token"
+
+    loop = asyncio.new_event_loop()
+
+    #_reset_app_custom_attributes(base_test_app, loop)
+
+    jwt = base_test_app_p5.oauth.create_jwt(
+        **{
+            "kid": "test-1",
+            "claims": {
+                "sub": base_test_app_p5.client_id,
+                "iss": base_test_app_p5.client_id,
+                "jti": str(uuid4()),
+                "aud": token_url,
+                "exp": int(time()) + 60,
+            },
+        }
+    )
+
+    token = loop.run_until_complete(
+        get_token(base_test_app_p5, grant_type="client_credentials", _jwt=jwt)
     )
     return token["access_token"]
 
