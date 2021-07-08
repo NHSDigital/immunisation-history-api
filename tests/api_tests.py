@@ -583,7 +583,7 @@ async def test_p5_happy_path(test_app_p5, api_client: APISessionClient, authoris
     correlation_id = str(uuid4())
     authorised_headers_p5["X-Correlation-ID"] = correlation_id
     authorised_headers_p5["NHSD-User-Identity"] = conftest.nhs_login_id_token(test_app_p5, allowed_proofing_level='P5')
-    current_attrs = (await test_app_p5.get_custom_attributes()).get('attribute', [])
+    # current_attrs = (await test_app_p5.get_custom_attributes()).get('attribute', [])
     async with api_client.get(
         _valid_uri("9912003888", "90640007"),
         headers=authorised_headers_p5,
