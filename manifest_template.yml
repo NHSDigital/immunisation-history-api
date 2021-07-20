@@ -25,6 +25,34 @@ APIGEE_ENVIRONMENTS:
     approval_type: manual
     ratelimit: '210000pm'
     quota: '210000'
+ACCESS_MODES:
+  - name: legacy
+    nameSuffix:
+    displayName: Legacy
+    scopes: [
+      'urn:nhsd:apim:app:level3:immunisation-history',
+      'urn:nhsd:apim:user-nhs-login:P9:immunisation-history',
+      'urn:nhsd:apim:user-nhs-login:P5:immunisation-history'
+    ]
+    requireCallbackUrl: false
+    description: Legacy
+  - name: user-restricted
+    nameSuffix: '-user-restricted'
+    displayName: User Restricted
+    scopes: [
+      'urn:nhsd:apim:user-nhs-login:P9:immunisation-history',
+      'urn:nhsd:apim:user-nhs-login:P5:immunisation-history'
+    ]
+    requireCallbackUrl: false
+    description: User restricted
+  - name: application-restricted
+    nameSuffix: -application-restricted
+    displayName: Application-Restricted
+    scopes: [
+      'urn:nhsd:apim:app:level3:immunisation-history'
+    ]
+    requireCallbackUrl: false
+    description: Application Restricted
 ---
 meta:
   api:
@@ -36,40 +64,39 @@ meta:
 apigee:
   environments:
 {% for ENV in APIGEE_ENVIRONMENTS %}
-{% set TITLE = PRODUCT_DISPLAY_NAME + ' (' + ENV.display_name + ' Environment)' %}
-{% set NAME = SERVICE_NAME + '-' + ENV.name %}
+    - name: {{ ENV.name }}
+      products:
 {% set approval_type = ENV.approval_type | default('auto') %}
-  - name: {{ ENV.name }}
-    products:
-      - name: {{ NAME }}
+{% for MODE in ACCESS_MODES %}
+      - name: immunisation-history-{{ ENV.name }}{{ MODE.nameSuffix }}
         approvalType: {{ approval_type }}
         attributes:
           - name: access
             value: public
           - name: ratelimit
             value: {{ ENV.ratelimit | default('300pm') }}
-        description: {{ DESCRIPTION }}
-        displayName: {{ TITLE }}
+        description: {{ MODE.description }}
+        displayName: Immunisation History - {{ MODE.displayName }} ({{ ENV.display_name }})
         environments: [ {{ ENV.name }} ]
         proxies:
-          - {{ SERVICE_NAME }}-{{ ENV.name }}
+          - immunisation-history-{{ ENV.name }}
           - identity-service-{{ ENV.name }}
-        scopes:
-          - 'urn:nhsd:apim:app:level3:{{ SERVICE_NAME }}'
-          - 'urn:nhsd:apim:user-nhs-login:P9:{{ SERVICE_NAME }}'
-          - 'urn:nhsd:apim:user-nhs-login:P5:{{ SERVICE_NAME }}'
+        scopes: {{ MODE.scopes }}
         quota: {{ ENV.quota | default('300') }}
         quotaInterval: '1'
         quotaTimeUnit: minute
-    specs:
-      - name: {{ NAME }}
-        path: {{ SERVICE_NAME }}.json
-    api_catalog:
-      - edgeAPIProductName: {{ NAME }}
+{% endfor %}
+      specs:
+      - name: immunisation-history-{{ ENV.name }}
+        path: immunisation-history.json
+      api_catalog:
+{% for MODE in ACCESS_MODES %}
+      - edgeAPIProductName: immunisation-history-{{ ENV.name }}{{ MODE.nameSuffix }}
         anonAllowed: true
-        description: {{ DESCRIPTION }}
-        requireCallbackUrl: false
-        title: {{ TITLE }}
+        description: Immunisation history API - {{ MODE.displayName|lower  }} access mode - {{ ENV.display_name|lower }} environment
+        requireCallbackUrl: {{ MODE.requireCallbackUrl }}
+        title: Immunisation History - {{ MODE.displayName }} ({{ ENV.display_name }})
         visibility: true
-        specId: {{ NAME }}
+        specId: immunisation-history-{{ ENV.name }}
+{% endfor %}
 {% endfor %}
