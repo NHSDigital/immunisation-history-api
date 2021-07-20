@@ -128,29 +128,39 @@ async def test_check_immunization_is_secured(api_client: APISessionClient):
             'identity_proofing_level': 'P5'
         },
         {
-            'suffixes': ['-user-restricted'],
+            'suffixes': ['-application-restricted'],
             'requested_proofing_level': 'P9',
             'identity_proofing_level': 'P9'
         },
         {
-            'suffixes': ['-user-restricted'],
+            'suffixes': ['-application-restricted'],
             'requested_proofing_level': 'P5',
             'identity_proofing_level': 'P9'
         },
         {
-            'suffixes': ['-user-restricted'],
+            'suffixes': ['-application-restricted'],
             'requested_proofing_level': 'P5',
             'identity_proofing_level': 'P5'
         },
         {
-            'suffixes': ['-application-restricted'],
-            'requested_proofing_level': 'P3',
-            'identity_proofing_level': 'P3'
-        }
+            'suffixes': ['', '-application-restricted', '-user-restricted'],
+            'requested_proofing_level': 'P9',
+            'identity_proofing_level': 'P9'
+        },
+        {
+            'suffixes': ['', '-application-restricted', '-user-restricted'],
+            'requested_proofing_level': 'P5',
+            'identity_proofing_level': 'P9'
+        },
+        {
+            'suffixes': ['', '-application-restricted', '-user-restricted'],
+            'requested_proofing_level': 'P5',
+            'identity_proofing_level': 'P5'
+        },
     ],
     indirect=True
 )
-async def test_immunization_happy_path(test_app, api_client: APISessionClient):
+async def test_client_credentials_happy_path(test_app, api_client: APISessionClient):
     authorised_headers = await conftest.get_authorised_headers(test_app)
 
     correlation_id = str(uuid4())
@@ -171,6 +181,33 @@ async def test_immunization_happy_path(test_app, api_client: APISessionClient):
         assert resp.headers["x-correlation-id"] == correlation_id
         assert body["resourceType"] == "Bundle", body
         assert len(body["entry"]) == 3, body
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    'test_app',
+    [
+        {
+            'suffixes': ['-user-restricted'],
+            'requested_proofing_level': 'P9',
+            'identity_proofing_level': 'P9'
+        },
+        {
+            'suffixes': ['-user-restricted'],
+            'requested_proofing_level': 'P5',
+            'identity_proofing_level': 'P9'
+        },
+        {
+            'suffixes': ['-user-restricted'],
+            'requested_proofing_level': 'P5',
+            'identity_proofing_level': 'P5'
+        },
+    ],
+    indirect=True
+)
+async def test_client_credentials_sad_path(test_app, api_client: APISessionClient):
+    await conftest.check_for_unauthorised_headers(test_app)
 
 
 @pytest.mark.e2e
@@ -416,10 +453,20 @@ async def test_correlation_id_mirrored_in_resp_when_error(
             'identity_proofing_level': 'P5'
         },
         {
-            'suffixes': ['-application-restricted'],
-            'requested_proofing_level': 'P3',
-            'identity_proofing_level': 'P3'
-        }
+            'suffixes': ['', '-application-restricted', '-user-restricted'],
+            'requested_proofing_level': 'P9',
+            'identity_proofing_level': 'P9'
+        },
+        {
+            'suffixes': ['', '-application-restricted', '-user-restricted'],
+            'requested_proofing_level': 'P5',
+            'identity_proofing_level': 'P9'
+        },
+        {
+            'suffixes': ['', '-application-restricted', '-user-restricted'],
+            'requested_proofing_level': 'P5',
+            'identity_proofing_level': 'P5'
+        },
     ],
     indirect=True
 )
@@ -450,6 +497,39 @@ async def test_token_exchange_happy_path(test_app, api_client: APISessionClient)
         assert resp.headers["x-correlation-id"] == correlation_id
         assert body["resourceType"] == "Bundle", body
         assert len(body["entry"]) == 3, body
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    'test_app',
+    [
+        {
+            'suffixes': ['-application-restricted'],
+            'requested_proofing_level': 'P9',
+            'identity_proofing_level': 'P9'
+        },
+        {
+            'suffixes': ['-application-restricted'],
+            'requested_proofing_level': 'P5',
+            'identity_proofing_level': 'P9'
+        },
+        {
+            'suffixes': ['-application-restricted'],
+            'requested_proofing_level': 'P5',
+            'identity_proofing_level': 'P5'
+        },
+    ],
+    indirect=True
+)
+async def test_token_exchange_sad_path(test_app, api_client: APISessionClient):
+    subject_token_claims = {
+        'identity_proofing_level': test_app.request_params['identity_proofing_level']
+    }
+    await conftest.check_for_unauthorised_token_exchange(
+        test_app,
+        subject_token_claims=subject_token_claims
+    )
 
 
 @pytest.mark.e2e

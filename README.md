@@ -11,6 +11,17 @@ This is a RESTful HL7® FHIR® API specification for the *Immunisation-History* 
 
 Consumers of the API will find developer documentation on the [NHS Digital Developer Hub](https://developer.digital.nhs.uk/).
 
+### Pre-requisites
+You will need the following packages installing: 
+    - [Poetry](https://python-poetry.org/docs/)
+    - [get_token](https://docs.apigee.com/api-platform/system-administration/auth-tools#install)
+And you will need to be granted access to the APIGEE    
+
+
+### Testing
+To test this locally you will need a local environment set up, please contact a developer managing this repo for local environment setup for testing.
+
+
 ## Contributing
 Contributions to this project are welcome from anyone, providing that they conform to the [guidelines for contribution](https://github.com/NHSDigital/immunisation-history/blob/master/CONTRIBUTING.md) and the [community code of conduct](https://github.com/NHSDigital/immunisation-history/blob/master/CODE_OF_CONDUCT.md).
 
@@ -18,4 +29,6 @@ Contributions to this project are welcome from anyone, providing that they confo
 This code is dual licensed under the MIT license and the OGL (Open Government License). Any new work added to this repository must conform to the conditions of these licenses. In particular this means that this project may not depend on GPL-licensed or AGPL-licensed libraries, as these would violate the terms of those libraries' licenses.
 
 The contents of this repository are protected by Crown Copyright (C).
+
+
 

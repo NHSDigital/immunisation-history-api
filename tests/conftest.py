@@ -126,6 +126,40 @@ async def get_authorised_headers(client_app):
     return {"Authorization": f'Bearer {token["access_token"]}'}
 
 
+async def check_for_unauthorised_headers(client_app):
+    oauth_proxy = get_env("OAUTH_PROXY")
+    oauth_base_uri = get_env("OAUTH_BASE_URI")
+    token_url = f"{oauth_base_uri}/{oauth_proxy}/token"
+
+    jwt = client_app.oauth.create_jwt(
+        **{
+            "kid": "test-1",
+            "claims": {
+                "sub": client_app.client_id,
+                "iss": client_app.client_id,
+                "jti": str(uuid4()),
+                "aud": token_url,
+                "exp": int(time()) + 60,
+            },
+        }
+    )
+
+    token_response = await get_bad_token(client_app, grant_type="client_credentials", _jwt=jwt)
+    assert token_response['status_code'] == 401
+    assert token_response['body']['error'] == 'unauthorized_client'
+    assert token_response["body"]['error_description'] == 'you have tried to requests authorization but your ' \
+                                                          'application is not configured to use this authorization ' \
+                                                          'grant type'
+
+
+async def get_bad_token(
+    app: ApigeeApiDeveloperApps, grant_type: str = "authorization_code", **kwargs
+):
+    oauth = app.oauth
+
+    return await oauth.get_token_response(grant_type=grant_type, **kwargs)
+
+
 async def get_token_nhs_login_token_exchange(test_app: ApigeeApiDeveloperApps,
                                              subject_token_claims: dict = None,
                                              client_assertion_jwt: dict = None):
@@ -157,6 +191,40 @@ async def get_token_nhs_login_token_exchange(test_app: ApigeeApiDeveloperApps,
     assert token_resp["status_code"] == 200, 'failed getting token'
     assert list(token_resp["body"].keys()) == ["access_token", "expires_in", "token_type", "issued_token_type"]
     return token_resp["body"]
+
+
+async def check_for_unauthorised_token_exchange(test_app: ApigeeApiDeveloperApps,
+                                                subject_token_claims: dict = None,
+                                                client_assertion_jwt: dict = None):
+    """Call identity server to get an access token"""
+    if client_assertion_jwt is not None:
+        client_assertion_jwt = test_app.oauth.create_jwt(kid="test-1",
+                                                         claims=client_assertion_jwt)
+    else:
+        client_assertion_jwt = test_app.oauth.create_jwt(kid="test-1")
+
+    if subject_token_claims is not None:
+        id_token_jwt = nhs_login_id_token(
+            test_app=test_app, id_token_claims=subject_token_claims
+        )
+    else:
+        id_token_jwt = nhs_login_id_token(test_app=test_app)
+
+    # When
+    token_resp = await test_app.oauth.get_token_response(
+        grant_type="token_exchange",
+        data={
+            "grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
+            "subject_token_type": "urn:ietf:params:oauth:token-type:id_token",
+            "client_assertion_type": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+            "subject_token": id_token_jwt,
+            "client_assertion": client_assertion_jwt,
+        },
+    )
+    assert token_resp["status_code"] == 401
+    assert token_resp["body"]['error'] == 'unauthorized_client'
+    assert token_resp["body"]['error_description'] == 'you have tried to requests authorization but your application ' \
+                                                      'is not configured to use this authorization grant type'
 
 
 @pytest.fixture(scope="session")
