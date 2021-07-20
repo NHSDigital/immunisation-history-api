@@ -1,15 +1,16 @@
+import asyncio
+from time import time
 from typing import List
 from uuid import uuid4
-from time import time
+
 import pytest
-import asyncio
-from tests import conftest
 from aiohttp import ClientResponse
 from api_test_utils import env
 from api_test_utils import poll_until
 from api_test_utils.api_session_client import APISessionClient
 from api_test_utils.api_test_session_config import APITestSessionConfig
-from api_test_utils.apigee_api_apps import ApigeeApiDeveloperApps
+
+from tests import conftest
 
 
 def dict_path(raw, path: List[str]):
@@ -32,43 +33,6 @@ def _base_valid_uri(nhs_number) -> str:
 
 def _valid_uri(nhs_number, procedure_code) -> str:
     return _base_valid_uri(nhs_number) + f"&procedure-code:below={procedure_code}"
-
-
-@pytest.fixture(scope='function')
-def authorised_headers(valid_access_token):
-    return {"Authorization": f"Bearer {valid_access_token}"}
-
-
-ALLOWED_PROOFING_LEVEL_ATTR = 'nhs-login-allowed-proofing-level'
-
-
-async def _wait_till_custom_attr_is(app: ApigeeApiDeveloperApps, attribute: str,  required_value: str = None):
-
-    while True:
-        current_attrs = (await app.get_custom_attributes()).get('attribute', [])
-        current_attrs = {attr['name']: attr['value'] for attr in current_attrs}
-
-        if current_attrs.get(attribute, None) == required_value:
-            return
-
-        await asyncio.sleep(1)
-
-
-async def _set_app_allowed_proofing_level(app: ApigeeApiDeveloperApps, proofing_level: str = None):
-
-    current_attrs = (await app.get_custom_attributes()).get('attribute', [])
-    current_attrs = {attr['name']: attr['value'] for attr in current_attrs if attr['name'] != 'DisplayName'}
-
-    if proofing_level is None:
-        if ALLOWED_PROOFING_LEVEL_ATTR in current_attrs:
-            await app.delete_custom_attribute(ALLOWED_PROOFING_LEVEL_ATTR)
-            await _wait_till_custom_attr_is(app, ALLOWED_PROOFING_LEVEL_ATTR, None)
-        return
-
-    current_attrs[ALLOWED_PROOFING_LEVEL_ATTR] = proofing_level
-
-    await app.set_custom_attributes(current_attrs)
-    await _wait_till_custom_attr_is(app, ALLOWED_PROOFING_LEVEL_ATTR, proofing_level)
 
 
 @pytest.mark.e2e
@@ -145,11 +109,66 @@ async def test_check_immunization_is_secured(api_client: APISessionClient):
 
 @pytest.mark.e2e
 @pytest.mark.asyncio
-async def test_immunization_happy_path(test_app, api_client: APISessionClient, authorised_headers):
+@pytest.mark.parametrize(
+    'test_app',
+    [
+        {
+            'suffixes': [''],
+            'requested_proofing_level': 'P9',
+            'identity_proofing_level': 'P9'
+        },
+        {
+            'suffixes': [''],
+            'requested_proofing_level': 'P5',
+            'identity_proofing_level': 'P9'
+        },
+        {
+            'suffixes': [''],
+            'requested_proofing_level': 'P5',
+            'identity_proofing_level': 'P5'
+        },
+        {
+            'suffixes': ['-application-restricted'],
+            'requested_proofing_level': 'P9',
+            'identity_proofing_level': 'P9'
+        },
+        {
+            'suffixes': ['-application-restricted'],
+            'requested_proofing_level': 'P5',
+            'identity_proofing_level': 'P9'
+        },
+        {
+            'suffixes': ['-application-restricted'],
+            'requested_proofing_level': 'P5',
+            'identity_proofing_level': 'P5'
+        },
+        {
+            'suffixes': ['', '-application-restricted', '-user-restricted'],
+            'requested_proofing_level': 'P9',
+            'identity_proofing_level': 'P9'
+        },
+        {
+            'suffixes': ['', '-application-restricted', '-user-restricted'],
+            'requested_proofing_level': 'P5',
+            'identity_proofing_level': 'P9'
+        },
+        {
+            'suffixes': ['', '-application-restricted', '-user-restricted'],
+            'requested_proofing_level': 'P5',
+            'identity_proofing_level': 'P5'
+        },
+    ],
+    indirect=True
+)
+async def test_client_credentials_happy_path(test_app, api_client: APISessionClient):
+    authorised_headers = await conftest.get_authorised_headers(test_app)
 
     correlation_id = str(uuid4())
     authorised_headers["X-Correlation-ID"] = correlation_id
-    authorised_headers["NHSD-User-Identity"] = conftest.nhs_login_id_token(test_app)
+    authorised_headers["NHSD-User-Identity"] = conftest.nhs_login_id_token(
+        test_app,
+        allowed_proofing_level=test_app.request_params['identity_proofing_level']
+    )
 
     async with api_client.get(
         _valid_uri("9912003888", "90640007"),
@@ -161,8 +180,34 @@ async def test_immunization_happy_path(test_app, api_client: APISessionClient, a
         assert "x-correlation-id" in resp.headers, resp.headers
         assert resp.headers["x-correlation-id"] == correlation_id
         assert body["resourceType"] == "Bundle", body
-        # no data for this nhs number ...
-        assert len(body["entry"]) == 0, body
+        assert len(body["entry"]) == 3, body
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    'test_app',
+    [
+        {
+            'suffixes': ['-user-restricted'],
+            'requested_proofing_level': 'P9',
+            'identity_proofing_level': 'P9'
+        },
+        {
+            'suffixes': ['-user-restricted'],
+            'requested_proofing_level': 'P5',
+            'identity_proofing_level': 'P9'
+        },
+        {
+            'suffixes': ['-user-restricted'],
+            'requested_proofing_level': 'P5',
+            'identity_proofing_level': 'P5'
+        },
+    ],
+    indirect=True
+)
+async def test_client_credentials_sad_path(test_app, api_client: APISessionClient):
+    await conftest.check_for_unauthorised_headers(test_app)
 
 
 @pytest.mark.e2e
@@ -194,18 +239,6 @@ async def test_immunization_happy_path(test_app, api_client: APISessionClient, a
                 "typ": "invalid"
             }
         },
-        # condition 3: invalid identity_proofing_level claim
-        # {
-        #     "expected_status_code": 401,
-        #     "expected_response": {
-        #         "severity": "error",
-        #         "error_code": "processing",
-        #         "error_diagnostics": "Missing or invalid 'identity_proofing_level' claim in ID Token",
-        #     },
-        #     "claims": {
-        #         "identity_proofing_level": "invalid"
-        #     }
-        # },
         # condition 3: jwt expired
         {
             "expected_status_code": 401,
@@ -253,17 +286,31 @@ async def test_immunization_happy_path(test_app, api_client: APISessionClient, a
                 "alg": "invalid"
             }
         },
+    ]
+)
+@pytest.mark.parametrize(
+    'test_app',
+    [
+        {
+            'suffixes': [''],
+            'requested_proofing_level': 'P9',
+            'identity_proofing_level': 'P9'
+        }
     ],
+    indirect=True
 )
 async def test_immunisation_id_token_error_scenarios(test_app,
                                                      api_client: APISessionClient,
-                                                     authorised_headers, request_data: dict):
+                                                     request_data: dict):
     await asyncio.sleep(1)  # Add delay to tests to avoid 429 on service callout
     id_token = conftest.nhs_login_id_token(
         test_app=test_app,
         id_token_claims=request_data.get("claims"),
-        id_token_headers=request_data.get("headers")
+        id_token_headers=request_data.get("headers"),
+        allowed_proofing_level=test_app.request_params['identity_proofing_level']
     )
+
+    authorised_headers = await conftest.get_authorised_headers(test_app)
 
     if request_data.get("id_token") is not None:
         authorised_headers["NHSD-User-Identity"] = request_data.get("id_token")
@@ -285,9 +332,22 @@ async def test_immunisation_id_token_error_scenarios(test_app,
 
 @pytest.mark.e2e
 @pytest.mark.asyncio
-async def test_immunization_no_jwt_header_provided(api_client: APISessionClient, authorised_headers):
+@pytest.mark.parametrize(
+    'test_app',
+    [
+        {
+            'suffixes': [''],
+            'requested_proofing_level': 'P9',
+            'identity_proofing_level': 'P9'
+        }
+    ],
+    indirect=True
+)
+async def test_immunization_no_jwt_header_provided(test_app, api_client: APISessionClient):
 
     await asyncio.sleep(1)  # Add delay to tests to avoid 429 on service callout
+
+    authorised_headers = await conftest.get_authorised_headers(test_app)
 
     async with api_client.get(
         _valid_uri("9912003888", "90640007"),
@@ -304,11 +364,27 @@ async def test_immunization_no_jwt_header_provided(api_client: APISessionClient,
 
 @pytest.mark.e2e
 @pytest.mark.asyncio
-async def test_bad_nhs_number(test_app, api_client: APISessionClient, authorised_headers):
+@pytest.mark.parametrize(
+    'test_app',
+    [
+        {
+            'suffixes': [''],
+            'requested_proofing_level': 'P9',
+            'identity_proofing_level': 'P9'
+        }
+    ],
+    indirect=True
+)
+async def test_bad_nhs_number(test_app, api_client: APISessionClient):
 
     await asyncio.sleep(1)  # Add delay to tests to avoid 429 on service callout
 
-    authorised_headers["NHSD-User-Identity"] = conftest.nhs_login_id_token(test_app)
+    authorised_headers = await conftest.get_authorised_headers(test_app)
+
+    authorised_headers["NHSD-User-Identity"] = conftest.nhs_login_id_token(
+        test_app,
+        allowed_proofing_level=test_app.request_params['identity_proofing_level']
+    )
 
     async with api_client.get(
         _valid_uri("90000000009", "90640007"),
@@ -343,20 +419,150 @@ async def test_correlation_id_mirrored_in_resp_when_error(
 
 @pytest.mark.e2e
 @pytest.mark.asyncio
-async def test_user_restricted_access_not_permitted(api_client: APISessionClient, test_product_and_app):
+@pytest.mark.parametrize(
+    'test_app',
+    [
+        {
+            'suffixes': [''],
+            'requested_proofing_level': 'P9',
+            'identity_proofing_level': 'P9'
+        },
+        {
+            'suffixes': [''],
+            'requested_proofing_level': 'P5',
+            'identity_proofing_level': 'P9'
+        },
+        {
+            'suffixes': [''],
+            'requested_proofing_level': 'P5',
+            'identity_proofing_level': 'P5'
+        },
+        {
+            'suffixes': ['-user-restricted'],
+            'requested_proofing_level': 'P9',
+            'identity_proofing_level': 'P9'
+        },
+        {
+            'suffixes': ['-user-restricted'],
+            'requested_proofing_level': 'P5',
+            'identity_proofing_level': 'P9'
+        },
+        {
+            'suffixes': ['-user-restricted'],
+            'requested_proofing_level': 'P5',
+            'identity_proofing_level': 'P5'
+        },
+        {
+            'suffixes': ['', '-application-restricted', '-user-restricted'],
+            'requested_proofing_level': 'P9',
+            'identity_proofing_level': 'P9'
+        },
+        {
+            'suffixes': ['', '-application-restricted', '-user-restricted'],
+            'requested_proofing_level': 'P5',
+            'identity_proofing_level': 'P9'
+        },
+        {
+            'suffixes': ['', '-application-restricted', '-user-restricted'],
+            'requested_proofing_level': 'P5',
+            'identity_proofing_level': 'P5'
+        },
+    ],
+    indirect=True
+)
+async def test_token_exchange_happy_path(test_app, api_client: APISessionClient):
+    subject_token_claims = {
+        'identity_proofing_level': test_app.request_params['identity_proofing_level']
+    }
+    token_response = await conftest.get_token_nhs_login_token_exchange(
+        test_app,
+        subject_token_claims=subject_token_claims
+    )
+    token = token_response["access_token"]
 
+    correlation_id = str(uuid4())
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "X-Correlation-ID": correlation_id
+    }
+
+    async with api_client.get(
+        _valid_uri("9912003888", "90640007"),
+        headers=headers,
+        allow_retries=True
+    ) as resp:
+        assert resp.status == 200, 'failed getting backend data'
+        body = await resp.json()
+        assert "x-correlation-id" in resp.headers, resp.headers
+        assert resp.headers["x-correlation-id"] == correlation_id
+        assert body["resourceType"] == "Bundle", body
+        assert len(body["entry"]) == 3, body
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    'test_app',
+    [
+        {
+            'suffixes': ['-application-restricted'],
+            'requested_proofing_level': 'P9',
+            'identity_proofing_level': 'P9'
+        },
+        {
+            'suffixes': ['-application-restricted'],
+            'requested_proofing_level': 'P5',
+            'identity_proofing_level': 'P9'
+        },
+        {
+            'suffixes': ['-application-restricted'],
+            'requested_proofing_level': 'P5',
+            'identity_proofing_level': 'P5'
+        },
+    ],
+    indirect=True
+)
+async def test_token_exchange_sad_path(test_app, api_client: APISessionClient):
+    subject_token_claims = {
+        'identity_proofing_level': test_app.request_params['identity_proofing_level']
+    }
+    await conftest.check_for_unauthorised_token_exchange(
+        test_app,
+        subject_token_claims=subject_token_claims
+    )
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    'test_product_and_app',
+    [
+        {
+            'scopes': ['urn:nhsd:apim:user-nhs-id:aal3:immunisation-history'],
+            'requested_proofing_level': 'P9',
+            'identity_proofing_level': 'P9'
+        },
+        {
+            'scopes': ['urn:nhsd:apim:user-nhs-id:aal3:immunisation-history'],
+            'requested_proofing_level': 'P5',
+            'identity_proofing_level': 'P9'
+        }
+    ],
+    indirect=True
+)
+async def test_user_restricted_access_not_permitted(api_client: APISessionClient, test_product_and_app):
     await asyncio.sleep(1)  # Add delay to tests to avoid 429 on service callout
 
     test_product, test_app = test_product_and_app
-
-    await test_product.update_scopes(["urn:nhsd:apim:user-nhs-id:aal3:immunisation-history"])
-    await test_app.add_api_product([test_product.name])
 
     token_response = await conftest.get_token(test_app)
 
     authorised_headers = {
         "Authorization": f"Bearer {token_response['access_token']}",
-        "NHSD-User-Identity": conftest.nhs_login_id_token(test_app)
+        "NHSD-User-Identity": conftest.nhs_login_id_token(
+            test_app,
+            allowed_proofing_level=test_app.request_params['identity_proofing_level']
+        )
     }
 
     async with api_client.get(
@@ -374,42 +580,27 @@ async def test_user_restricted_access_not_permitted(api_client: APISessionClient
 
 @pytest.mark.e2e
 @pytest.mark.asyncio
-async def test_token_exchange_happy_path(api_client: APISessionClient, test_product_and_app):
-
-    test_product, test_app = test_product_and_app
-    token_response = await conftest.get_token_nhs_login_token_exchange(test_app)
-    token = token_response["access_token"]
-
-    correlation_id = str(uuid4())
-    headers = {
-        "Authorization": f"Bearer {token}",
-        "X-Correlation-ID": correlation_id
-    }
-
-    async with api_client.get(
-        _valid_uri("9912003888", "90640007"),
-        headers=headers,
-        allow_retries=True
-    ) as resp:
-        assert resp.status == 200
-        body = await resp.json()
-        assert "x-correlation-id" in resp.headers, resp.headers
-        assert resp.headers["x-correlation-id"] == correlation_id
-        assert body["resourceType"] == "Bundle", body
-        # no data for this nhs number ...
-        assert len(body["entry"]) == 0, body
-
-
-@pytest.mark.e2e
-@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    'test_product_and_app',
+    [
+        {
+            'scopes': ['urn:nhsd:apim:user-nhs-login:P6:immunisation-history'],
+            'requested_proofing_level': 'P9',
+            'identity_proofing_level': 'P6'
+        },
+        {
+            'scopes': ['urn:nhsd:apim:user-nhs-login:P6:immunisation-history'],
+            'requested_proofing_level': 'P5',
+            'identity_proofing_level': 'P6'
+        }
+    ],
+    indirect=True
+)
 async def test_token_exchange_invalid_identity_proofing_level_scope(api_client: APISessionClient, test_product_and_app):
 
     test_product, test_app = test_product_and_app
-    await test_product.update_scopes(
-        ["urn:nhsd:apim:user-nhs-login:P8:immunisation-history"]
-    )
     subject_token_claims = {
-        "identity_proofing_level": "P8"
+        "identity_proofing_level": test_app.request_params['identity_proofing_level']
     }
     token_response = await conftest.get_token_nhs_login_token_exchange(
         test_app, subject_token_claims=subject_token_claims
@@ -446,16 +637,41 @@ async def test_token_exchange_invalid_identity_proofing_level_scope(api_client: 
 
 @pytest.mark.e2e
 @pytest.mark.asyncio
-async def test_token_exchange_both_header_and_exchange(api_client: APISessionClient,
-                                                       test_product_and_app,
-                                                       authorised_headers):
-    test_product, test_app = test_product_and_app
+@pytest.mark.parametrize(
+    'test_app',
+    [
+        {
+            'suffixes': [''],
+            'requested_proofing_level': 'P9',
+            'identity_proofing_level': 'P9'
+        },
+        {
+            'suffixes': [''],
+            'requested_proofing_level': 'P5',
+            'identity_proofing_level': 'P9'
+        },
+        {
+            'suffixes': [''],
+            'requested_proofing_level': 'P5',
+            'identity_proofing_level': 'P5'
+        }
+    ],
+    indirect=True
+)
+async def test_token_exchange_both_header_and_exchange(test_app, api_client: APISessionClient):
+    authorised_headers = await conftest.get_authorised_headers(test_app)
     correlation_id = str(uuid4())
     authorised_headers["X-Correlation-ID"] = correlation_id
     authorised_headers["NHSD-User-Identity"] = conftest.nhs_login_id_token(test_app)
 
     # Use token exchange token in conjunction with JWT header
-    token_response = await conftest.get_token_nhs_login_token_exchange(test_app)
+    subject_token_claims = {
+        "identity_proofing_level": test_app.request_params['identity_proofing_level']
+    }
+    token_response = await conftest.get_token_nhs_login_token_exchange(
+        test_app,
+        subject_token_claims=subject_token_claims
+    )
     token = token_response["access_token"]
 
     authorised_headers["Authorization"] = f"Bearer {token}"
@@ -471,126 +687,4 @@ async def test_token_exchange_both_header_and_exchange(api_client: APISessionCli
         assert resp.headers["x-correlation-id"] == correlation_id
         assert body["resourceType"] == "Bundle", body
         # no data for this nhs number ...
-        assert len(body["entry"]) == 0, body
-
-
-@pytest.mark.e2e
-@pytest.mark.asyncio
-async def test_p5_happy_path(test_app, api_client: APISessionClient, authorised_headers):
-
-    await _set_app_allowed_proofing_level(test_app, 'P5')
-
-    correlation_id = str(uuid4())
-    authorised_headers["X-Correlation-ID"] = correlation_id
-    authorised_headers["NHSD-User-Identity"] = conftest.nhs_login_id_token(test_app, allowed_proofing_level='P5')
-
-    async with api_client.get(
-        _valid_uri("9912003888", "90640007"),
-        headers=authorised_headers,
-        allow_retries=True
-    ) as resp:
-        assert resp.status == 200
-        body = await resp.json()
-        assert "x-correlation-id" in resp.headers, resp.headers
-        assert resp.headers["x-correlation-id"] == correlation_id
-        assert body["resourceType"] == "Bundle", body
-        # no data for this nhs number ...
-        assert len(body["entry"]) == 0, body
-
-
-@pytest.mark.e2e
-@pytest.mark.asyncio
-async def test_p5_token_exchange_with_allowed_proofing_level(api_client: APISessionClient, test_product_and_app):
-
-    test_product, test_app = test_product_and_app
-
-    await _set_app_allowed_proofing_level(test_app, 'P5')
-
-    token_response = await conftest.get_token_nhs_login_token_exchange(
-        test_app,
-        subject_token_claims={
-            "identity_proofing_level": "P5"
-        }
-    )
-    token = token_response["access_token"]
-
-    correlation_id = str(uuid4())
-    headers = {
-        "Authorization": f"Bearer {token}",
-        "X-Correlation-ID": correlation_id,
-    }
-
-    async with api_client.get(
-        _valid_uri("9912003888", "90640007"),
-        headers=headers,
-        allow_retries=True
-    ) as resp:
-        assert resp.status == 200
-        body = await resp.json()
-        assert body["resourceType"] == "Bundle", body
-        # no data for this nhs number ...
-        assert len(body["entry"]) == 0, body
-
-
-@pytest.mark.e2e
-@pytest.mark.asyncio
-async def test_p5_without_allowed_proofing_level_attribute(test_app, api_client: APISessionClient, authorised_headers):
-
-    correlation_id = str(uuid4())
-    authorised_headers["X-Correlation-ID"] = correlation_id
-    authorised_headers["NHSD-User-Identity"] = conftest.nhs_login_id_token(test_app, allowed_proofing_level='P5')
-
-    async with api_client.get(
-        _valid_uri("9912003888", "90640007"),
-        headers=authorised_headers,
-        allow_retries=True
-    ) as resp:
-        assert resp.status == 401
-        # body = await resp.json()
-        assert "x-correlation-id" in resp.headers, resp.headers
-        assert resp.headers["x-correlation-id"] == correlation_id
-        # assert body == {
-        #     "issue":
-        #         [
-        #             {
-        #                 "severity": "error",
-        #                 "diagnostics": "Provided access token is invalid",
-        #                 "code": "forbidden"
-        #             }
-        #         ],
-        #     "resourceType": "OperationOutcome"
-        # }
-
-
-@pytest.mark.e2e
-@pytest.mark.asyncio
-async def test_p5_with_higher_proofing_level_attribute_specified(
-    test_app, api_client: APISessionClient, authorised_headers
-):
-
-    await _set_app_allowed_proofing_level(test_app, 'P9')
-
-    correlation_id = str(uuid4())
-    authorised_headers["X-Correlation-ID"] = correlation_id
-    authorised_headers["NHSD-User-Identity"] = conftest.nhs_login_id_token(test_app, allowed_proofing_level='P5')
-
-    async with api_client.get(
-        _valid_uri("9912003888", "90640007"),
-        headers=authorised_headers,
-        allow_retries=True
-    ) as resp:
-        assert resp.status == 401
-        # body = await resp.json()
-        assert "x-correlation-id" in resp.headers, resp.headers
-        assert resp.headers["x-correlation-id"] == correlation_id
-        # assert body == {
-        #     "issue":
-        #         [
-        #             {
-        #                 "severity": "error",
-        #                 "diagnostics": "Provided access token is invalid",
-        #                 "code": "forbidden"
-        #             }
-        #         ],
-        #     "resourceType": "OperationOutcome"
-        # }
+        assert len(body["entry"]) == 3, body
