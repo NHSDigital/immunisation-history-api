@@ -329,6 +329,7 @@ async def test_immunisation_id_token_error_scenarios(test_app,
         assert body["issue"][0]["diagnostics"] == request_data["expected_response"]["error_diagnostics"]
         assert body["issue"][0]["code"] == request_data["expected_response"]["error_code"]
 
+
 @pytest.mark.e2e
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
