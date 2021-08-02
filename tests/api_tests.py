@@ -343,38 +343,6 @@ async def test_immunisation_id_token_error_scenarios(test_app,
     ],
     indirect=True
 )
-async def test_immunization_no_jwt_header_provided(test_app, api_client: APISessionClient):
-
-    await asyncio.sleep(1)  # Add delay to tests to avoid 429 on service callout
-
-    authorised_headers = await conftest.get_authorised_headers(test_app)
-
-    async with api_client.get(
-        _valid_uri("9912003888", "90640007"),
-        headers=authorised_headers,
-        allow_retries=True
-    ) as resp:
-        assert resp.status == 401
-        body = await resp.json()
-        assert body["resourceType"] == "OperationOutcome"
-        assert body["issue"][0]["severity"] == "error"
-        assert body["issue"][0]["diagnostics"] == "Missing value in header 'NHSD-User-Identity'"
-        assert body["issue"][0]["code"] == "processing"
-
-
-@pytest.mark.e2e
-@pytest.mark.asyncio
-@pytest.mark.parametrize(
-    'test_app',
-    [
-        {
-            'suffixes': [''],
-            'requested_proofing_level': 'P9',
-            'identity_proofing_level': 'P9'
-        }
-    ],
-    indirect=True
-)
 async def test_bad_nhs_number(test_app, api_client: APISessionClient):
 
     await asyncio.sleep(1)  # Add delay to tests to avoid 429 on service callout
