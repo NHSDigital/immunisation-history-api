@@ -38,7 +38,7 @@
             </Step>
         </FaultRule>
         <FaultRule name="missing_nhsd_user_identity_header">
-            <Condition>(JWT.failed Equals true) AND (error.message Equals "Failed to Resolve Variable : policy(DecodeJWT.FromExternalIdToken)")</Condition>
+            <Condition>(JWT.failed Equals true)</Condition>
             <Step>
                 <Name>AssignMessage.MissingNHSDUserIdentityheader</Name>
             </Step>
