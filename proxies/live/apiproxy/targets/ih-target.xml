@@ -68,34 +68,6 @@
             </Step>
             <!-- JWT Header Flow -->
             <Step>
-                <Name>DecodeJWT.FromExternalIdToken</Name>
-                <Condition>accesstoken.grant_type != "urn:ietf:params:oauth:grant-type:token-exchange"</Condition>
-            </Step>
-            <Step>
-                <Name>LookupCache.JWKS</Name>
-                <Condition>accesstoken.grant_type != "urn:ietf:params:oauth:grant-type:token-exchange"</Condition>
-            </Step>
-            <Step>
-                <Name>JavaScript.ValidateClaimFromExternalIdToken</Name>
-                <Condition>accesstoken.grant_type != "urn:ietf:params:oauth:grant-type:token-exchange" and jwks != null</Condition>
-            </Step>
-            <Step>
-                <Name>ServiceCallout.NHSLoginGetJWKS</Name>
-                <Condition>accesstoken.grant_type != "urn:ietf:params:oauth:grant-type:token-exchange" and (jwks = null Or jwksUpdated = false)</Condition>
-            </Step>
-            <Step>
-                <Name>PopulateCache.JWKS</Name>
-                <Condition>accesstoken.grant_type != "urn:ietf:params:oauth:grant-type:token-exchange" and (jwks = null Or jwksUpdated = false)</Condition>
-            </Step>
-            <Step>
-                <Name>AssignMessage.JWKS</Name>
-                <Condition>accesstoken.grant_type != "urn:ietf:params:oauth:grant-type:token-exchange" and (jwks = null Or jwksUpdated = false)</Condition>
-            </Step>
-            <Step>
-                <Name>VerifyJWT.FromExternalIdToken</Name>
-                <Condition>accesstoken.grant_type != "urn:ietf:params:oauth:grant-type:token-exchange"</Condition>
-            </Step>
-            <Step>
               <Name>AccessEntity.GetApp</Name>
             </Step>
             <Step>
