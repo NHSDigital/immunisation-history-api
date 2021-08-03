@@ -252,17 +252,7 @@ async def test_client_credentials_sad_path(test_app, api_client: APISessionClien
                 "iat": int(time()) - 10
             }
         },
-        # condition 4: invalid id token
-        {
-            "expected_status_code": 200,
-            "expected_response": {
-                "severity": "error",
-                "error_code": "processing",
-                "error_diagnostics": "Malformed JWT in 'NHSD-User-Identity' header",
-            },
-            "id_token": "invalid"
-        },
-        # condition 5: no matching public key
+        # condition 4: no matching public key
         {
             "expected_status_code": 200,
             "expected_response": {
@@ -274,7 +264,7 @@ async def test_client_credentials_sad_path(test_app, api_client: APISessionClien
                 "kid": "invalid"
             }
         },
-        # condition 6: catch all error message
+        # condition 5: catch all error message
         {
             "expected_status_code": 200,
             "expected_response": {
