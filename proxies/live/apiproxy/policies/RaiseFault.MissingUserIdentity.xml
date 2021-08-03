@@ -1,4 +1,4 @@
-<FaultRule name="missing_nhsd_user_identity_">
+<FaultRule name="RaiseFault.MissingUserIdentity"> RaiseFault.NoSharingCode
   <Condition>error.message Equals "Failed to Resolve Variable : policy(AssignMessage.AddUserIdHeader) variable(accesstoken.id_token)")</Condition>
   <Step>
     <Name>RaiseFault.MissingNHSDUserIdentity</Name>

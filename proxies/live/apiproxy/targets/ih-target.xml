@@ -24,11 +24,19 @@
             <!-- If the token was retrieved via token exchange, assign the jwt from the token attributes to the NHSD-User-Identity Header -->
             <Step>
                 <Name>RaiseFault.SharingCodeHeader</Name>
-                <Condition>
-                ((accesstoken.auth_grant_type == "client_credentials") And 
-                (request.header.NHSD-Remote-Sharing-Code Is null) Or 
-                (request.header.NHSD-Remote-Sharing-Code Equals ""))
-                </Condition>
+                    <Condition>
+                        ((accesstoken.auth_grant_type == "client_credentials") And 
+                        (request.header.NHSD-Remote-Sharing-Code Is null) Or 
+                        (request.header.NHSD-Remote-Sharing-Code Equals ""))
+                    </Condition>
+            </Step>
+            <Step>
+                <Name>RaiseFault.MissingUserIdentity</Name>
+                    <Condition>
+                        ((accesstoken.auth_grant_type == "token_exchange") And 
+                        (request.header.NHSD-User-Identity Is null) Or 
+                        (request.header.NHSD-User-Identity Equals ""))
+                    </Condition>
             </Step>
             <Step>
                 <Name>AssignMessage.AddUserIdHeader</Name>
