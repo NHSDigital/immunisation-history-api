@@ -49,12 +49,6 @@
                 <Name>AssignMessage.NoMatchingPublicKey</Name>
             </Step>
         </FaultRule>
-        <FaultRule name="catchall_jwt_error">
-            <Condition>(JWT.failed Equals true)</Condition>
-            <Step>
-                <Name>AssignMessage.CatchAllJWTError</Name>
-            </Step>
-        </FaultRule>
     </FaultRules>
     <PreFlow>
         <Request>
