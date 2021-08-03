@@ -1,0 +1,15 @@
+<RaiseFault async="false" continueOnError="false" enabled="true" name="RaiseFault.NoSharingCode">
+  <FaultResponse>
+    <Set>
+      <Payload contentType="application/json">
+        {
+          "error": "invalid_request",
+          "error_description": "Application restricted requires sharing code",
+        }
+</Payload>
+      <StatusCode>400</StatusCode>
+      <ReasonPhrase>Bad Request</ReasonPhrase>
+    </Set>
+  </FaultResponse>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</RaiseFault>
