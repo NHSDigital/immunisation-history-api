@@ -113,21 +113,6 @@ async def test_check_immunization_is_secured(api_client: APISessionClient):
     'test_app',
     [
         {
-            'suffixes': [''],
-            'requested_proofing_level': 'P9',
-            'identity_proofing_level': 'P9'
-        },
-        {
-            'suffixes': [''],
-            'requested_proofing_level': 'P5',
-            'identity_proofing_level': 'P9'
-        },
-        {
-            'suffixes': [''],
-            'requested_proofing_level': 'P5',
-            'identity_proofing_level': 'P5'
-        },
-        {
             'suffixes': ['-application-restricted'],
             'requested_proofing_level': 'P9',
             'identity_proofing_level': 'P9'
@@ -336,7 +321,7 @@ async def test_immunisation_id_token_error_scenarios(test_app,
     'test_app',
     [
         {
-            'suffixes': [''],
+            'suffixes': ['-user-restricted'],
             'requested_proofing_level': 'P9',
             'identity_proofing_level': 'P9'
         }

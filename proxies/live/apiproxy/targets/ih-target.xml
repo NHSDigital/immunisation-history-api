@@ -31,16 +31,16 @@
                     </Condition>
             </Step>
             <Step>
+                <Name>AssignMessage.AddUserIdHeader</Name>
+                <Condition>accesstoken.auth_grant_type = "token_exchange"</Condition>
+            </Step>
+            <Step>
                 <Name>RaiseFault.MissingUserIdentity</Name>
                     <Condition>
                         ((accesstoken.auth_grant_type == "token_exchange") And 
                         (request.header.NHSD-User-Identity Is null) Or 
                         (request.header.NHSD-User-Identity Equals ""))
                     </Condition>
-            </Step>
-            <Step>
-                <Name>AssignMessage.AddUserIdHeader</Name>
-                <Condition>accesstoken.auth_grant_type = "token_exchange"</Condition>
             </Step>
             <Step>
               <Name>AccessEntity.GetApp</Name>
