@@ -33,13 +33,7 @@
             </Step>
             <Step>
                 <Name>RaiseFault.MissingNHSDUserIdentity</Name>
-                <Condition>
-                    (accesstoken.auth_grant_type == "token_exchange") And
-                    (
-                        (request.header.NHSD-User-Identity Is null) Or
-                        (request.header.NHSD-User-Identity Equals "")
-                    )
-                </Condition>
+                <Condition>(accesstoken.auth_grant_type == "token_exchange") And ((request.header.NHSD-User-Identity Is null) Or (request.header.NHSD-User-Identity Equals ""))</Condition>
             </Step>
             <Step>
                 <Name>AccessEntity.GetApp</Name>
