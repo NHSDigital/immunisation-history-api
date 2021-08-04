@@ -7,21 +7,21 @@
                 <Name>AssignMessage.CatchallErrorMessage</Name>
                 <Condition>(fault.name NotEquals "RaiseFault")</Condition>
             </Step>
-                <Condition>(fault.name Equals "RaiseFault")</Condition>
+            <Condition>(fault.name Equals "RaiseFault")</Condition>
         </FaultRule>
         <FaultRule name="access_token_invalid">
             <Step>
                 <Name>RaiseFault.InvalidAccessToken</Name>
             </Step>
-                <Condition>oauthV2.OauthV2.VerifyAccessToken.failed</Condition>
+            <Condition>oauthV2.OauthV2.VerifyAccessToken.failed</Condition>
         </FaultRule>
-        <FaultRule name="RaiseFault.MissingNHSDUserIdentity"> RaiseFault.MissingNHSDUserIdentity
+        <FaultRule name="RaiseFault.MissingNHSDUserIdentity">
             <Condition>error.message Equals "Failed to Resolve Variable : policy(AssignMessage.AddUserIdHeader) variable(accesstoken.id_token)"</Condition>
             <Step>
                 <Name>RaiseFault.MissingNHSDUserIdentity</Name>
             </Step>
         </FaultRule> 
-        </FaultRules>
+    </FaultRules>
     <PreFlow>
         <Request>
             <Step>
@@ -29,11 +29,13 @@
             </Step>
             <Step>
                 <Name>RaiseFault.NoSharingCode</Name>
-                    <Condition>
-                        ((accesstoken.auth_grant_type == "client_credentials") And 
-                        (request.header.NHSD-Remote-Sharing-Code Is null) Or 
-                        (request.header.NHSD-Remote-Sharing-Code Equals ""))
-                    </Condition>
+                <Condition>
+                    (accesstoken.auth_grant_type == "client_credentials") And
+                    (
+                        (request.header.NHSD-Remote-Sharing-Code Is null) Or
+                        (request.header.NHSD-Remote-Sharing-Code Equals "")
+                    )
+                </Condition>
             </Step>
             <Step>
                 <Name>AssignMessage.AddUserIdHeader</Name>
@@ -41,11 +43,13 @@
             </Step>
             <Step>
                 <Name>RaiseFault.MissingNHSDUserIdentity</Name>
-                    <Condition>
-                        ((accesstoken.auth_grant_type == "token_exchange") And 
-                        (request.header.NHSD-User-Identity Is null) Or 
-                        (request.header.NHSD-User-Identity Equals ""))
-                    </Condition>
+                <Condition>
+                    (accesstoken.auth_grant_type == "token_exchange") And
+                    (
+                        (request.header.NHSD-User-Identity Is null) Or
+                        (request.header.NHSD-User-Identity Equals "")
+                    )
+                </Condition>
             </Step>
             <Step>
                 <Name>AccessEntity.GetApp</Name>
