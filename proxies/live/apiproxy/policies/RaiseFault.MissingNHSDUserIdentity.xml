@@ -1,0 +1,6 @@
+<FaultRule name="RaiseFault.MissingNHSDUserIdentity"> RaiseFault.MissingNHSDUserIdentity
+  <Condition>error.message Equals "Failed to Resolve Variable : policy(AssignMessage.AddUserIdHeader) variable(accesstoken.id_token)")</Condition>
+  <Step>
+    <Name>RaiseFault.MissingNHSDUserIdentity</Name>
+  </Step>
+</FaultRule>
