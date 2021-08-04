@@ -40,7 +40,7 @@
                 <Condition>accesstoken.auth_grant_type == "token_exchange"</Condition>
             </Step>
             <Step>
-                <Name>RaiseFault.MissingUserIdentity</Name>
+                <Name>RaiseFault.MissingNHSDUserIdentity</Name>
                     <Condition>
                         ((accesstoken.auth_grant_type == "token_exchange") And 
                         (request.header.NHSD-User-Identity Is null) Or 
