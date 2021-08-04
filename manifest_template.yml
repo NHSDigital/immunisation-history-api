@@ -1,4 +1,4 @@
-ERVICE_NAME: immunisation-history
+SERVICE_NAME: immunisation-history
 PRODUCT_DISPLAY_NAME: Immunisation History
 DESCRIPTION: Immunisation history API
 APIGEE_ENVIRONMENTS:
