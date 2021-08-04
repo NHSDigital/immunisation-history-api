@@ -29,7 +29,6 @@
                         (request.header.NHSD-Remote-Sharing-Code Equals ""))
                     </Condition>
             </Step>
-            <!-- If the token was retrieved via token exchange, assign the jwt from the token attributes to the NHSD-User-Identity Header -->
             <Step>
                 <Name>AssignMessage.AddUserIdHeader</Name>
                 <Condition>accesstoken.auth_grant_type == "token_exchange"</Condition>
@@ -47,10 +46,10 @@
                     </Condition>
             </Step>
             <Step>
-              <Name>AccessEntity.GetApp</Name>
+                <Name>AccessEntity.GetApp</Name>
             </Step>
             <Step>
-              <Name>ExtractVariables.GetProofingLevel</Name>
+                <Name>ExtractVariables.GetProofingLevel</Name>
             </Step>
             <Step>
                 <Name>Javascript.AddClientRPDetailsHeader</Name>

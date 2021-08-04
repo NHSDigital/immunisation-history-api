@@ -26,16 +26,6 @@ APIGEE_ENVIRONMENTS:
     ratelimit: '210000pm'
     quota: '210000'
 ACCESS_MODES:
-  - name: legacy
-    nameSuffix:
-    displayName: Legacy
-    scopes: [
-      'urn:nhsd:apim:app:level3:immunisation-history',
-      'urn:nhsd:apim:user-nhs-login:P9:immunisation-history',
-      'urn:nhsd:apim:user-nhs-login:P5:immunisation-history'
-    ]
-    requireCallbackUrl: false
-    description: Legacy
   - name: user-restricted
     nameSuffix: '-user-restricted'
     displayName: User Restricted
