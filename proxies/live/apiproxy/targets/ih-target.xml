@@ -21,18 +21,22 @@
             <Step>
                 <Name>OauthV2.VerifyAccessToken</Name>
             </Step>
-            <!-- If the token was retrieved via token exchange, assign the jwt from the token attributes to the NHSD-User-Identity Header -->
             <Step>
-                <Name>RaiseFault.SharingCodeHeader</Name>
+                <Name>RaiseFault.NoSharingCode</Name>
                     <Condition>
                         ((accesstoken.auth_grant_type == "client_credentials") And 
                         (request.header.NHSD-Remote-Sharing-Code Is null) Or 
                         (request.header.NHSD-Remote-Sharing-Code Equals ""))
                     </Condition>
             </Step>
+            <!-- If the token was retrieved via token exchange, assign the jwt from the token attributes to the NHSD-User-Identity Header -->
             <Step>
                 <Name>AssignMessage.AddUserIdHeader</Name>
-                <Condition>accesstoken.auth_grant_type = "token_exchange"</Condition>
+                <Condition>accesstoken.auth_grant_type == "token_exchange"</Condition>
+            </Step>
+            <Step>
+                <Name>AssignMessage.AddClientIdHeader</Name>
+                <Condition>accesstoken.auth_grant_type == "client_credentials"</Condition>
             </Step>
             <Step>
                 <Name>RaiseFault.MissingUserIdentity</Name>
