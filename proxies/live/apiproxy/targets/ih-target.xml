@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <TargetEndpoint name="immunisation-history-target">
     <FaultRules>
-        <FaultRule name="allow_raisefaults">
-        <!-- Fault rule to prevent the DefaultFaultRule from executing when RaiseFault is used in a flow -->
-            <Step>
-                <Name>AssignMessage.CatchallErrorMessage</Name>
-                <Condition>(fault.name NotEquals "RaiseFault")</Condition>
-            </Step>
-            <Condition>(fault.name Equals "RaiseFault")</Condition>
-        </FaultRule>
         <FaultRule name="access_token_invalid">
             <Step>
                 <Name>RaiseFault.InvalidAccessToken</Name>
@@ -20,7 +12,15 @@
             <Step>
                 <Name>RaiseFault.MissingNHSDUserIdentity</Name>
             </Step>
-        </FaultRule> 
+        </FaultRule>
+        <FaultRule name="allow_raisefaults">
+            <!-- Fault rule to prevent the DefaultFaultRule from executing when RaiseFault is used in a flow -->
+            <Step>
+                <Name>AssignMessage.CatchallErrorMessage</Name>
+                <Condition>(fault.name NotEquals "RaiseFault")</Condition>
+            </Step>
+            <Condition>(fault.name Equals "RaiseFault")</Condition>
+        </FaultRule>
     </FaultRules>
     <PreFlow>
         <Request>
