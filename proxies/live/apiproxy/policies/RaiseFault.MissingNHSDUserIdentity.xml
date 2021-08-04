@@ -1,6 +1,15 @@
-<FaultRule name="RaiseFault.MissingNHSDUserIdentity"> RaiseFault.MissingNHSDUserIdentity
-  <Condition>error.message Equals "Failed to Resolve Variable : policy(AssignMessage.AddUserIdHeader) variable(accesstoken.id_token)")</Condition>
-  <Step>
-    <Name>RaiseFault.MissingNHSDUserIdentity</Name>
-  </Step>
-</FaultRule>
+<RaiseFault async="false" continueOnError="false" enabled="true" name="RaiseFault.MissingNHSDUserIdentity">
+  <FaultResponse>
+    <Set>
+      <Payload contentType="application/json">
+        {
+          "error": "invalid_request",
+          "error_description": "Missing NHSD User Identity",
+        }
+</Payload>
+      <StatusCode>400</StatusCode>
+      <ReasonPhrase>Bad Request</ReasonPhrase>
+    </Set>
+  </FaultResponse>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</RaiseFault>
