@@ -28,16 +28,6 @@
                 <Name>OauthV2.VerifyAccessToken</Name>
             </Step>
             <Step>
-                <Name>RaiseFault.NoSharingCode</Name>
-                <Condition>
-                    (accesstoken.auth_grant_type == "client_credentials") And
-                    (
-                        (request.header.NHSD-Remote-Sharing-Code Is null) Or
-                        (request.header.NHSD-Remote-Sharing-Code Equals "")
-                    )
-                </Condition>
-            </Step>
-            <Step>
                 <Name>AssignMessage.AddUserIdHeader</Name>
                 <Condition>accesstoken.auth_grant_type == "token_exchange"</Condition>
             </Step>
