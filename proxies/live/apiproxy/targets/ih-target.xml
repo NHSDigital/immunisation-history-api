@@ -1,19 +1,53 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <TargetEndpoint name="immunisation-history-target">
     <FaultRules>
-        <FaultRule name="allow_raisefaults">
-        <!-- Fault rule to prevent the DefaultFaultRule from executing when RaiseFault is used in a flow -->
-        <Step>
-          <Name>AssignMessage.CatchallErrorMessage</Name>
-          <Condition>(fault.name NotEquals "RaiseFault")</Condition>
-        </Step>
-        <Condition>(fault.name Equals "RaiseFault")</Condition>
-      </FaultRule>
-      <FaultRule name="access_token_invalid">
+        <FaultRule name="access_token_invalid">
             <Step>
                 <Name>RaiseFault.InvalidAccessToken</Name>
             </Step>
             <Condition>oauthV2.OauthV2.VerifyAccessToken.failed</Condition>
+        </FaultRule>
+        <FaultRule name="expired_jwt">
+            <Condition>(JWT.failed Equals true) And (error.message Equals "The Token has expired: policy(VerifyJWT.FromExternalIdToken)")</Condition>
+            <Step>
+                <Name>AssignMessage.ExpiredJWTError</Name>
+            </Step>
+        </FaultRule>
+        <FaultRule name="failed_decoding_jwt">
+            <Condition>(JWT.failed Equals true) And (fault.name Equals "FailedToDecode")</Condition>
+            <Step>
+                <Name>AssignMessage.FailedToDecodeJWTError</Name>
+            </Step>
+        </FaultRule>
+        <FaultRule name="missing_invalid-iss">
+            <Condition>(JWT.failed Equals true) AND (error.message Equals "Invalid Claim: policy(VerifyJWT.FromExternalIdToken) claim(iss)")</Condition>
+            <Step>
+                <Name>AssignMessage.MissingOrInvalidIssClaim</Name>
+            </Step>
+        </FaultRule>
+        <FaultRule name="missing_invalid_identity_proofing_level">
+            <Condition>(JWT.failed Equals true) AND (error.message Equals "Invalid Claim: policy(VerifyJWT.FromExternalIdToken) claim(identity_proofing_level)")</Condition>
+            <Step>
+                <Name>AssignMessage.MissingOrInvalidIdentityProofingLevelClaim</Name>
+            </Step>
+        </FaultRule>
+        <FaultRule name="missing_invalid_typ_header">
+            <Condition>(JWT.failed Equals true) AND (error.message Equals "Invalid Claim: policy(VerifyJWT.FromExternalIdToken) claim(typ)")</Condition>
+            <Step>
+                <Name>AssignMessage.MissingOrInvalidTypHeader</Name>
+            </Step>
+        </FaultRule>
+        <FaultRule name="id_token_invalid">
+            <Condition>(JWT.failed Equals true) AND (error.message Equals "Invalid token: policy(VerifyJWT.FromExternalIdToken)")</Condition>
+            <Step>
+                <Name>AssignMessage.FailedToDecodeJWTError</Name>
+            </Step>
+        </FaultRule>
+        <FaultRule name="no_matching_publickey">
+            <Condition>(JWT.failed Equals true) AND (error.message Equals "Could not find a matching Public Key: policy(VerifyJWT.FromExternalIdToken)")</Condition>
+            <Step>
+                <Name>AssignMessage.NoMatchingPublicKey</Name>
+            </Step>
         </FaultRule>
     </FaultRules>
     <PreFlow>
@@ -21,31 +55,17 @@
             <Step>
                 <Name>OauthV2.VerifyAccessToken</Name>
             </Step>
-            <Step>
-                <Name>RaiseFault.NoSharingCode</Name>
-                    <Condition>
-                        ((accesstoken.auth_grant_type == "client_credentials") And 
-                        (request.header.NHSD-Remote-Sharing-Code Is null) Or 
-                        (request.header.NHSD-Remote-Sharing-Code Equals ""))
-                    </Condition>
-            </Step>
+            <!-- If the token was retrieved via token exchange, assign the jwt from the token attributes to the NHSD-User-Identity Header -->
             <Step>
                 <Name>AssignMessage.AddUserIdHeader</Name>
-                <Condition>accesstoken.auth_grant_type == "token_exchange"</Condition>
+                <Condition>accesstoken.grant_type = "urn:ietf:params:oauth:grant-type:token-exchange"</Condition>
+            </Step>
+            <!-- JWT Header Flow -->
+            <Step>
+              <Name>AccessEntity.GetApp</Name>
             </Step>
             <Step>
-                <Name>RaiseFault.MissingUserIdentity</Name>
-                    <Condition>
-                        ((accesstoken.auth_grant_type == "token_exchange") And 
-                        (request.header.NHSD-User-Identity Is null) Or 
-                        (request.header.NHSD-User-Identity Equals ""))
-                    </Condition>
-            </Step>
-            <Step>
-                <Name>AccessEntity.GetApp</Name>
-            </Step>
-            <Step>
-                <Name>ExtractVariables.GetProofingLevel</Name>
+              <Name>ExtractVariables.GetProofingLevel</Name>
             </Step>
             <Step>
                 <Name>Javascript.AddClientRPDetailsHeader</Name>
