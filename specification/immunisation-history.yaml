@@ -41,7 +41,7 @@ info:
 
     ## Who can use this API
     This API:
-    - is only for use by patient/citizen-facing applications
+    - is only for use by patient-facing applications
     - is only for non-clinical use
     - can only be used where there is a legal basis to do so
     
@@ -91,7 +91,7 @@ info:
     - [User-restricted RESTful APIs - NHS login separate authentication and authorisation](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation/user-restricted-restful-apis-nhs-login-separate-authentication-and-authorisation)
 
     Note that:
-    - the end user must be a citizen
+    - the end user must be a patient
     - the calling application must strongly authenticate the end user using NHS login
     - the end user must have their identity verified to 'high' (P9) level
     - the NHS number in the request must match the NHS number in the NHS login account
