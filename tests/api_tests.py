@@ -158,10 +158,9 @@ async def test_immunization_no_auth_bearer_token_provided(test_app, api_client: 
     await asyncio.sleep(1)  # Add delay to tests to avoid 429 on service callout
     correlation_id = str(uuid4())
     headers = {
-        "Authorization": f"Bearer",
+        "Authorization": "Bearer",
         "X-Correlation-ID": correlation_id
     }
-    
     async with api_client.get(
         _valid_uri("9912003888", "90640007"),
         headers=headers,
@@ -171,8 +170,9 @@ async def test_immunization_no_auth_bearer_token_provided(test_app, api_client: 
         body = await resp.json()
         assert "x-correlation-id" in resp.headers, resp.headers
         assert resp.headers["x-correlation-id"] == correlation_id
-        assert body["issue"] == [{'code': 'forbidden', 'diagnostics': 'Provided access token is invalid', 'severity': 'error'}], body
-
+        assert body["issue"] == [
+            {'code': 'forbidden', 'diagnostics': 'Provided access token is invalid', 'severity': 'error'}
+            ], body
 
 
 @pytest.mark.e2e
