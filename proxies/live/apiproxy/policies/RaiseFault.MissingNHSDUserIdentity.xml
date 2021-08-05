@@ -1,0 +1,15 @@
+<RaiseFault async="false" continueOnError="false" enabled="true" name="RaiseFault.MissingNHSDUserIdentity">
+  <FaultResponse>
+    <Set>
+      <Payload contentType="application/json">
+        {
+          "error": "invalid_request",
+          "error_description": "Missing NHSD User Identity",
+        }
+</Payload>
+      <StatusCode>400</StatusCode>
+      <ReasonPhrase>Bad Request</ReasonPhrase>
+    </Set>
+  </FaultResponse>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</RaiseFault>
