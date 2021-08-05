@@ -1,5 +1,4 @@
 import asyncio
-from time import time
 from typing import List
 from uuid import uuid4
 
@@ -138,6 +137,7 @@ async def test_client_credentials_happy_path(test_app, api_client: APISessionCli
         assert resp.headers["x-correlation-id"] == correlation_id
         assert body["resourceType"] == "Bundle", body
         assert len(body["entry"]) == 3, body
+
 
 @pytest.mark.e2e
 @pytest.mark.asyncio

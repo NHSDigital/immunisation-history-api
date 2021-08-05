@@ -14,7 +14,7 @@
             </Step>
         </FaultRule>
         <FaultRule name="allow_raisefaults">
-            <!-- Fault rule to prevent the DefaultFaultRule from executing when RaiseFault is used in a flow -->
+            <!-- prevent the DefaultFaultRule from executing when RaiseFault is used in a flow -->
             <Step>
                 <Name>AssignMessage.CatchallErrorMessage</Name>
                 <Condition>(fault.name NotEquals "RaiseFault")</Condition>
