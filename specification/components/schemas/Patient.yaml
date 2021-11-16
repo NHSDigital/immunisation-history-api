@@ -26,7 +26,7 @@ properties:
         value:
           description: Code identifying the patient.
           type: string
-          example: "9912003888"
+          example: "9000000009"
   birthDate:
     description: Patient's date of birth.
     type: string

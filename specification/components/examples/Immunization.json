@@ -52,7 +52,7 @@
           "type": "Patient",
           "identifier": {
             "system": "https://fhir.nhs.uk/Id/nhs-number",
-            "value": "9912003888"
+            "value": "9000000009"
           }
         },
         "occurrenceDateTime": "2020-12-10T13:00:08.476+00:00",
@@ -170,7 +170,7 @@
           "type": "Patient",
           "identifier": {
             "system": "https://fhir.nhs.uk/Id/nhs-number",
-            "value": "9912003888"
+            "value": "9000000009"
           }
         },
         "occurrenceDateTime": "2020-12-31T13:00:08.476+00:00",
@@ -246,7 +246,7 @@
         "identifier": [
           {
             "system": "https://fhir.nhs.uk/Id/nhs-number",
-            "value": "9912003888"
+            "value": "9000000009"
           }
         ],
         "birthDate": "1965-02-28"

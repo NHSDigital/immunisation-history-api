@@ -80,7 +80,7 @@ async function immunization(req, res, next) {
     });
     if (patientIdentifier == null || patientIdentifier == "") {
         res.status(400).json(errResponse);
-    } else if (patientIdentifier == "9912003888") {
+    } else if (patientIdentifier == "9000000009") {
         res.json(getResponse);
     } else {
         res.json(emptyBundle);

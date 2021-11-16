@@ -150,8 +150,10 @@ paths:
         
         | Scenario                      | Request                                                              | Response                                   |
         | ----------------------------- | -------------------------------------------------------------------- | ------------------------------------------ |
-        | Immunisation history found    | `patient.identifier`=`https://fhir.nhs.uk/Id/nhs-number\|9912003888` | HTTP Status 200 with immunisation data in response body |
-        | No immunisations found        | `patient.identifier`= anything else                                  | HTTP Status 200 with empty bundle in response body |
+        | Immunisation history found    | `patient.identifier`=`https://fhir.nhs.uk/Id/nhs-number\|9000000009` | HTTP Status 200 with immunisation data in response body |
+        | No immunisations found        | `patient.identifier`=`https://fhir.nhs.uk/Id/nhs-number\|9111231130` | HTTP Status 200 with empty bundle in response body |
+        | Bad Request                   | `patient.identifier`= anything else                                  | HTTP Status 400 Bad Request |
+
 
         You can try out the sandbox using the 'Try this API' feature on this page.
 
@@ -167,7 +169,7 @@ paths:
           required: true
           schema:
             type: string
-            example: "https://fhir.nhs.uk/Id/nhs-number|9912003888"
+            example: "https://fhir.nhs.uk/Id/nhs-number|9000000009"
         - name: procedure-code:below
           in: query
           description: |
