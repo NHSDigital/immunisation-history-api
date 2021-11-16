@@ -246,7 +246,7 @@
         "identifier": [
           {
             "system": "https://fhir.nhs.uk/Id/nhs-number",
-            "value": "90000000009"
+            "value": "9000000009"
           }
         ],
         "birthDate": "1965-02-28"
