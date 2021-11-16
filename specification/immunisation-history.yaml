@@ -159,7 +159,7 @@ paths:
 
         Alternatively, you can try out the sandbox using our Postman collection:
     
-        [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/e999c0aeddefe51b6b89)
+        [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/3704ae08a48222a7732e)
       parameters:
         - name: patient.identifier
           in: query
