@@ -48,7 +48,7 @@ def nhs_login_id_token(
         "jti": str(uuid4()),
         "identity_proofing_level": allowed_proofing_level,
         "birthdate": "1939-09-26",
-        "nhs_number": "9912003888",
+        "nhs_number": "9000000009",
         "nonce": "randomnonce",
         "surname": "CARTHY",
         "vot": "P9.Cp.Cd",
