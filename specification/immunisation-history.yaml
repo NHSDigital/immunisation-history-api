@@ -113,7 +113,7 @@ info:
 
     Alternatively, you can try out the sandbox using our Postman collection:
     
-    [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/3704ae08a48222a7732e)
+    [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/b7dfde415e5726658d09)
     
     ### Integration testing
     Our [integration test environment](https://digital.nhs.uk/developer/guides-and-documentation/testing#integration-testing):
@@ -151,7 +151,7 @@ paths:
         | Scenario                      | Request                                                              | Response                                   |
         | ----------------------------- | -------------------------------------------------------------------- | ------------------------------------------ |
         | Immunisation history found    | `patient.identifier`=`https://fhir.nhs.uk/Id/nhs-number\|9000000009` | HTTP Status 200 with immunisation data in response body |
-        | No immunisations found        | `patient.identifier`=`https://fhir.nhs.uk/Id/nhs-number\|9111231130` | HTTP Status 200 with empty bundle in response body |
+        | No immunisations found        | `patient.identifier`=`https://fhir.nhs.uk/Id/nhs-number\|9000000033` | HTTP Status 200 with empty bundle in response body |
         | Bad Request                   | `patient.identifier`= anything else                                  | HTTP Status 400 Bad Request |
 
 
@@ -159,7 +159,7 @@ paths:
 
         Alternatively, you can try out the sandbox using our Postman collection:
     
-        [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/3704ae08a48222a7732e)
+        [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/b7dfde415e5726658d09)
       parameters:
         - name: patient.identifier
           in: query
