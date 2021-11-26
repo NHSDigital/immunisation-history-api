@@ -53,9 +53,9 @@ info:
     ## API status and roadmap    
     
     ### Status
-    This API is in alpha, meaning:
-    - it is available for testing but not yet for production use
-    - we might make breaking changes
+    This API is in [private beta](https://digital.nhs.uk/developer/guides-and-documentation/reference-guide#api-status), meaning:
+    - it's available in production but only to a limited number of connecting applications
+    - it's more stable, but might still be subject to minor breaking changes
     
     If you would like to be involved in our beta programme, [contact us](https://digital.nhs.uk/developer/help-and-support).
     
