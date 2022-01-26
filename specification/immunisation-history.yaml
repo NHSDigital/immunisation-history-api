@@ -125,10 +125,9 @@ info:
     Our [integration test environment](https://digital.nhs.uk/developer/guides-and-documentation/testing#integration-testing):
     * is for formal integration testing
     * includes authorisation
-         
-    Currently, the integration test environment returns a single static response, the same one as the sandbox environment - regardless of what request parameters you send.
-    In due course we will change it to support more scenarios.
-
+    
+    It also includes ready-to-use [immunisation history test data](https://digital.nhs.uk/developer/api-catalogue/immunisation-history-fhir/immunisation-history-fhir-api-test-data).
+    
     For more details see [integration testing with our RESTful APIs](https://digital.nhs.uk/developer/guides-and-documentation/testing#integration-testing-with-our-restful-apis).
     
     ## Onboarding
