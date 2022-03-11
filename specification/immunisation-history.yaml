@@ -170,7 +170,7 @@ paths:
           in: query
           description: |
             The patient's NHS number.
-            Expressed as `<type>|<value>` where `<type>` must be `https://fhir.nhs.uk/Id/nhs-number` and `<value>` must be a [valid NHS number](https://www.datadictionary.nhs.uk/data_dictionary/attributes/n/nhs/nhs_number_de.asp).
+            Expressed as `<type>|<value>` where `<type>` must be `https://fhir.nhs.uk/Id/nhs-number` and `<value>` must be a [valid NHS number](https://www.datadictionary.nhs.uk/attributes/nhs_number.html).
           required: true
           schema:
             type: string
