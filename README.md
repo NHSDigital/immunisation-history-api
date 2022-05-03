@@ -9,7 +9,7 @@ This is a RESTful HL7® FHIR® API specification for the *Immunisation-History* 
 * `scripts/` Utilities helpful to developers of this specification.
 * `proxies/` Live (connecting to another service) and sandbox (using the sandbox container) Apigee API Proxy definitions.
 
-Consumers of the API will find developer documentation on the [NHS Digital Developer Hub](https://developer.digital.nhs.uk/).
+Consumers of the API will find developer documentation on the [NHS Digital Developer Hub](https://digital.nhs.uk/developer).
 
 ### Pre-requisites
 You will need the following packages installing: 
