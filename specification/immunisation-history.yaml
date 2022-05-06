@@ -153,11 +153,11 @@ paths:
         ## Sandbox testing
         You can test the following scenarios in our sandbox environment:
         
-        | Scenario                      | Request                                                              | Response                                   |
-        | ----------------------------- | -------------------------------------------------------------------- | ------------------------------------------ |
+        | Scenario                      | Request                                                              | Response                                                |
+        | ----------------------------- | -------------------------------------------------------------------- | ------------------------------------------------------- |
         | Immunisation history found    | `patient.identifier`=`https://fhir.nhs.uk/Id/nhs-number\|9000000009` | HTTP Status 200 with immunisation data in response body |
-        | No immunisations found        | `patient.identifier`=`https://fhir.nhs.uk/Id/nhs-number\|9000000033` | HTTP Status 200 with empty bundle in response body |
-        | Bad Request                   | `patient.identifier`= anything else                                  | HTTP Status 400 Bad Request |
+        | No immunisations found        | `patient.identifier`=`https://fhir.nhs.uk/Id/nhs-number\|9000000033` | HTTP Status 200 with empty bundle in response body      |
+        | Bad Request                   | `patient.identifier`= anything else                                  | HTTP Status 400 Bad Request                             |
 
 
         You can try out the sandbox using the 'Try this API' feature on this page.
@@ -176,15 +176,44 @@ paths:
             type: string
             example: "https://fhir.nhs.uk/Id/nhs-number|9000000009"
         - name: procedure-code:below
+          deprecated: true
           in: query
           description: |
             Parent SNOMED immunisation procedure code.
             For example, `90640007`, which is the parent code for all COVID-19 vaccinations.
+
+            This parameter has been deprecated and will be replaced by the `immunization.target` parameter.
           required: true
           schema:
             type: string
             example: "90640007"
             description: Parent SNOMED code for all COVID-19 vaccinations.
+        - name: immunization.target
+          in: query
+          description: |
+            Immunization History is segmented into multiple Data Stores, which may target specific procedures, disorders, diseases, infections or organisms.
+          schema:
+            type: string
+            example: COVID-19
+            enum:
+            - COVID19
+            - HPV
+        - name: date.from
+          in: query
+          description: |
+            The earliest date-time to be included (e.g. 2020-01-01T00:00:00)
+          schema:
+            type: string
+            format: date-time
+            default: "1900-01-01T00:00:00"
+        - name: date.to
+          in: query
+          description: |
+            The latest date-time to be included (e.g. 2020-12-31T23:59:59)
+          schema:
+            type: string
+            format: date-time
+            default: "9999-12-31T23:59:59"
         - name: _include
           in: query
           description: |
@@ -231,12 +260,12 @@ paths:
           description: |
             An error occurred as follows:
             
-            | HTTP status | Error code                 | Description |
-            | ----------- | -------------------------- | --------------------------------------------- |
-            | 400         | `processing`               | Missing or invalid NHS number |
-            | 400         | `processing`               | Missing or invalid parent SNOMED code |
-            | 401         | `processing`               | Missing or invalid ID token |
-            | 401         | `processing`               | Missing or invalid OAuth 2.0 bearer token |
+            | HTTP status | Error code                 | Description                                                         |
+            | ----------- | -------------------------- | ------------------------------------------------------------------- |
+            | 400         | `processing`               | Missing or invalid NHS number                                       |
+            | 400         | `processing`               | Missing, invalid or conflicting parent SNOMED code / Target         |
+            | 401         | `processing`               | Missing or invalid ID token                                         |
+            | 401         | `processing`               | Missing or invalid OAuth 2.0 bearer token                           |
             | 401         | `processing`               | NHS number in request doesn't match NHS number in NHS login account |
             
             For details see the `diagnostics` field.
