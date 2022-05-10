@@ -90,17 +90,22 @@ info:
     For more details see [Network access for APIs](https://digital.nhs.uk/developer/guides-and-documentation/network-access-for-apis).
     
     ## Security and authorisation
-    This API is [user-restricted](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation#user-restricted-apis),
-    meaning an end user must be present and authenticated.
 
-    Specifically, it uses the following security pattern:
-    - [User-restricted RESTful APIs - NHS login separate authentication and authorisation](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation/user-restricted-restful-apis-nhs-login-separate-authentication-and-authorisation)
+    This API offers two access modes: User restricted &amp; Application restricted.
 
-    Note that:
-    - the end user must be a patient
-    - the calling application must strongly authenticate the end user using NHS login
-    - the end user must have their identity verified to 'high' (P9) level
-    - the NHS number in the request must match the NHS number in the NHS login account
+    ### User restricted
+
+    * [Guides and Documentation](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation#user-restricted-apis)
+    * [Authentication and Authorisation](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation/user-restricted-restful-apis-nhs-login-separate-authentication-and-authorisation)
+    * for user-restricted the end user must be a patient
+    * the end user must have their identity verified to 'high' (P9) level
+    * the NHS number in the request must match the NHS number in the NHS login account
+
+    ### Application restricted
+
+    * [Guides and Documentation](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation#application-restricted-apis)
+    * [Authentication and Authorisation](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation#application-restricted-apis)
+    * the calling application must strongly authenticate the end user using NHS login
 
     ## Environments and testing
     | Environment       | Base URL                                                               |
