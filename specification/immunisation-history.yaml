@@ -194,7 +194,7 @@ paths:
             Immunization History is segmented into multiple Data Stores, which may target specific procedures, disorders, diseases, infections or organisms.
           schema:
             type: string
-            example: COVID-19
+            example: COVID19
             enum:
             - COVID19
             - HPV
