@@ -201,19 +201,19 @@ paths:
         - name: date.from
           in: query
           description: |
-            The earliest date-time to be included (e.g. 2020-01-01T00:00:00)
+            The earliest date to be included (e.g. 2020-01-01)
           schema:
             type: string
-            format: date-time
-            default: "1900-01-01T00:00:00"
+            format: date
+            default: "1900-01-01"
         - name: date.to
           in: query
           description: |
-            The latest date-time to be included (e.g. 2020-12-31T23:59:59)
+            The latest date to be included (e.g. 2020-12-31)
           schema:
             type: string
-            format: date-time
-            default: "9999-12-31T23:59:59"
+            format: date
+            default: "9999-12-31Z"
         - name: _include
           in: query
           description: |
