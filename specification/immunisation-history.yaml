@@ -186,9 +186,8 @@ paths:
           description: |
             Parent SNOMED immunisation procedure code.
             For example, `90640007`, which is the parent code for all COVID-19 vaccinations.
-
             This parameter has been deprecated and will be replaced by the `immunization.target` parameter.
-          required: true
+          required: false
           schema:
             type: string
             example: "90640007"
@@ -218,7 +217,7 @@ paths:
           schema:
             type: string
             format: date
-            default: "9999-12-31Z"
+            default: "9999-12-31"
         - name: _include
           in: query
           description: |
