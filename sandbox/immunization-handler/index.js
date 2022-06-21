@@ -91,8 +91,8 @@ async function immunization(req, res, next) {
       patientIdentifier: patientIdentifier,
       procedureCodeBelow: procedureCodeBelow,
       immunizationTarget: immunizationTarget,
-      dateFrom: rawDateFrom,
-      dateTo: rawDateTo
+      rawDateFrom: rawDateFrom,
+      rawDateTo: rawDateTo
     }
   });
 
