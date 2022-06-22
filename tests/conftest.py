@@ -189,7 +189,7 @@ async def get_token_nhs_login_token_exchange(test_app: ApigeeApiDeveloperApps,
         },
     )
     assert token_resp["status_code"] == 200, 'failed getting token'
-    assert "access_token" in token_resp["body"].keys()
+    assert set(token_resp["body"].keys()).issuperset({"access_token", "expires_in", "token_type", "issued_token_type"})
     return token_resp["body"]
 
 
