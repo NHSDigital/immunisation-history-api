@@ -189,7 +189,7 @@ async def get_token_nhs_login_token_exchange(test_app: ApigeeApiDeveloperApps,
         },
     )
     assert token_resp["status_code"] == 200, 'failed getting token'
-    assert list(token_resp["body"].keys()) == ["access_token", "expires_in", "token_type", "issued_token_type"]
+    assert set(token_resp["body"].keys()).issuperset({"access_token", "expires_in", "token_type", "issued_token_type"})
     return token_resp["body"]
 
 
@@ -239,7 +239,7 @@ def test_app(request):
 
     custom_attributes = {
         "jwks-resource-url": "https://raw.githubusercontent.com/NHSDigital/identity-service-jwks/main/jwks/internal-dev/9baed6f4-1361-4a8e-8531-1f8426e3aba8.json",
-        "nhs-login-allowed-proofing-level": request_params.get('requested_proofing_level', '') 
+        "nhs-login-allowed-proofing-level": request_params.get('requested_proofing_level', '')
     }
 
     api_products = get_product_names(request_params['suffixes'])
