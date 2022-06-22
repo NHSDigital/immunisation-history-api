@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+const cors = require('cors');
 const app = express();
 const log = require('loglevel');
 const uuid = require('uuid');
@@ -123,6 +124,22 @@ function on_error(err, req, res, next) {
 }
 
 const handlers = require('./handlers');
+app.use(
+  cors({
+    origin: 'https://digital.nhs.uk',
+    allowedHeaders: [
+      'origin',
+      'x-requested-with',
+      'accept',
+      'content-type',
+      'nhsd-session-urid',
+      'nhsd-user-identity',
+      'x-correlation-id'
+    ],
+    maxAge: 3628800,
+    methods: ['GET', 'PUT', 'POST', 'DELETE']
+  })
+);
 app.use(before_request);
 app.get('/_ping', handlers.status);
 app.get('/_status', handlers.status);

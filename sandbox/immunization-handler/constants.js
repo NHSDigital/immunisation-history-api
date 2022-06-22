@@ -18,7 +18,7 @@ const SK_DATE_FORMAT = 'YYYY-MM-DD';
 
 const EXTREME_DATES = {
   START: moment('0001-01-01', SK_DATE_FORMAT, true),
-  END: moment('9998-12-31', SK_DATE_FORMAT, true)
+  END: moment('9999-12-31', SK_DATE_FORMAT, true)
 };
 
 exports.IMMUNIZATION_TARGETS = IMMUNIZATION_TARGETS;

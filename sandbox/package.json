@@ -10,6 +10,7 @@
   "license": "Unlicense",
   "private": true,
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^5.0.0-alpha.8",
     "loglevel": "^1.7.1",
     "moment": "^2.29.3",

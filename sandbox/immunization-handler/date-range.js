@@ -1,5 +1,6 @@
-const moment = require('moment')
-const { SK_DATE_FORMAT, EXTREME_DATES } = require('./constants')
+const moment = require('moment');
+
+const { SK_DATE_FORMAT, EXTREME_DATES } = require('./constants');
 
 function parseDate(dateString, defaultDate) {
   if (dateString) {
@@ -16,7 +17,11 @@ function parseDateRange(rawDateFrom, rawDateTo) {
 }
 
 function isValidDate(date) {
-  return date.isValid() && date >= EXTREME_DATES.START && date <= EXTREME_DATES.END;
+  return (
+    date.isValid() &&
+    date.isSameOrAfter(EXTREME_DATES.START) &&
+    date.isSameOrBefore(EXTREME_DATES.END)
+  );
 }
 
 function validateDateRange(dateFrom, dateTo) {
