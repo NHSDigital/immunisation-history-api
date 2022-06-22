@@ -178,6 +178,8 @@ async def get_token_nhs_login_token_exchange(test_app: ApigeeApiDeveloperApps,
         id_token_jwt = nhs_login_id_token(test_app=test_app)
 
     # When
+    print("subject token -->", id_token_jwt)
+    print("client assertion -->", client_assertion_jwt)
     token_resp = await test_app.oauth.get_token_response(
         grant_type="token_exchange",
         data={
@@ -236,6 +238,7 @@ def api_test_config() -> APITestSessionConfig:
 def test_app(request):
     """Setup & Teardown an app-restricted app for this api"""
     request_params = request.param
+    print("==> setting up test app with params", request_params)
 
     custom_attributes = {
         "jwks-resource-url": "https://raw.githubusercontent.com/NHSDigital/identity-service-jwks/main/jwks/internal-dev/9baed6f4-1361-4a8e-8531-1f8426e3aba8.json",
