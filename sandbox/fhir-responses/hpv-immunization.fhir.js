@@ -380,13 +380,12 @@ const entries = [
 
 exports.hpvImmunizationFhir = (dateFrom, dateTo) => {
   const filteredEntries = entries.filter(entry => isEntryWithinDateRange(entry, dateFrom, dateTo));
-  if (filteredEntries.length > 0) {
-    filteredEntries.push(patientFhir());
-  }
+  const vaccineLength = filteredEntries.length;
+  filteredEntries.push(patientFhir());
   return {
     resourceType: 'Bundle',
     type: 'searchset',
-    total: filteredEntries.length,
+    total: vaccineLength,
     entry: filteredEntries
   };
 };
