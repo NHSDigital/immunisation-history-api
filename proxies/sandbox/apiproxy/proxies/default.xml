@@ -63,9 +63,6 @@
     </RouteRule>
     <DefaultFaultRule>
         <Step>
-            <Name>AssignMessage.AddCors</Name>
-        </Step>
-        <Step>
             <Name>AssignMessage.Errors.CatchAllMessage</Name>
         </Step>
     </DefaultFaultRule>
