@@ -17,4 +17,3 @@
     </HTTPTargetConnection>
     <Timeout>20000</Timeout>
 </ServiceCallout>
-
