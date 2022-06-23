@@ -102,15 +102,7 @@ const entries = [
           }
         ]
       },
-      statusReason: [
-        {
-          coding: [
-            {
-              system: 'http://snomed.info/sct'
-            }
-          ]
-        }
-      ],
+      status: 'completed',
       vaccineCode: {
         coding: [
           {
@@ -226,15 +218,7 @@ const entries = [
           }
         ]
       },
-      statusReason: [
-        {
-          coding: [
-            {
-              system: 'http://snomed.info/sct'
-            }
-          ]
-        }
-      ],
+      status: 'completed',
       vaccineCode: {
         coding: [
           {
@@ -351,15 +335,7 @@ const entries = [
           }
         ]
       },
-      statusReason: [
-        {
-          coding: [
-            {
-              system: 'http://snomed.info/sct'
-            }
-          ]
-        }
-      ],
+      status: 'completed',
       vaccineCode: {
         coding: [
           {
