@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<RaiseFault async="false" continueOnError="false" enabled="true" name="RaiseFault.ProdAuthorisedTargetCannotBeAll">
-    <DisplayName>RaiseFault.ProdAuthorisedTargetCannotBeAll</DisplayName>
+<RaiseFault async="false" continueOnError="false" enabled="true" name="RaiseFault.StrictAuthorisedTargetsCannotBeAll">
+    <DisplayName>RaiseFault.StrictAuthorisedTargetsCannotBeAll</DisplayName>
     <Properties/>
     <FaultResponse>
         <Set>

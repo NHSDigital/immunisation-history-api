@@ -46,16 +46,19 @@
             </Step>
 
             <Step>
-                <Name>AssignMessage.SetDefaultNonProdAuthorisedTargetToAll</Name>
-                <Condition>(app.authorised_targets is null) and (environment.name NotEquals "prod")</Condition>
+                <Name>Javascript.SetStrictAuthorisedTargets</Name>
+            </Step>
+            <Step>
+                <Name>AssignMessage.SetDefaultAuthorisedTargetsToAll</Name>
+                <Condition>(not apigee.USE_STRICT_AUTHORISED_TARGETS) and (app.authorised_targets is null)</Condition>
             </Step>
             <Step>
                 <Name>AssignMessage.PopulateAuthorisedTargetsFromApp</Name>
-                <Condition>(app.authorised_targets IsNot null)</Condition>
+                <Condition>app.authorised_targets IsNot null</Condition>
             </Step>
             <Step>
-                <Name>RaiseFault.ProdAuthorisedTargetCannotBeAll</Name>
-                <Condition>(apigee.AUTHORISED_TARGETS Equals "*") and (environment.name Equals "prod")</Condition>
+                <Name>RaiseFault.StrictAuthorisedTargetsCannotBeAll</Name>
+                <Condition>(apigee.USE_STRICT_AUTHORISED_TARGETS) and (apigee.AUTHORISED_TARGETS Equals "*")</Condition>
             </Step>
             <Step>
                 <Name>RaiseFault.MissingAuthorisedTargets</Name>
