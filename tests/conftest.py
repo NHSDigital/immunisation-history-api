@@ -262,6 +262,10 @@ def test_app(request):
     if authorised_targets is not None:
         custom_attributes["authorised_targets"] = authorised_targets
 
+    strict_mode = request_params.get("use_strict_authorised_targets", False)
+    if strict_mode:
+        custom_attributes["use_strict_authorised_targets"] = strict_mode
+
     api_products = get_product_names(request_params["suffixes"])
 
     app = ApigeeApiDeveloperApps()

@@ -38,6 +38,18 @@ def _valid_uri(nhs_number, procedure_code) -> str:
     return _base_valid_uri(nhs_number) + f"&procedure-code:below={procedure_code}"
 
 
+def _add_authorised_targets_to_request_params(request_params_list: List[Dict]):
+    new_request_params_list = []
+    for request_params in request_params_list:
+        for strict_mode in (True, False):
+            for targets in TARGET_COMBINATIONS:
+                _request_params = deepcopy(request_params)
+                _request_params["authorised_targets"] = targets
+                _request_params["use_strict_authorised_targets"] = strict_mode
+                new_request_params_list.append(_request_params)
+    return new_request_params_list
+
+
 @pytest.mark.e2e
 @pytest.mark.smoketest
 def test_output_test_config(api_test_config: APITestSessionConfig):
@@ -110,16 +122,6 @@ async def test_check_immunization_is_secured(api_client: APISessionClient):
         _base_valid_uri("9912003888"), allow_retries=True
     ) as resp:
         assert resp.status == 401
-
-
-def _add_authorised_targets_to_request_params(request_params_list: List[Dict]):
-    new_request_params_list = []
-    for request_params in request_params_list:
-        for targets in TARGET_COMBINATIONS:
-            _request_params = deepcopy(request_params)
-            _request_params["authorised_targets"] = targets
-            new_request_params_list.append(_request_params)
-    return new_request_params_list
 
 
 @pytest.mark.e2e
@@ -461,11 +463,16 @@ async def test_token_exchange_invalid_identity_proofing_level_scope(
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     "test_app",
-    [{"suffixes": ["-application-restricted"], "authorised_targets": None}],
+    [
+        {
+            "suffixes": ["-application-restricted"],
+            "authorised_targets": None,
+            "use_strict_authorised_targets": False,
+        }
+    ],
     indirect=True,
 )
 async def test_pass_when_auth_targets_is_null(test_app, api_client: APISessionClient):
-    """Note this test passes only for non-prod, as an example of self-serve"""
     authorised_headers = await conftest.get_authorised_headers(test_app)
 
     correlation_id = str(uuid4())
@@ -489,8 +496,46 @@ async def test_pass_when_auth_targets_is_null(test_app, api_client: APISessionCl
     [
         {
             "suffixes": ["-application-restricted"],
-            "authorised_targets": "",
+            "authorised_targets": None,
+            "use_strict_authorised_targets": True,
         }
+    ],
+    indirect=True,
+)
+async def test_fail_when_auth_targets_is_null_in_strict_mode(
+    test_app, api_client: APISessionClient
+):
+    authorised_headers = await conftest.get_authorised_headers(test_app)
+
+    correlation_id = str(uuid4())
+    authorised_headers[
+        "X-Correlation-ID"
+    ] = f"test_fail_when_auth_targets_is_null_in_strict_mode-{correlation_id}"
+
+    async with api_client.get(
+        _valid_uri("9912003888", "90640007"),
+        headers=authorised_headers,
+        allow_retries=True,
+    ) as resp:
+        body = await resp.text()
+        assert resp.status == 401, body
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "test_app",
+    [
+        {
+            "suffixes": ["-application-restricted"],
+            "authorised_targets": "",
+            "use_strict_authorised_targets": True,
+        },
+        {
+            "suffixes": ["-application-restricted"],
+            "authorised_targets": "",
+            "use_strict_authorised_targets": False,
+        },
     ],
     indirect=True,
 )
@@ -509,3 +554,67 @@ async def test_fail_when_auth_targets_is_blank(test_app, api_client: APISessionC
     ) as resp:
         body = await resp.text()
         assert resp.status == 401, body
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "test_app",
+    [
+        {
+            "suffixes": ["-application-restricted"],
+            "authorised_targets": "*",
+            "use_strict_authorised_targets": False,
+        }
+    ],
+    indirect=True,
+)
+async def test_pass_when_auth_targets_is_star_in_non_strict_mode(
+    test_app, api_client: APISessionClient
+):
+    authorised_headers = await conftest.get_authorised_headers(test_app)
+
+    correlation_id = str(uuid4())
+    authorised_headers[
+        "X-Correlation-ID"
+    ] = f"test_pass_when_auth_targets_is_star_in_non_strict_mode-{correlation_id}"
+
+    async with api_client.get(
+        _valid_uri("9912003888", "90640007"),
+        headers=authorised_headers,
+        allow_retries=True,
+    ) as resp:
+        body = await resp.text()
+        assert resp.status == 200, body
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "test_app",
+    [
+        {
+            "suffixes": ["-application-restricted"],
+            "authorised_targets": "*",
+            "use_strict_authorised_targets": True,
+        }
+    ],
+    indirect=True,
+)
+async def test_fail_when_auth_targets_is_star_in_strict_mode(
+    test_app, api_client: APISessionClient
+):
+    authorised_headers = await conftest.get_authorised_headers(test_app)
+
+    correlation_id = str(uuid4())
+    authorised_headers[
+        "X-Correlation-ID"
+    ] = f"test_fail_when_auth_targets_is_star_in_strict_mode-{correlation_id}"
+
+    async with api_client.get(
+        _valid_uri("9912003888", "90640007"),
+        headers=authorised_headers,
+        allow_retries=True,
+    ) as resp:
+        body = await resp.text()
+        assert resp.status == 403, body
