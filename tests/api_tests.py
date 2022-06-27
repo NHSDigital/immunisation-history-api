@@ -1,5 +1,6 @@
 import asyncio
-from typing import List
+from copy import deepcopy
+from typing import Dict, List
 from uuid import uuid4
 
 import pytest
@@ -11,6 +12,8 @@ from api_test_utils.api_session_client import APISessionClient
 from api_test_utils.api_test_session_config import APITestSessionConfig
 
 from tests import conftest
+
+TARGET_COMBINATIONS = ["HPV", "COVID19", "HPV,COVID19", "COVID19,HPV"]
 
 
 def dict_path(raw, path: List[str]):
@@ -109,22 +112,29 @@ async def test_check_immunization_is_secured(api_client: APISessionClient):
         assert resp.status == 401
 
 
+def _add_authorised_targets_to_request_params(request_params_list: List[Dict]):
+    new_request_params_list = []
+    for request_params in request_params_list:
+        for targets in TARGET_COMBINATIONS:
+            _request_params = deepcopy(request_params)
+            _request_params["authorised_targets"] = targets
+            new_request_params_list.append(_request_params)
+    return new_request_params_list
+
+
 @pytest.mark.e2e
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     "test_app",
-    [
-        {"suffixes": ["-application-restricted"], "authorised_targets": "FOO,BAR"},
-        {
-            "suffixes": ["-application-restricted", "-user-restricted"],
-            "authorised_targets": "FOO,BAR",
-        },
-    ],
+    _add_authorised_targets_to_request_params(
+        [
+            {"suffixes": ["-application-restricted"]},
+            {"suffixes": ["-application-restricted", "-user-restricted"]},
+        ]
+    ),
     indirect=True,
 )
 async def test_client_credentials_happy_path(test_app, api_client: APISessionClient):
-
-    # assert test_app.headers['AUTHORISED_TARGETS'] == 'FOO,BAR'
 
     authorised_headers = await conftest.get_authorised_headers(test_app)
 
@@ -148,10 +158,12 @@ async def test_client_credentials_happy_path(test_app, api_client: APISessionCli
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     "test_app",
-    [
-        {"suffixes": ["-user-restricted"], "authorised_targets": "FOO,BAR"},
-        {"suffixes": ["-application-restricted"], "authorised_targets": "FOO,BAR"},
-    ],
+    _add_authorised_targets_to_request_params(
+        [
+            {"suffixes": ["-user-restricted"]},
+            {"suffixes": ["-application-restricted"]},
+        ]
+    ),
     indirect=True,
 )
 async def test_immunization_no_auth_bearer_token_provided(
@@ -181,14 +193,15 @@ async def test_immunization_no_auth_bearer_token_provided(
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     "test_app",
-    [
-        {
-            "suffixes": ["-user-restricted"],
-            "requested_proofing_level": "P9",
-            "identity_proofing_level": "P9",
-            "authorised_targets": "FOO,BAR",
-        }
-    ],
+    _add_authorised_targets_to_request_params(
+        [
+            {
+                "suffixes": ["-user-restricted"],
+                "requested_proofing_level": "P9",
+                "identity_proofing_level": "P9",
+            }
+        ]
+    ),
     indirect=True,
 )
 async def test_bad_nhs_number(test_app, api_client: APISessionClient):
@@ -245,44 +258,40 @@ async def test_correlation_id_mirrored_in_resp_when_error(api_client: APISession
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     "test_app",
-    [
-        {
-            "suffixes": ["-user-restricted"],
-            "requested_proofing_level": "P9",
-            "identity_proofing_level": "P9",
-            "authorised_targets": "FOO,BAR",
-        },
-        {
-            "suffixes": ["-user-restricted"],
-            "requested_proofing_level": "P5",
-            "identity_proofing_level": "P9",
-            "authorised_targets": "FOO,BAR",
-        },
-        {
-            "suffixes": ["-user-restricted"],
-            "requested_proofing_level": "P5",
-            "identity_proofing_level": "P5",
-            "authorised_targets": "FOO,BAR",
-        },
-        {
-            "suffixes": ["-application-restricted", "-user-restricted"],
-            "requested_proofing_level": "P9",
-            "identity_proofing_level": "P9",
-            "authorised_targets": "FOO,BAR",
-        },
-        {
-            "suffixes": ["-application-restricted", "-user-restricted"],
-            "requested_proofing_level": "P5",
-            "identity_proofing_level": "P9",
-            "authorised_targets": "FOO,BAR",
-        },
-        {
-            "suffixes": ["-application-restricted", "-user-restricted"],
-            "requested_proofing_level": "P5",
-            "identity_proofing_level": "P5",
-            "authorised_targets": "FOO,BAR",
-        },
-    ],
+    _add_authorised_targets_to_request_params(
+        [
+            {
+                "suffixes": ["-user-restricted"],
+                "requested_proofing_level": "P9",
+                "identity_proofing_level": "P9",
+            },
+            {
+                "suffixes": ["-user-restricted"],
+                "requested_proofing_level": "P5",
+                "identity_proofing_level": "P9",
+            },
+            {
+                "suffixes": ["-user-restricted"],
+                "requested_proofing_level": "P5",
+                "identity_proofing_level": "P5",
+            },
+            {
+                "suffixes": ["-application-restricted", "-user-restricted"],
+                "requested_proofing_level": "P9",
+                "identity_proofing_level": "P9",
+            },
+            {
+                "suffixes": ["-application-restricted", "-user-restricted"],
+                "requested_proofing_level": "P5",
+                "identity_proofing_level": "P9",
+            },
+            {
+                "suffixes": ["-application-restricted", "-user-restricted"],
+                "requested_proofing_level": "P5",
+                "identity_proofing_level": "P5",
+            },
+        ]
+    ),
     indirect=True,
 )
 async def test_token_exchange_happy_path(test_app, api_client: APISessionClient):
@@ -312,26 +321,25 @@ async def test_token_exchange_happy_path(test_app, api_client: APISessionClient)
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     "test_app",
-    [
-        {
-            "suffixes": ["-application-restricted"],
-            "requested_proofing_level": "P9",
-            "identity_proofing_level": "P9",
-            "authorised_targets": "FOO,BAR",
-        },
-        {
-            "suffixes": ["-application-restricted"],
-            "requested_proofing_level": "P5",
-            "identity_proofing_level": "P9",
-            "authorised_targets": "FOO,BAR",
-        },
-        {
-            "suffixes": ["-application-restricted"],
-            "requested_proofing_level": "P5",
-            "identity_proofing_level": "P5",
-            "authorised_targets": "FOO,BAR",
-        },
-    ],
+    _add_authorised_targets_to_request_params(
+        [
+            {
+                "suffixes": ["-application-restricted"],
+                "requested_proofing_level": "P9",
+                "identity_proofing_level": "P9",
+            },
+            {
+                "suffixes": ["-application-restricted"],
+                "requested_proofing_level": "P5",
+                "identity_proofing_level": "P9",
+            },
+            {
+                "suffixes": ["-application-restricted"],
+                "requested_proofing_level": "P5",
+                "identity_proofing_level": "P5",
+            },
+        ]
+    ),
     indirect=True,
 )
 async def test_token_exchange_sad_path(test_app, api_client: APISessionClient):
@@ -347,20 +355,20 @@ async def test_token_exchange_sad_path(test_app, api_client: APISessionClient):
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     "test_product_and_app",
-    [
-        {
-            "scopes": ["urn:nhsd:apim:user-nhs-id:aal3:immunisation-history"],
-            "requested_proofing_level": "P9",
-            "identity_proofing_level": "P9",
-            "authorised_targets": "FOO,BAR",
-        },
-        {
-            "scopes": ["urn:nhsd:apim:user-nhs-id:aal3:immunisation-history"],
-            "requested_proofing_level": "P5",
-            "identity_proofing_level": "P9",
-            "authorised_targets": "FOO,BAR",
-        },
-    ],
+    _add_authorised_targets_to_request_params(
+        [
+            {
+                "scopes": ["urn:nhsd:apim:user-nhs-id:aal3:immunisation-history"],
+                "requested_proofing_level": "P9",
+                "identity_proofing_level": "P9",
+            },
+            {
+                "scopes": ["urn:nhsd:apim:user-nhs-id:aal3:immunisation-history"],
+                "requested_proofing_level": "P5",
+                "identity_proofing_level": "P9",
+            },
+        ]
+    ),
     indirect=True,
 )
 async def test_user_restricted_access_not_permitted(
@@ -397,20 +405,20 @@ async def test_user_restricted_access_not_permitted(
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     "test_product_and_app",
-    [
-        {
-            "scopes": ["urn:nhsd:apim:user-nhs-login:P6:immunisation-history"],
-            "requested_proofing_level": "P9",
-            "identity_proofing_level": "P6",
-            "authorised_targets": "FOO,BAR",
-        },
-        {
-            "scopes": ["urn:nhsd:apim:user-nhs-login:P6:immunisation-history"],
-            "requested_proofing_level": "P5",
-            "identity_proofing_level": "P6",
-            "authorised_targets": "FOO,BAR",
-        },
-    ],
+    _add_authorised_targets_to_request_params(
+        [
+            {
+                "scopes": ["urn:nhsd:apim:user-nhs-login:P6:immunisation-history"],
+                "requested_proofing_level": "P9",
+                "identity_proofing_level": "P6",
+            },
+            {
+                "scopes": ["urn:nhsd:apim:user-nhs-login:P6:immunisation-history"],
+                "requested_proofing_level": "P5",
+                "identity_proofing_level": "P6",
+            },
+        ]
+    ),
     indirect=True,
 )
 async def test_token_exchange_invalid_identity_proofing_level_scope(
