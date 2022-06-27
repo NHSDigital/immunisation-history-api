@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RaiseFault async="false" continueOnError="false" enabled="true" name="RaiseFault.MissingAuthorisedTargets">
+    <DisplayName>RaiseFault.MissingAuthorisedTargets</DisplayName>
+    <Properties/>
+    <FaultResponse>
+        <Set>
+            <Headers/>
+            <Payload contentType="text/plain"/>
+            <StatusCode>401</StatusCode>
+            <ReasonPhrase>Access Denied</ReasonPhrase>
+        </Set>
+        <AssignVariable>
+            <Name>ih.error.code</Name>
+            <Value>unauthorised</Value>
+        </AssignVariable>
+        <AssignVariable>
+            <Name>ih.error.diagnostics</Name>
+            <Value>Custom Attribute Key-Value pair "authorised_targets" is either blank or does not exist.</Value>
+        </AssignVariable>
+    </FaultResponse>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</RaiseFault>

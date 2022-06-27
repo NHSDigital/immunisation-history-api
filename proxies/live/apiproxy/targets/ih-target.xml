@@ -44,6 +44,27 @@
             <Step>
                 <Name>Javascript.AddClientRPDetailsHeader</Name>
             </Step>
+
+            <Step>
+                <Name>AssignMessage.SetDefaultNonProdAuthorisedTargetToAll</Name>
+                <Condition>(app.authorised_targets is null) and (environment.name NotEquals "prod")</Condition>
+            </Step>
+            <Step>
+                <Name>AssignMessage.PopulateAuthorisedTargetsFromApp</Name>
+                <Condition>(app.authorised_targets IsNot null)</Condition>
+            </Step>
+            <Step>
+                <Name>RaiseFault.ProdAuthorisedTargetCannotBeAll</Name>
+                <Condition>(apigee.AUTHORISED_TARGETS Equals "*") and (environment.name Equals "prod")</Condition>
+            </Step>
+            <Step>
+                <Name>RaiseFault.MissingAuthorisedTargets</Name>
+                <Condition>(apigee.AUTHORISED_TARGETS is null) or (apigee.AUTHORISED_TARGETS Equals "")</Condition>
+            </Step>
+            <Step>
+                <Name>AssignMessage.AddAuthorisedTargetsHeader</Name>
+            </Step>
+
             <Step>
                 <Name>Quota</Name>
             </Step>

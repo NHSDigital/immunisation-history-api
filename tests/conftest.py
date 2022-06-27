@@ -32,7 +32,7 @@ def nhs_login_id_token(
     test_app: ApigeeApiDeveloperApps,
     id_token_claims: dict = None,
     id_token_headers: dict = None,
-    allowed_proofing_level: str = 'P9'
+    allowed_proofing_level: str = "P9",
 ) -> str:
 
     default_id_token_claims = {
@@ -58,16 +58,14 @@ def nhs_login_id_token(
     if id_token_claims is not None:
         default_id_token_claims = {**default_id_token_claims, **id_token_claims}
 
-    default_id_token_headers = {
-        "kid": "nhs-login",
-        "typ": "JWT",
-        "alg": "RS512"
-    }
+    default_id_token_headers = {"kid": "nhs-login", "typ": "JWT", "alg": "RS512"}
 
     if id_token_headers is not None:
         default_id_token_headers = {**default_id_token_headers, **id_token_headers}
 
-    nhs_login_id_token_private_key_path = get_env("ID_TOKEN_NHS_LOGIN_PRIVATE_KEY_ABSOLUTE_PATH")
+    nhs_login_id_token_private_key_path = get_env(
+        "ID_TOKEN_NHS_LOGIN_PRIVATE_KEY_ABSOLUTE_PATH"
+    )
 
     with open(nhs_login_id_token_private_key_path, "r") as f:
         contents = f.read()
@@ -144,12 +142,17 @@ async def check_for_unauthorised_headers(client_app):
         }
     )
 
-    token_response = await get_bad_token(client_app, grant_type="client_credentials", _jwt=jwt)
-    assert token_response['status_code'] == 401
-    assert token_response['body']['error'] == 'unauthorized_client'
-    assert token_response["body"]['error_description'] == 'you have tried to requests authorization but your ' \
-                                                          'application is not configured to use this authorization ' \
-                                                          'grant type'
+    token_response = await get_bad_token(
+        client_app, grant_type="client_credentials", _jwt=jwt
+    )
+    assert token_response["status_code"] == 401
+    assert token_response["body"]["error"] == "unauthorized_client"
+    assert (
+        token_response["body"]["error_description"]
+        == "you have tried to requests authorization but your "
+        "application is not configured to use this authorization "
+        "grant type"
+    )
 
 
 async def get_bad_token(
@@ -160,13 +163,16 @@ async def get_bad_token(
     return await oauth.get_token_response(grant_type=grant_type, **kwargs)
 
 
-async def get_token_nhs_login_token_exchange(test_app: ApigeeApiDeveloperApps,
-                                             subject_token_claims: dict = None,
-                                             client_assertion_jwt: dict = None):
+async def get_token_nhs_login_token_exchange(
+    test_app: ApigeeApiDeveloperApps,
+    subject_token_claims: dict = None,
+    client_assertion_jwt: dict = None,
+):
     """Call identity server to get an access token"""
     if client_assertion_jwt is not None:
-        client_assertion_jwt = test_app.oauth.create_jwt(kid="test-1",
-                                                         claims=client_assertion_jwt)
+        client_assertion_jwt = test_app.oauth.create_jwt(
+            kid="test-1", claims=client_assertion_jwt
+        )
     else:
         client_assertion_jwt = test_app.oauth.create_jwt(kid="test-1")
 
@@ -188,18 +194,23 @@ async def get_token_nhs_login_token_exchange(test_app: ApigeeApiDeveloperApps,
             "client_assertion": client_assertion_jwt,
         },
     )
-    assert token_resp["status_code"] == 200, 'failed getting token'
-    assert set(token_resp["body"].keys()).issuperset({"access_token", "expires_in", "token_type", "issued_token_type"})
+    assert token_resp["status_code"] == 200, "failed getting token"
+    assert set(token_resp["body"].keys()).issuperset(
+        {"access_token", "expires_in", "token_type", "issued_token_type"}
+    )
     return token_resp["body"]
 
 
-async def check_for_unauthorised_token_exchange(test_app: ApigeeApiDeveloperApps,
-                                                subject_token_claims: dict = None,
-                                                client_assertion_jwt: dict = None):
+async def check_for_unauthorised_token_exchange(
+    test_app: ApigeeApiDeveloperApps,
+    subject_token_claims: dict = None,
+    client_assertion_jwt: dict = None,
+):
     """Call identity server to get an access token"""
     if client_assertion_jwt is not None:
-        client_assertion_jwt = test_app.oauth.create_jwt(kid="test-1",
-                                                         claims=client_assertion_jwt)
+        client_assertion_jwt = test_app.oauth.create_jwt(
+            kid="test-1", claims=client_assertion_jwt
+        )
     else:
         client_assertion_jwt = test_app.oauth.create_jwt(kid="test-1")
 
@@ -222,9 +233,12 @@ async def check_for_unauthorised_token_exchange(test_app: ApigeeApiDeveloperApps
         },
     )
     assert token_resp["status_code"] == 401
-    assert token_resp["body"]['error'] == 'unauthorized_client'
-    assert token_resp["body"]['error_description'] == 'you have tried to requests authorization but your application ' \
-                                                      'is not configured to use this authorization grant type'
+    assert token_resp["body"]["error"] == "unauthorized_client"
+    assert (
+        token_resp["body"]["error_description"]
+        == "you have tried to requests authorization but your application "
+        "is not configured to use this authorization grant type"
+    )
 
 
 @pytest.fixture(scope="session")
@@ -239,10 +253,16 @@ def test_app(request):
 
     custom_attributes = {
         "jwks-resource-url": "https://raw.githubusercontent.com/NHSDigital/identity-service-jwks/main/jwks/internal-dev/9baed6f4-1361-4a8e-8531-1f8426e3aba8.json",
-        "nhs-login-allowed-proofing-level": request_params.get('requested_proofing_level', '')
+        "nhs-login-allowed-proofing-level": request_params.get(
+            "requested_proofing_level", ""
+        ),
     }
 
-    api_products = get_product_names(request_params['suffixes'])
+    authorised_targets = request_params.get("authorised_targets")
+    if authorised_targets is not None:
+        custom_attributes["authorised_targets"] = authorised_targets
+
+    api_products = get_product_names(request_params["suffixes"])
 
     app = ApigeeApiDeveloperApps()
 
@@ -267,15 +287,15 @@ def test_product_and_app(request):
     app = ApigeeApiDeveloperApps()
     loop = asyncio.new_event_loop()
     loop.run_until_complete(product.create_new_product())
-    loop.run_until_complete(product.update_scopes(
-        request_params['scopes']
-    ))
+    loop.run_until_complete(product.update_scopes(request_params["scopes"]))
     loop.run_until_complete(
         app.setup_app(
             api_products=[product.name],
-            custom_attributes= {
+            custom_attributes={
                 "jwks-resource-url": "https://raw.githubusercontent.com/NHSDigital/identity-service-jwks/main/jwks/internal-dev/9baed6f4-1361-4a8e-8531-1f8426e3aba8.json",
-                "nhs-login-allowed-proofing-level": request_params['requested_proofing_level']
+                "nhs-login-allowed-proofing-level": request_params[
+                    "requested_proofing_level"
+                ],
             },
         )
     )
