@@ -6,8 +6,8 @@
         <Set>
             <Headers/>
             <Payload contentType="text/plain"/>
-            <StatusCode>401</StatusCode>
-            <ReasonPhrase>Access Denied</ReasonPhrase>
+            <StatusCode>403</StatusCode>
+            <ReasonPhrase>Forbidden</ReasonPhrase>
         </Set>
         <AssignVariable>
             <Name>ih.error.code</Name>
@@ -15,7 +15,7 @@
         </AssignVariable>
         <AssignVariable>
             <Name>ih.error.diagnostics</Name>
-            <Value>Custom Attribute Key-Value pair "authorised_targets" cannot be "*" in production.</Value>
+            <Value>Your permissions have been incorrectly configured (Custom Attribute Key-Value pair "authorised_targets" cannot be "*" in production). Please contact support, quoting this message.</Value>
         </AssignVariable>
     </FaultResponse>
     <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
