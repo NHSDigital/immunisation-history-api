@@ -13,7 +13,7 @@ from api_test_utils.api_test_session_config import APITestSessionConfig
 
 from tests import conftest
 
-TARGET_COMBINATIONS = ["HPV", "COVID19", "HPV,COVID19", "COVID19,HPV"]
+TARGET_COMBINATIONS = ["HPV", "COVID19", "HPV,COVID19"]
 
 
 def dict_path(raw, path: List[str]):
@@ -618,3 +618,38 @@ async def test_fail_when_auth_targets_is_star_in_strict_mode(
     ) as resp:
         body = await resp.text()
         assert resp.status == 403, body
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "test_app",
+    _add_authorised_targets_to_request_params(
+        [
+            {"suffixes": ["-application-restricted"]},
+        ]
+    ),
+    indirect=True,
+)
+@pytest.mark.parametrize(
+    "extra_header", ["AUTHORISED_TARGETS", "authorised_targets", "autHORised_TArgets"]
+)
+async def test_fail_when_authorised_targets_header_upper_set_in_good_request(
+    test_app, extra_header, api_client: APISessionClient
+):
+
+    authorised_headers = await conftest.get_authorised_headers(test_app)
+
+    correlation_id = str(uuid4())
+    authorised_headers[
+        "X-Correlation-ID"
+    ] = f"test_fail_when_authorised_targets_header_upper_set_in_good_request-{correlation_id}"
+    authorised_headers[extra_header] = "FOO,BAR"
+
+    async with api_client.get(
+        _valid_uri("9912003888", "90640007"),
+        headers=authorised_headers,
+        allow_retries=True,
+    ) as resp:
+        body = await resp.text()
+        assert resp.status == 404, body

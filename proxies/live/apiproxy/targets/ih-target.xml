@@ -46,6 +46,13 @@
             </Step>
 
             <Step>
+                <Name>Javascript.FlagIfAuthorisedTargetsAlreadyInHeader</Name>
+            </Step>
+            <Step>
+                <Name>RaiseFault.AuthorisedTargetsAlreadyInHeader</Name>
+                <Condition>apigee.AUTHORISED_TARGETS_ALREADY_IN_HEADER is true</Condition>
+            </Step>
+            <Step>
                 <Name>Javascript.SetStrictAuthorisedTargets</Name>
             </Step>
             <Step>
