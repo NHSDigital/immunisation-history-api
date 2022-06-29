@@ -139,7 +139,18 @@ const entries = [
           value: '1324761000000102'
         }
       ],
-      status: 'completed',
+      status: 'not-done',
+      statusReason: [
+        {
+          coding: [
+            {
+              system: 'http://snomed.info/sct',
+              code: '310376006',
+              display: 'Immunization consent not given'
+            }
+          ]
+        }
+      ],
       vaccineCode: {
         coding: [
           {
