@@ -102,15 +102,7 @@ const entries = [
           }
         ]
       },
-      statusReason: [
-        {
-          coding: [
-            {
-              system: 'http://snomed.info/sct'
-            }
-          ]
-        }
-      ],
+      status: 'completed',
       vaccineCode: {
         coding: [
           {
@@ -226,15 +218,7 @@ const entries = [
           }
         ]
       },
-      statusReason: [
-        {
-          coding: [
-            {
-              system: 'http://snomed.info/sct'
-            }
-          ]
-        }
-      ],
+      status: 'completed',
       vaccineCode: {
         coding: [
           {
@@ -351,11 +335,14 @@ const entries = [
           }
         ]
       },
+      status: 'not-done',
       statusReason: [
         {
           coding: [
             {
-              system: 'http://snomed.info/sct'
+              system: 'http://snomed.info/sct',
+              code: '310376006',
+              display: 'Immunization consent not given'
             }
           ]
         }
