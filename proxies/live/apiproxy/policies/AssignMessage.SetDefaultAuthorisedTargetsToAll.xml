@@ -1,0 +1,6 @@
+<AssignMessage name="AssignMessage.SetDefaultAuthorisedTargetsToAll" enabled="true">
+  <AssignVariable>
+    <Name>apigee.AUTHORISED_TARGETS</Name>
+    <Value>*</Value>
+  </AssignVariable>
+</AssignMessage>

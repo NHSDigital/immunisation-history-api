@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RaiseFault async="false" continueOnError="false" enabled="true" name="RaiseFault.AuthorisedTargetsAlreadyInHeader">
+    <DisplayName>RaiseFault.AuthorisedTargetsAlreadyInHeader</DisplayName>
+    <Properties/>
+    <FaultResponse>
+        <Set>
+            <Headers/>
+            <Payload contentType="text/plain"/>
+            <StatusCode>404</StatusCode>
+            <ReasonPhrase>Not Found</ReasonPhrase>
+        </Set>
+        <AssignVariable>
+            <Name>ih.error.code</Name>
+            <Value>not found</Value>
+        </AssignVariable>
+        <AssignVariable>
+            <Name>ih.error.diagnostics</Name>
+            <Value>AUTHORISED_TARGETS cannot be provided in headers</Value>
+        </AssignVariable>
+    </FaultResponse>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</RaiseFault>
