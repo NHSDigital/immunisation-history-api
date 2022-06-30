@@ -44,6 +44,37 @@
             <Step>
                 <Name>Javascript.AddClientRPDetailsHeader</Name>
             </Step>
+
+            <Step>
+                <Name>Javascript.FlagIfAuthorisedTargetsAlreadyInHeader</Name>
+            </Step>
+            <Step>
+                <Name>RaiseFault.AuthorisedTargetsAlreadyInHeader</Name>
+                <Condition>apigee.AUTHORISED_TARGETS_ALREADY_IN_HEADER is true</Condition>
+            </Step>
+            <Step>
+                <Name>Javascript.SetStrictAuthorisedTargets</Name>
+            </Step>
+            <Step>
+                <Name>AssignMessage.SetDefaultAuthorisedTargetsToAll</Name>
+                <Condition>(apigee.USE_STRICT_AUTHORISED_TARGETS is false) and (app.authorised_targets is null)</Condition>
+            </Step>
+            <Step>
+                <Name>AssignMessage.PopulateAuthorisedTargetsFromApp</Name>
+                <Condition>app.authorised_targets IsNot null</Condition>
+            </Step>
+            <Step>
+                <Name>RaiseFault.StrictAuthorisedTargetsCannotBeAll</Name>
+                <Condition>(apigee.USE_STRICT_AUTHORISED_TARGETS is true) and (apigee.AUTHORISED_TARGETS Equals "*")</Condition>
+            </Step>
+            <Step>
+                <Name>RaiseFault.MissingAuthorisedTargets</Name>
+                <Condition>(apigee.AUTHORISED_TARGETS is null) or (apigee.AUTHORISED_TARGETS Equals "")</Condition>
+            </Step>
+            <Step>
+                <Name>AssignMessage.AddAuthorisedTargetsHeader</Name>
+            </Step>
+
             <Step>
                 <Name>Quota</Name>
             </Step>

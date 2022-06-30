@@ -21,6 +21,28 @@ And you will need to be granted access to the APIGEE
 ### Testing
 To test this locally you will need a local environment set up, please contact a developer managing this repo for local environment setup for testing.
 
+#### Authorising immunisation targets in production
+
+Successful deployment of consumer apps in production requires a custom attribute key-value pair with name `authorised_targets` and a value set to a comma-delimited list of target immunisations, e.g.
+
+```yaml
+authorised_targets: COVID19,HPV
+```
+
+or for a single immunisation target, e.g.:
+
+```yaml
+authorised_targets: COVID19
+```
+
+Invalid values of `authorised_targets` in production (in APIGEE validation) are:
+
+* an empty value (indicated in testing by `""`)
+* "`*`" (unless in non-production environments)
+
+Additionally, requests with will be rejected if `authorised_targets` contains a value which is not one of the pre-defined target immunisation keywords. Contact the maintainers for the up-to-date set of target immunisation keywords.
+
+:bulb: For non-production ("self-serve") environments: the custom attribute `authorised_targets` is not required to exist; if it doesn't exist it will automatically be set to "`*`" (i.e. valid for any target).
 
 ## Contributing
 Contributions to this project are welcome from anyone, providing that they conform to the [guidelines for contribution](https://github.com/NHSDigital/immunisation-history/blob/master/CONTRIBUTING.md) and the [community code of conduct](https://github.com/NHSDigital/immunisation-history/blob/master/CODE_OF_CONDUCT.md).
