@@ -1,6 +1,6 @@
 <AssignMessage name="AssignMessage.PopulateAuthorisedTargetsFromApp" enabled="true">
   <AssignVariable>
     <Name>apigee.AUTHORISED_TARGETS</Name>
-    <Ref>app.authorised_targets</Ref>
+    <Ref>apim-app-flow-vars.immunisation-history.authorised_targets</Ref>
   </AssignVariable>
 </AssignMessage>
