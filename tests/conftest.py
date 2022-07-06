@@ -1,5 +1,6 @@
 # flake8: noqa
 import asyncio
+import json
 import os
 from typing import List
 from uuid import uuid4
@@ -260,7 +261,9 @@ def test_app(request):
 
     authorised_targets = request_params.get("authorised_targets")
     if authorised_targets is not None:
-        custom_attributes["authorised_targets"] = authorised_targets
+        custom_attributes["apim-app-flow-vars"] = json.dumps(
+            {"immunisation-history": {"authorised_targets": authorised_targets}}
+        )
 
     strict_mode = request_params.get("use_strict_authorised_targets", False)
     if strict_mode:

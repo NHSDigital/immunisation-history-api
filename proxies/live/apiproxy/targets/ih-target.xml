@@ -28,6 +28,9 @@
                 <Name>OauthV2.VerifyAccessToken</Name>
             </Step>
             <Step>
+                <Name>FlowCallout.ExtendedAttributes</Name>
+            </Step>
+            <Step>
                 <Name>AssignMessage.AddUserIdHeader</Name>
                 <Condition>accesstoken.auth_grant_type == "token_exchange"</Condition>
             </Step>
@@ -57,11 +60,11 @@
             </Step>
             <Step>
                 <Name>AssignMessage.SetDefaultAuthorisedTargetsToAll</Name>
-                <Condition>(apigee.USE_STRICT_AUTHORISED_TARGETS is false) and (app.authorised_targets is null)</Condition>
+                <Condition>(apigee.USE_STRICT_AUTHORISED_TARGETS is false) and (apim-app-flow-vars.immunisation-history.authorised_targets is null)</Condition>
             </Step>
             <Step>
                 <Name>AssignMessage.PopulateAuthorisedTargetsFromApp</Name>
-                <Condition>app.authorised_targets IsNot null</Condition>
+                <Condition>apim-app-flow-vars.immunisation-history.authorised_targets IsNot null</Condition>
             </Step>
             <Step>
                 <Name>RaiseFault.StrictAuthorisedTargetsCannotBeAll</Name>
