@@ -63,7 +63,7 @@
                 <Condition>(apigee.USE_STRICT_AUTHORISED_TARGETS is false) and (apim-app-flow-vars.immunisation-history.authorised_targets is null)</Condition>
             </Step>
             <Step>
-                <Name>AssignMessage.PopulateAuthorisedTargetsFromApp</Name>
+                <Name>Javascript.PopulateAuthorisedTargetsFromApp</Name>
                 <Condition>apim-app-flow-vars.immunisation-history.authorised_targets IsNot null</Condition>
             </Step>
             <Step>
