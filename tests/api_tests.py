@@ -13,7 +13,7 @@ from api_test_utils.api_test_session_config import APITestSessionConfig
 
 from tests import conftest
 
-TARGET_COMBINATIONS = ["HPV", "COVID19", "HPV,COVID19"]
+TARGET_COMBINATIONS = [["COVID19"], ["HPV", "COVID19"]]
 
 
 def dict_path(raw, path: List[str]):
@@ -357,20 +357,18 @@ async def test_token_exchange_sad_path(test_app, api_client: APISessionClient):
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     "test_product_and_app",
-    _add_authorised_targets_to_request_params(
-        [
-            {
-                "scopes": ["urn:nhsd:apim:user-nhs-id:aal3:immunisation-history"],
-                "requested_proofing_level": "P9",
-                "identity_proofing_level": "P9",
-            },
-            {
-                "scopes": ["urn:nhsd:apim:user-nhs-id:aal3:immunisation-history"],
-                "requested_proofing_level": "P5",
-                "identity_proofing_level": "P9",
-            },
-        ]
-    ),
+    [
+        {
+            "scopes": ["urn:nhsd:apim:user-nhs-id:aal3:immunisation-history"],
+            "requested_proofing_level": "P9",
+            "identity_proofing_level": "P9",
+        },
+        {
+            "scopes": ["urn:nhsd:apim:user-nhs-id:aal3:immunisation-history"],
+            "requested_proofing_level": "P5",
+            "identity_proofing_level": "P9",
+        },
+    ],
     indirect=True,
 )
 async def test_user_restricted_access_not_permitted(
@@ -536,10 +534,17 @@ async def test_fail_when_auth_targets_is_null_in_strict_mode(
             "authorised_targets": "",
             "use_strict_authorised_targets": False,
         },
+        {
+            "suffixes": ["-application-restricted"],
+            "authorised_targets": "somethingInvalid",
+            "use_strict_authorised_targets": False,
+        },
     ],
     indirect=True,
 )
-async def test_fail_when_auth_targets_is_blank(test_app, api_client: APISessionClient):
+async def test_fail_when_auth_targets_is_blank_or_invalid(
+    test_app, api_client: APISessionClient
+):
     authorised_headers = await conftest.get_authorised_headers(test_app)
 
     correlation_id = str(uuid4())
