@@ -20,7 +20,7 @@ install: install-node install-python .git/hooks/pre-commit
 
 lint:
 	npm run lint
-# find . -name '*.py' -not -path '**/.venv/*' | xargs poetry run flake8
+	find . -name '*.py' -not -path '**/.venv/*' -not -path '**/.direnv/*' | xargs poetry run flake8
 
 clean:
 	rm -rf build
@@ -65,7 +65,7 @@ sandboxtest:
 pytest-guards: guard-SERVICE_BASE_PATH guard-APIGEE_ENVIRONMENT guard-SOURCE_COMMIT_ID guard-STATUS_ENDPOINT_API_KEY
 
 smoketest: pytest-guards
-	poetry run python -m pytest -v --junitxml=smoketest-report.xml -s -m smoketest
+	poetry run pytest -v --junitxml=smoketest-report.xml -s -m smoketest
 
 e2etest: pytest-guards
 	poetry run pytest -v --junitxml=e2e-report.xml -s -m e2e
