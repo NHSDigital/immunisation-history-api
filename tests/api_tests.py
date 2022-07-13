@@ -4,7 +4,6 @@ from typing import Dict, List
 from uuid import uuid4
 
 import pytest
-
 from aiohttp import ClientResponse
 from api_test_utils import env
 from api_test_utils import poll_until
@@ -50,6 +49,10 @@ def _add_authorised_targets_to_request_params(request_params_list: List[Dict]):
     return new_request_params_list
 
 
+def _generate_correlation_id(prefix: str) -> str:
+    return f'{prefix}_{uuid4()}'
+
+
 @pytest.mark.e2e
 @pytest.mark.smoketest
 def test_output_test_config(api_test_config: APITestSessionConfig):
@@ -78,7 +81,6 @@ async def test_wait_for_ping(
 @pytest.mark.smoketest
 @pytest.mark.asyncio
 async def test_check_status_is_secured(api_client: APISessionClient):
-
     async with api_client.get("_status", allow_retries=True) as resp:
         assert resp.status == 401
 
@@ -117,7 +119,6 @@ async def test_wait_for_status(
 @pytest.mark.e2e
 @pytest.mark.asyncio
 async def test_check_immunization_is_secured(api_client: APISessionClient):
-
     async with api_client.get(
         _base_valid_uri("9912003888"), allow_retries=True
     ) as resp:
@@ -137,10 +138,9 @@ async def test_check_immunization_is_secured(api_client: APISessionClient):
     indirect=True,
 )
 async def test_client_credentials_happy_path(test_app, api_client: APISessionClient):
-
     authorised_headers = await conftest.get_authorised_headers(test_app)
 
-    correlation_id = str(uuid4())
+    correlation_id = _generate_correlation_id('test_client_credentials_happy_path')
     authorised_headers["X-Correlation-ID"] = correlation_id
 
     async with api_client.get(
@@ -171,9 +171,8 @@ async def test_client_credentials_happy_path(test_app, api_client: APISessionCli
 async def test_immunization_no_auth_bearer_token_provided(
     test_app, api_client: APISessionClient
 ):
-
     await asyncio.sleep(1)  # Add delay to tests to avoid 429 on service callout
-    correlation_id = str(uuid4())
+    correlation_id = _generate_correlation_id('test_immunization_no_auth_bearer_token_provided')
     headers = {"Authorization": "Bearer", "X-Correlation-ID": correlation_id}
     async with api_client.get(
         _valid_uri("9912003888", "90640007"), headers=headers, allow_retries=True
@@ -207,7 +206,6 @@ async def test_immunization_no_auth_bearer_token_provided(
     indirect=True,
 )
 async def test_bad_nhs_number(test_app, api_client: APISessionClient):
-
     await asyncio.sleep(1)  # Add delay to tests to avoid 429 on service callout
 
     subject_token_claims = {
@@ -218,7 +216,7 @@ async def test_bad_nhs_number(test_app, api_client: APISessionClient):
     )
     token = token_response["access_token"]
 
-    correlation_id = str(uuid4())
+    correlation_id = _generate_correlation_id('test_bad_nhs_number')
     headers = {"Authorization": f"Bearer {token}", "X-Correlation-ID": correlation_id}
 
     async with api_client.get(
@@ -241,7 +239,7 @@ async def test_bad_nhs_number(test_app, api_client: APISessionClient):
 async def test_correlation_id_mirrored_in_resp_when_error(api_client: APISessionClient):
     access_token = "invalid_token"
 
-    correlation_id = str(uuid4())
+    correlation_id = _generate_correlation_id('test_correlation_id_mirrored_in_resp_when_error')
 
     async with api_client.get(
         _valid_uri("9912003888", "90640007"),
@@ -305,7 +303,7 @@ async def test_token_exchange_happy_path(test_app, api_client: APISessionClient)
     )
     token = token_response["access_token"]
 
-    correlation_id = str(uuid4())
+    correlation_id = _generate_correlation_id('test_token_exchange_happy_path')
     headers = {"Authorization": f"Bearer {token}", "X-Correlation-ID": correlation_id}
 
     async with api_client.get(
@@ -380,12 +378,15 @@ async def test_user_restricted_access_not_permitted(
 
     token_response = await conftest.get_token(test_app)
 
+    correlation_id = _generate_correlation_id('test_user_restricted_access_not_permitted')
+
     authorised_headers = {
         "Authorization": f"Bearer {token_response['access_token']}",
         "NHSD-User-Identity": conftest.nhs_login_id_token(
             test_app,
             allowed_proofing_level=test_app.request_params["identity_proofing_level"],
         ),
+        "X-Correlation-ID": correlation_id
     }
 
     async with api_client.get(
@@ -424,7 +425,6 @@ async def test_user_restricted_access_not_permitted(
 async def test_token_exchange_invalid_identity_proofing_level_scope(
     api_client: APISessionClient, test_product_and_app
 ):
-
     test_product, test_app = test_product_and_app
     subject_token_claims = {
         "identity_proofing_level": test_app.request_params["identity_proofing_level"]
@@ -434,7 +434,7 @@ async def test_token_exchange_invalid_identity_proofing_level_scope(
     )
     token = token_response["access_token"]
 
-    correlation_id = str(uuid4())
+    correlation_id = _generate_correlation_id('test_token_exchange_invalid_identity_proofing_level_scope')
     headers = {"Authorization": f"Bearer {token}", "X-Correlation-ID": correlation_id}
 
     async with api_client.get(
@@ -473,10 +473,8 @@ async def test_token_exchange_invalid_identity_proofing_level_scope(
 async def test_pass_when_auth_targets_is_null(test_app, api_client: APISessionClient):
     authorised_headers = await conftest.get_authorised_headers(test_app)
 
-    correlation_id = str(uuid4())
-    authorised_headers[
-        "X-Correlation-ID"
-    ] = f"test_pass_when_auth_targets_is_null-{correlation_id}"
+    correlation_id = _generate_correlation_id('test_pass_when_auth_targets_is_null')
+    authorised_headers["X-Correlation-ID"] = correlation_id
 
     async with api_client.get(
         _valid_uri("9912003888", "90640007"),
@@ -505,10 +503,8 @@ async def test_fail_when_auth_targets_is_null_in_strict_mode(
 ):
     authorised_headers = await conftest.get_authorised_headers(test_app)
 
-    correlation_id = str(uuid4())
-    authorised_headers[
-        "X-Correlation-ID"
-    ] = f"test_fail_when_auth_targets_is_null_in_strict_mode-{correlation_id}"
+    correlation_id = _generate_correlation_id('test_fail_when_auth_targets_is_null_in_strict_mode')
+    authorised_headers["X-Correlation-ID"] = correlation_id
 
     async with api_client.get(
         _valid_uri("9912003888", "90640007"),
@@ -547,10 +543,8 @@ async def test_fail_when_auth_targets_is_blank_or_invalid(
 ):
     authorised_headers = await conftest.get_authorised_headers(test_app)
 
-    correlation_id = str(uuid4())
-    authorised_headers[
-        "X-Correlation-ID"
-    ] = f"test_fail_when_auth_targets_is_blank-{correlation_id}"
+    correlation_id = _generate_correlation_id('test_fail_when_auth_targets_is_blank_or_invalid')
+    authorised_headers["X-Correlation-ID"] = correlation_id
 
     async with api_client.get(
         _valid_uri("9912003888", "90640007"),
@@ -579,10 +573,8 @@ async def test_pass_when_auth_targets_is_star_in_non_strict_mode(
 ):
     authorised_headers = await conftest.get_authorised_headers(test_app)
 
-    correlation_id = str(uuid4())
-    authorised_headers[
-        "X-Correlation-ID"
-    ] = f"test_pass_when_auth_targets_is_star_in_non_strict_mode-{correlation_id}"
+    correlation_id = _generate_correlation_id('test_pass_when_auth_targets_is_star_in_non_strict_mode')
+    authorised_headers["X-Correlation-ID"] = correlation_id
 
     async with api_client.get(
         _valid_uri("9912003888", "90640007"),
@@ -611,10 +603,8 @@ async def test_fail_when_auth_targets_is_star_in_strict_mode(
 ):
     authorised_headers = await conftest.get_authorised_headers(test_app)
 
-    correlation_id = str(uuid4())
-    authorised_headers[
-        "X-Correlation-ID"
-    ] = f"test_fail_when_auth_targets_is_star_in_strict_mode-{correlation_id}"
+    correlation_id = _generate_correlation_id('test_fail_when_auth_targets_is_star_in_strict_mode')
+    authorised_headers["X-Correlation-ID"] = correlation_id
 
     async with api_client.get(
         _valid_uri("9912003888", "90640007"),
@@ -642,13 +632,10 @@ async def test_fail_when_auth_targets_is_star_in_strict_mode(
 async def test_fail_when_authorised_targets_header_upper_set_in_good_request(
     test_app, extra_header, api_client: APISessionClient
 ):
-
     authorised_headers = await conftest.get_authorised_headers(test_app)
 
-    correlation_id = str(uuid4())
-    authorised_headers[
-        "X-Correlation-ID"
-    ] = f"test_fail_when_authorised_targets_header_upper_set_in_good_request-{correlation_id}"
+    correlation_id = _generate_correlation_id('test_fail_when_authorised_targets_header_upper_set_in_good_request')
+    authorised_headers["X-Correlation-ID"] = correlation_id
     authorised_headers[extra_header] = "FOO,BAR"
 
     async with api_client.get(
