@@ -33,8 +33,12 @@ def _base_valid_uri(nhs_number) -> str:
     return f"FHIR/R4/Immunization?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|{nhs_number}"
 
 
-def _valid_uri(nhs_number, procedure_code) -> str:
+def _valid_uri_procedure_below(nhs_number, procedure_code) -> str:
     return _base_valid_uri(nhs_number) + f"&procedure-code:below={procedure_code}"
+
+
+def _valid_uri_immunization_target(nhs_number: str, target: str) -> str:
+    return _base_valid_uri(nhs_number) + f"&immunization.target={target}"
 
 
 def _add_authorised_targets_to_request_params(request_params_list: List[Dict]):
@@ -144,7 +148,7 @@ async def test_client_credentials_happy_path(test_app, api_client: APISessionCli
     authorised_headers["X-Correlation-ID"] = correlation_id
 
     async with api_client.get(
-        _valid_uri("9912003888", "90640007"),
+        _valid_uri_procedure_below("9912003888", "90640007"),
         headers=authorised_headers,
         allow_retries=True,
     ) as resp:
@@ -175,7 +179,7 @@ async def test_immunization_no_auth_bearer_token_provided(
     correlation_id = _generate_correlation_id('test_immunization_no_auth_bearer_token_provided')
     headers = {"Authorization": "Bearer", "X-Correlation-ID": correlation_id}
     async with api_client.get(
-        _valid_uri("9912003888", "90640007"), headers=headers, allow_retries=True
+        _valid_uri_procedure_below("9912003888", "90640007"), headers=headers, allow_retries=True
     ) as resp:
         assert resp.status == 401, "failed getting backend data"
         body = await resp.json()
@@ -220,7 +224,7 @@ async def test_bad_nhs_number(test_app, api_client: APISessionClient):
     headers = {"Authorization": f"Bearer {token}", "X-Correlation-ID": correlation_id}
 
     async with api_client.get(
-        _valid_uri("90000000009", "90640007"), headers=headers, allow_retries=True
+        _valid_uri_procedure_below("90000000009", "90640007"), headers=headers, allow_retries=True
     ) as resp:
         assert resp.status == 400
         body = await resp.json()
@@ -242,7 +246,7 @@ async def test_correlation_id_mirrored_in_resp_when_error(api_client: APISession
     correlation_id = _generate_correlation_id('test_correlation_id_mirrored_in_resp_when_error')
 
     async with api_client.get(
-        _valid_uri("9912003888", "90640007"),
+        _valid_uri_procedure_below("9912003888", "90640007"),
         headers={
             "Authorization": f"Bearer {access_token}",
             "X-Correlation-ID": correlation_id,
@@ -307,7 +311,7 @@ async def test_token_exchange_happy_path(test_app, api_client: APISessionClient)
     headers = {"Authorization": f"Bearer {token}", "X-Correlation-ID": correlation_id}
 
     async with api_client.get(
-        _valid_uri("9912003888", "90640007"), headers=headers, allow_retries=True
+        _valid_uri_procedure_below("9912003888", "90640007"), headers=headers, allow_retries=True
     ) as resp:
         assert resp.status == 200, "failed getting backend data"
         body = await resp.json()
@@ -390,7 +394,7 @@ async def test_user_restricted_access_not_permitted(
     }
 
     async with api_client.get(
-        _valid_uri("9912003888", "90640007"),
+        _valid_uri_procedure_below("9912003888", "90640007"),
         headers=authorised_headers,
         allow_retries=True,
     ) as resp:
@@ -438,7 +442,7 @@ async def test_token_exchange_invalid_identity_proofing_level_scope(
     headers = {"Authorization": f"Bearer {token}", "X-Correlation-ID": correlation_id}
 
     async with api_client.get(
-        _valid_uri("9912003888", "90640007"), headers=headers, allow_retries=True
+        _valid_uri_procedure_below("9912003888", "90640007"), headers=headers, allow_retries=True
     ) as resp:
         assert resp.status == 401
         # body = await resp.json()
@@ -477,7 +481,7 @@ async def test_pass_when_auth_targets_is_null(test_app, api_client: APISessionCl
     authorised_headers["X-Correlation-ID"] = correlation_id
 
     async with api_client.get(
-        _valid_uri("9912003888", "90640007"),
+        _valid_uri_procedure_below("9912003888", "90640007"),
         headers=authorised_headers,
         allow_retries=True,
     ) as resp:
@@ -507,7 +511,7 @@ async def test_fail_when_auth_targets_is_null_in_strict_mode(
     authorised_headers["X-Correlation-ID"] = correlation_id
 
     async with api_client.get(
-        _valid_uri("9912003888", "90640007"),
+        _valid_uri_procedure_below("9912003888", "90640007"),
         headers=authorised_headers,
         allow_retries=True,
     ) as resp:
@@ -547,7 +551,7 @@ async def test_fail_when_auth_targets_is_blank_or_invalid(
     authorised_headers["X-Correlation-ID"] = correlation_id
 
     async with api_client.get(
-        _valid_uri("9912003888", "90640007"),
+        _valid_uri_procedure_below("9912003888", "90640007"),
         headers=authorised_headers,
         allow_retries=True,
     ) as resp:
@@ -577,7 +581,7 @@ async def test_pass_when_auth_targets_is_star_in_non_strict_mode(
     authorised_headers["X-Correlation-ID"] = correlation_id
 
     async with api_client.get(
-        _valid_uri("9912003888", "90640007"),
+        _valid_uri_procedure_below("9912003888", "90640007"),
         headers=authorised_headers,
         allow_retries=True,
     ) as resp:
@@ -607,7 +611,7 @@ async def test_fail_when_auth_targets_is_star_in_strict_mode(
     authorised_headers["X-Correlation-ID"] = correlation_id
 
     async with api_client.get(
-        _valid_uri("9912003888", "90640007"),
+        _valid_uri_procedure_below("9912003888", "90640007"),
         headers=authorised_headers,
         allow_retries=True,
     ) as resp:
@@ -639,9 +643,75 @@ async def test_fail_when_authorised_targets_header_upper_set_in_good_request(
     authorised_headers[extra_header] = "FOO,BAR"
 
     async with api_client.get(
-        _valid_uri("9912003888", "90640007"),
+        _valid_uri_procedure_below("9912003888", "90640007"),
         headers=authorised_headers,
         allow_retries=True,
     ) as resp:
         body = await resp.text()
         assert resp.status == 404, body
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "test_app",
+    [
+        {
+            "suffixes": ["-application-restricted"],
+            "authorised_targets": "*",
+            "use_strict_authorised_targets": False,
+        }
+    ],
+    indirect=True,
+)
+@pytest.mark.parametrize(
+    "immunization_target", ["COVID19", "HPV"]
+)
+async def test_immunization_target_happy_path(test_app, immunization_target, api_client: APISessionClient):
+    authorised_headers = await conftest.get_authorised_headers(test_app)
+
+    correlation_id = str(uuid4())
+    authorised_headers[
+        "X-Correlation-ID"
+    ] = f"test_immunization_target_happy_path-{correlation_id}"
+
+    async with api_client.get(
+        _valid_uri_immunization_target("9912003888", immunization_target),
+        headers=authorised_headers,
+        allow_retries=True,
+    ) as resp:
+        body = await resp.text()
+        assert resp.status == 200, body
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "test_app",
+    [
+        {
+            "suffixes": ["-application-restricted"],
+            "authorised_targets": "*",
+            "use_strict_authorised_targets": False,
+        }
+    ],
+    indirect=True,
+)
+@pytest.mark.parametrize(
+    "immunization_target", ["COvID19", "hPV", "RANDOM"]
+)
+async def test_immunization_target_unhappy_path(test_app, immunization_target, api_client: APISessionClient):
+    authorised_headers = await conftest.get_authorised_headers(test_app)
+
+    correlation_id = str(uuid4())
+    authorised_headers[
+        "X-Correlation-ID"
+    ] = f"test_immunization_target_unhappy_path-{correlation_id}"
+
+    async with api_client.get(
+        _valid_uri_immunization_target("9912003888", immunization_target),
+        headers=authorised_headers,
+        allow_retries=True,
+    ) as resp:
+        body = await resp.text()
+        assert resp.status == 400, body
