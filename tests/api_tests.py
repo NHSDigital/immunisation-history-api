@@ -670,10 +670,8 @@ async def test_fail_when_authorised_targets_header_upper_set_in_good_request(
 async def test_immunization_target_happy_path(test_app, immunization_target, api_client: APISessionClient):
     authorised_headers = await conftest.get_authorised_headers(test_app)
 
-    correlation_id = str(uuid4())
-    authorised_headers[
-        "X-Correlation-ID"
-    ] = f"test_immunization_target_happy_path-{correlation_id}"
+    correlation_id = _generate_correlation_id('test_immunization_target_happy_path')
+    authorised_headers["X-Correlation-ID"] = correlation_id
 
     async with api_client.get(
         _valid_uri_immunization_target("9912003888", immunization_target),
@@ -703,10 +701,8 @@ async def test_immunization_target_happy_path(test_app, immunization_target, api
 async def test_immunization_target_unhappy_path(test_app, immunization_target, api_client: APISessionClient):
     authorised_headers = await conftest.get_authorised_headers(test_app)
 
-    correlation_id = str(uuid4())
-    authorised_headers[
-        "X-Correlation-ID"
-    ] = f"test_immunization_target_unhappy_path-{correlation_id}"
+    correlation_id = _generate_correlation_id('test_immunization_target_unhappy_path')
+    authorised_headers["X-Correlation-ID"] = correlation_id
 
     async with api_client.get(
         _valid_uri_immunization_target("9912003888", immunization_target),
