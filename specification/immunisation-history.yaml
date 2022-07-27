@@ -244,6 +244,14 @@ paths:
           schema:
             type: string
             example: 11C46F5F-CDEF-4865-94B2-0EE0EDCC26DA
+        - name: Accept
+          in: header
+          required: false
+          description: |
+            Optional header to select the version of the api. Version number will follow semver.
+          schema:
+            type: string
+            example: version=1.0
       responses:
         '200':
           description: |

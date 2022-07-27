@@ -5,9 +5,9 @@ const { hpvImmunizationFhir } = require('./fhir-responses/hpv-immunization.fhir'
 const { badRequest } = require('../api-response');
 const { parseDateRange, validateDateRange } = require('./date-range');
 const { writeLog } = require('../../logging');
-const { HTTP_STATUS } = require('../constants');
+const { HTTP_STATUS, API_VERSIONS } = require('../constants');
 
-const VERSION = '1.0';
+const VERSION = API_VERSIONS.V1;
 
 function getImmunizationResponse(
   patientIdentifier,

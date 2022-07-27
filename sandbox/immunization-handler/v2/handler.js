@@ -4,10 +4,10 @@ const { covidImmunizationFhir } = require('./fhir-responses/covid-immunization.f
 const { hpvImmunizationFhir } = require('./fhir-responses/hpv-immunization.fhir');
 const { parseDateRange, validateDateRange } = require('./date-range');
 const { writeLog } = require('../../logging');
-const { HTTP_STATUS } = require('../constants');
+const { HTTP_STATUS, API_VERSIONS } = require('../constants');
 const { badRequest } = require('../api-response');
 
-const VERSION = '2.0';
+const VERSION = API_VERSIONS.V2;
 
 function getImmunizationResponse(
   patientIdentifier,
