@@ -1,4 +1,5 @@
 [project]
+name = "immunisation-history"
 python = "^3.8"
 
 [tool.poetry]
