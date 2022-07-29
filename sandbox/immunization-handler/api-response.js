@@ -1,11 +1,13 @@
-
+const { operationOutcomeFhir } = require('./operation-outcome.fhir');
 const { HTTP_STATUS } = require('./constants');
-const { operationOutcomeFhir } = require('../fhir-responses/operation-outcome.fhir')
 
-function badRequest(errorMessage) {
+function badRequest(errorMessage, version) {
   return {
     status: HTTP_STATUS.BAD_REQUEST,
-    response: operationOutcomeFhir(errorMessage)
+    response: operationOutcomeFhir(errorMessage),
+    headers: {
+      version: version
+    }
   };
 }
 
