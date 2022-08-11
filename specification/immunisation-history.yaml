@@ -137,7 +137,13 @@ info:
     ## Onboarding
     You need to get your software approved by us before it can go live with this API. We call this onboarding. The onboarding process can sometimes be quite long, so it’s worth planning well ahead.
 
-    Details to follow.
+    This API uses our online digital onboarding process. 
+    
+    As part of this process, you need to demonstrate that you can manage risks and that your software conforms technically with the requirements for this API. 
+    
+    Information on this page might impact the design of your software. For details, see [Onboarding support information](https://digital.nhs.uk/developer/api-catalogue/immunisation-history-fhir/onboarding-support-information). 
+    
+    To get started, see [digital onboarding](https://digital.nhs.uk/developer/guides-and-documentation/digital-onboarding#using-the-digital-onboarding-portal). 
 servers:
   - url: 'https://sandbox.api.service.nhs.uk/immunisation-history/FHIR/R4'
     description: Sandbox environment.
