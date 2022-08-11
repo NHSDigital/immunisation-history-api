@@ -21,7 +21,6 @@ info:
 
     You cannot currently use this API to:
     - get details of other types of immunisation
-    - get the immunisation history for a specific date range
 
     You get the following data:
     - immunisation event details
