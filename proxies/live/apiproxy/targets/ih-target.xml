@@ -77,7 +77,12 @@
             <Step>
                 <Name>AssignMessage.AddAuthorisedTargetsHeader</Name>
             </Step>
-
+            <Step>
+                <Name>Javascript.PopulateRequestUrlHeader</Name>
+            </Step>
+            <Step>
+                <Name>AssignMessage.AddRequestUrl</Name>
+            </Step>
             <Step>
                 <Name>Quota</Name>
             </Step>

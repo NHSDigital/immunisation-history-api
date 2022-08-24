@@ -1,0 +1,11 @@
+<AssignMessage async="false" continueOnError="false" enabled="true" name="AssignMessage.AddRequestUrl">
+    <FaultRules/>
+    <Properties/>
+    <Add>
+        <Headers>
+            <Header name="X-Request-Url">{apigee.X_REQUEST_URL}</Header>
+        </Headers>
+    </Add>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+    <AssignTo createNew="false" transport="http" type="request"/>
+</AssignMessage>
