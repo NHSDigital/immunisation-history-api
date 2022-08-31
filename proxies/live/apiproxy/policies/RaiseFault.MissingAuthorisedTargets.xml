@@ -4,8 +4,12 @@
     <Properties/>
     <FaultResponse>
         <Set>
-            <Headers/>
-            <Payload contentType="text/plain"/>
+            <Payload contentType="application/json">
+              {
+                "error": "access_denied",
+                "error_description": "Your permissions have been incorrectly configured (Custom Attribute Key-Value pair "authorised_targets" is either blank or does not exist). Please contact support, quoting this message.",
+              }
+            </Payload>
             <StatusCode>401</StatusCode>
             <ReasonPhrase>Access Denied</ReasonPhrase>
         </Set>
