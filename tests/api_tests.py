@@ -515,8 +515,15 @@ async def test_fail_when_auth_targets_is_null_in_strict_mode(
         headers=authorised_headers,
         allow_retries=True,
     ) as resp:
-        body = await resp.text()
+        body = await resp.json()
         assert resp.status == 401, body
+        assert body == {
+            "error": "access_denied",
+            "error_description": ("Your permissions have been incorrectly configured "
+                                  "(Custom Attribute Key-Value pair 'authorised_targets'"
+                                  " is either blank or does not exist). "
+                                  "Please contact support, quoting this message.")
+        }
 
 
 @pytest.mark.e2e
@@ -647,8 +654,12 @@ async def test_fail_when_authorised_targets_header_upper_set_in_good_request(
         headers=authorised_headers,
         allow_retries=True,
     ) as resp:
-        body = await resp.text()
+        body = await resp.json()
         assert resp.status == 404, body
+        assert body == {
+            "error": "invalid_request",
+            "error_description": "AUTHORISED_TARGETS cannot be provided in headers",
+        }
 
 
 @pytest.mark.e2e

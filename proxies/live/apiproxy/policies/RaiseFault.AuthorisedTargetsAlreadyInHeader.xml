@@ -7,7 +7,7 @@
             <Payload contentType="application/json">
               {
                 "error": "invalid_request",
-                "error_description": "AUTHORISED_TARGETS cannot be provided in headers",
+                "error_description": "AUTHORISED_TARGETS cannot be provided in headers"
               }
             </Payload>
             <StatusCode>404</StatusCode>
