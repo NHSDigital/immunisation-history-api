@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RaiseFault async="false" continueOnError="false" enabled="true" name="RaiseFault.RequestUrlAlreadyInHeader">
+    <DisplayName>RaiseFault.RequestUrlAlreadyInHeader</DisplayName>
+    <Properties/>
+    <FaultResponse>
+        <Set>
+            <Payload contentType="application/json">
+              {
+                "error": "invalid_request",
+                "error_description": "X-Request-Url cannot be provided in headers"
+              }
+            </Payload>
+            <StatusCode>404</StatusCode>
+            <ReasonPhrase>Not Found</ReasonPhrase>
+        </Set>
+        <AssignVariable>
+            <Name>ih.error.code</Name>
+            <Value>not found</Value>
+        </AssignVariable>
+        <AssignVariable>
+            <Name>ih.error.diagnostics</Name>
+            <Value>X-Request-Url cannot be provided in headers</Value>
+        </AssignVariable>
+    </FaultResponse>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</RaiseFault>

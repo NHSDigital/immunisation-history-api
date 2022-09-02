@@ -24,6 +24,7 @@
     </FaultRules>
     <PreFlow>
         <Request>
+            <!-- Start of the flow -->
             <Step>
                 <Name>OauthV2.VerifyAccessToken</Name>
             </Step>
@@ -47,7 +48,7 @@
             <Step>
                 <Name>Javascript.AddClientRPDetailsHeader</Name>
             </Step>
-
+            <!-- Authorised targets flow -->
             <Step>
                 <Name>Javascript.FlagIfAuthorisedTargetsAlreadyInHeader</Name>
             </Step>
@@ -77,12 +78,21 @@
             <Step>
                 <Name>AssignMessage.AddAuthorisedTargetsHeader</Name>
             </Step>
+            <!-- Requests URL flow -->
             <Step>
-                <Name>Javascript.PopulateRequestUrlHeader</Name>
+                <Name>Javascript.FlagIfRequestUrlAlreadyInHeader</Name>
             </Step>
             <Step>
-                <Name>AssignMessage.AddRequestUrl</Name>
+                <Name>RaiseFault.RequestUrlAlreadyInHeader</Name>
+                <Condition>apigee.REQUEST_URL_ALREADY_IN_HEADER is true</Condition>
             </Step>
+            <Step>
+                <Name>Javascript.PopulateRequestUrlFromContext</Name>
+            </Step>
+            <Step>
+                <Name>AssignMessage.AddRequestUrlHeader</Name>
+            </Step>
+            <!-- Rest of the flow -->
             <Step>
                 <Name>Quota</Name>
             </Step>
