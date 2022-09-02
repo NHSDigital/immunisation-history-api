@@ -1,4 +1,4 @@
-<AssignMessage async="false" continueOnError="false" enabled="true" name="AssignMessage.AddRequestUrl">
+<AssignMessage async="false" continueOnError="false" enabled="true" name="AssignMessage.AddRequestUrlHeader">
     <FaultRules/>
     <Properties/>
     <Add>
