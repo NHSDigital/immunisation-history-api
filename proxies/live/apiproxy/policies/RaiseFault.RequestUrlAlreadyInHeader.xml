@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<RaiseFault async="false" continueOnError="false" enabled="true" name="RaiseFault.AuthorisedTargetsAlreadyInHeader">
-    <DisplayName>RaiseFault.AuthorisedTargetsAlreadyInHeader</DisplayName>
+<RaiseFault async="false" continueOnError="false" enabled="true" name="RaiseFault.RequestUrlAlreadyInHeader">
+    <DisplayName>RaiseFault.RequestUrlAlreadyInHeader</DisplayName>
     <Properties/>
     <FaultResponse>
         <Set>
             <Payload contentType="application/json">
               {
                 "error": "invalid_request",
-                "error_description": "AUTHORISED_TARGETS cannot be provided in headers"
+                "error_description": "X-Request-Url cannot be provided in headers"
               }
             </Payload>
             <StatusCode>404</StatusCode>
@@ -19,7 +19,7 @@
         </AssignVariable>
         <AssignVariable>
             <Name>ih.error.diagnostics</Name>
-            <Value>AUTHORISED_TARGETS cannot be provided in headers</Value>
+            <Value>X-Request-Url cannot be provided in headers</Value>
         </AssignVariable>
     </FaultResponse>
     <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>

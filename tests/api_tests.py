@@ -515,8 +515,15 @@ async def test_fail_when_auth_targets_is_null_in_strict_mode(
         headers=authorised_headers,
         allow_retries=True,
     ) as resp:
-        body = await resp.text()
+        body = await resp.json()
         assert resp.status == 401, body
+        assert body == {
+            "error": "access_denied",
+            "error_description": ("Your permissions have been incorrectly configured "
+                                  "(Custom Attribute Key-Value pair 'authorised_targets'"
+                                  " is either blank or does not exist). "
+                                  "Please contact support, quoting this message.")
+        }
 
 
 @pytest.mark.e2e
@@ -647,8 +654,12 @@ async def test_fail_when_authorised_targets_header_upper_set_in_good_request(
         headers=authorised_headers,
         allow_retries=True,
     ) as resp:
-        body = await resp.text()
+        body = await resp.json()
         assert resp.status == 404, body
+        assert body == {
+            "error": "invalid_request",
+            "error_description": "AUTHORISED_TARGETS cannot be provided in headers",
+        }
 
 
 @pytest.mark.e2e
@@ -711,3 +722,42 @@ async def test_immunization_target_unhappy_path(test_app, immunization_target, a
     ) as resp:
         body = await resp.text()
         assert resp.status == 400, body
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "test_app",
+    [
+        {
+            "suffixes": ["-application-restricted"],
+            "authorised_targets": "*",
+            "use_strict_authorised_targets": False,
+        }
+    ],
+    indirect=True,
+)
+@pytest.mark.parametrize(
+    "immunization_target", ["COVID19", "HPV"]
+)
+@pytest.mark.parametrize(
+    "x_request_url_name", ["X-Request-Url", "X-REQUEST-URL", "x-request-url"]
+)
+async def test_fails_if_request_url_set_in_header(test_app, immunization_target, x_request_url_name, api_client):
+    authorised_headers = await conftest.get_authorised_headers(test_app)
+
+    correlation_id = _generate_correlation_id('test_fails_if_request_url_set_in_header')
+    authorised_headers["X-Correlation-ID"] = correlation_id
+    authorised_headers[x_request_url_name] = "this_is_an_injected_url"
+
+    async with api_client.get(
+        _valid_uri_immunization_target("9912003888", immunization_target),
+        headers=authorised_headers,
+        allow_retries=True,
+    ) as resp:
+        body = await resp.json()
+        assert resp.status == 404, body
+        assert body == {
+            "error": "invalid_request",
+            "error_description": "X-Request-Url cannot be provided in headers"
+        }

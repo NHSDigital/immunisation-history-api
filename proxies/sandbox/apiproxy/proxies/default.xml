@@ -31,7 +31,7 @@
         </Request>
         <Response>
           <Step>
-            <Name>javascript.SetStatusResponse</Name>
+            <Name>Javascript.SetStatusResponse</Name>
           </Step>
         </Response>
         <Condition>(proxy.pathsuffix MatchesPath "/_status") and ((request.verb = "GET") or (request.verb = "HEAD"))</Condition>

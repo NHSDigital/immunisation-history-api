@@ -4,7 +4,7 @@
       <Payload contentType="application/json">
         {
           "error": "invalid_request",
-          "error_description": "Missing NHSD User Identity",
+          "error_description": "Missing NHSD User Identity"
         }
 </Payload>
       <StatusCode>400</StatusCode>
