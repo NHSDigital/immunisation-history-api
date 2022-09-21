@@ -89,21 +89,26 @@ info:
 
     ## Security and authorisation
 
-    This API offers two access modes: User restricted &amp; Application restricted.
-
-    ### User restricted
-
-    * [Guides and Documentation](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation#user-restricted-apis)
-    * [Authentication and Authorisation](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation/user-restricted-restful-apis-nhs-login-separate-authentication-and-authorisation)
-    * for user-restricted the end user must be a patient
-    * the end user must have their identity verified to 'high' (P9) level
-    * the NHS number in the request must match the NHS number in the NHS login account
+    This API has two access modes: 
+    * application-restricted access
+    * user restricted access
 
     ### Application restricted
+    
+    This access mode is [application-restricted](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation#application-restricted-apis), meaning we authenticate the calling application but not the end user.
+    
+    To use this access mode, use the following security pattern:
+    * [Application-restricted RESTful API - signed JWT authentication](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation/application-restricted-restful-apis-signed-jwt-authentication)
+    
+    ### User restricted
 
-    * [Guides and Documentation](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation#application-restricted-apis)
-    * [Authentication and Authorisation](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation#application-restricted-apis)
-    * the calling application must strongly authenticate the end user using NHS login
+    Use this access mode if the end user is a patient and:
+    * the end user must have their identity verified to 'high' (P9) level
+    * the NHS number in the request must match the NHS number in the NHS login account
+    * [Guides and Documentation](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation#user-restricted-apis)
+    
+    To use this access mode, use the following security pattern:
+    * [User-restricted RESTful APIs - NHS login separate authentication and authorisation](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation/user-restricted-restful-apis-nhs-login-separate-authentication-and-authorisation)
 
     ## Environments and testing
     | Environment       | Base URL                                                               |
