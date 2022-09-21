@@ -91,21 +91,20 @@ info:
 
     This API has two access modes: 
     * application-restricted access
-    * user restricted access
+    * user-restricted access
 
-    ### Application restricted
+    ### Application-restricted access
     
     This access mode is [application-restricted](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation#application-restricted-apis), meaning we authenticate the calling application but not the end user.
     
     To use this access mode, use the following security pattern:
     * [Application-restricted RESTful API - signed JWT authentication](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation/application-restricted-restful-apis-signed-jwt-authentication)
     
-    ### User restricted
+    ### User-restricted access
 
-    Use this access mode if the end user is a patient and:
+    Use this [user-restricted access mode](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation#user-restricted-apis) if the end user is a patient:
     * the end user must have their identity verified to 'high' (P9) level
     * the NHS number in the request must match the NHS number in the NHS login account
-    * [Guides and Documentation](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation#user-restricted-apis)
     
     To use this access mode, use the following security pattern:
     * [User-restricted RESTful APIs - NHS login separate authentication and authorisation](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation/user-restricted-restful-apis-nhs-login-separate-authentication-and-authorisation)
