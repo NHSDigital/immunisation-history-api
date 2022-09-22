@@ -1,18 +1,13 @@
+import base64
+import json
 from contextlib import contextmanager
 from typing import List
 
 from pytest_nhsd_apim.auth_journey import create_jwt_key_pair
-import json
-import base64
 
 from tests.feature_tests.utils.apigee import apigee_request
-from tests.feature_tests.utils.constants import (
-    ApigeeUrl,
-    REDIRECT_URI,
-    DYNAMIC_APP_NAME,
-    APP_LIFETIME_MILLISECONDS,
-    PRODUCT_TYPES, DEFAULT_APP_ATTRIBUTES,
-)
+from tests.feature_tests.utils.constants import ApigeeUrl, REDIRECT_URI, DYNAMIC_APP_NAME, APP_LIFETIME_MILLISECONDS, \
+    PRODUCT_TYPES
 from tests.feature_tests.utils.logging import logging
 
 
@@ -26,19 +21,12 @@ def jwt_public_key_url(jwt_public_key):
     return f"https://internal-dev.api.service.nhs.uk/mock-jwks/{encoded_public_key_bytes.decode()}"
 
 
-def _get_jwks_resource_url(app_restricted: bool, jwt_key_pair) -> str:
-    if app_restricted:
-        return jwt_public_key_url(jwt_key_pair["json_web_key"])
-
-    return DEFAULT_APP_ATTRIBUTES["jwks-resource-url"]
-
-
 @logging(teaser="Creating app", kwargs_to_log=["app_name"])
-def _create_app(app_name: str, api_products: List[str], app_attrs: dict[str:str], app_restricted: bool):
+def _create_app(app_name: str, api_products: List[str], app_attrs: dict[str:str]):
     jwt_key_pair = create_jwt_key_pair("kid-1")
     full_app_attrs = {
         **app_attrs,
-        "jwks-resource-url": _get_jwks_resource_url(app_restricted, jwt_key_pair)
+        "jwks-resource-url": jwt_public_key_url(jwt_key_pair["json_web_key"])
     }
 
     body = apigee_request(
@@ -60,7 +48,7 @@ def _create_app(app_name: str, api_products: List[str], app_attrs: dict[str:str]
     return {
         "app_key": credentials["consumerKey"],
         "app_secret": credentials["consumerSecret"],
-        "jwt_key_pair": jwt_key_pair
+        "app_jwt_private_key": jwt_key_pair["private_key_pem"]
     }
 
 
@@ -72,12 +60,11 @@ def _delete_app(app_name: str):
 
 
 @contextmanager
-def app(api_products: list[str], app_attrs: dict[str:str], correlation_id: str, app_restricted: bool = False):
+def app(api_products: list[str], app_attrs: dict[str:str], correlation_id: str):
     app_name = DYNAMIC_APP_NAME.format(correlation_id=correlation_id)
-    # api_products = _get_api_products(api_name=api_name)
 
     secrets = _create_app(
-        app_name=app_name, api_products=api_products, app_attrs=app_attrs, app_restricted=app_restricted
+        app_name=app_name, api_products=api_products, app_attrs=app_attrs
     )
 
     exception = None

@@ -8,13 +8,6 @@ PRODUCT_TYPES = ("application-restricted", "user-restricted")
 APP_LIFETIME_MILLISECONDS = 60000
 TRACE_LIFETIME_SECONDS = 30
 
-DEFAULT_APP_ATTRIBUTES = {
-    "jwks-resource-url":
-        "https://raw.githubusercontent.com/NHSDigital/identity-service-jwks/" +
-        "main/jwks/internal-dev/9baed6f4-1361-4a8e-8531-1f8426e3aba8.json",
-    "nhs-login-allowed-proofing-level": "P0",
-}
-
 
 class ApigeeUrl:
     _BASE = f"https://api.enterprise.apigee.com/v1/organizations/{ORGANISATION}"

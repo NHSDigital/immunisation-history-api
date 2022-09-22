@@ -1,44 +1,62 @@
-from pytest_nhsd_apim.auth_journey import get_access_token_via_user_restricted_flow_combined_auth, \
-    get_access_token_via_signed_jwt_flow
+import os
+from time import time
+from uuid import uuid4
 
-from tests.feature_tests.utils.constants import REDIRECT_URI
+import jwt
+from pytest_nhsd_apim.auth_journey import get_access_token_via_signed_jwt_flow
+
 from tests.feature_tests.utils.logging import logging
 
 
-@logging(teaser="Getting OAuth token")
-def get_oauth_user_restricted_token(base_url: str, app_key: str, app_secret: str) -> str:
-    token = get_access_token_via_user_restricted_flow_combined_auth(
-        identity_service_base_url=f"{base_url}/oauth2",
-        client_id=app_key,
-        client_secret=app_secret,
-        callback_url=REDIRECT_URI,
-        auth_scope="nhs-login",
-        login_form={},
+def _get_nhs_login_private_key() -> str:
+    nhs_login_id_token_private_key_path = os.environ.get(
+        "ID_TOKEN_NHS_LOGIN_PRIVATE_KEY_ABSOLUTE_PATH"
     )
-    return token["access_token"]
+    with open(nhs_login_id_token_private_key_path, "r") as f:
+        return f.read()
+
+
+def get_nhs_login_id_token(nhs_number: str, proofing_level: str):
+    expires = int(time())
+    payload = {
+        "aud": 'tf_-APIM-1',
+        "id_status": 'verified',
+        "token_use": 'id',
+        "auth_time": 1616600683,
+        "iss": "https://internal-dev.api.service.nhs.uk",
+        "sub": "https://internal-dev.api.service.nhs.uk",
+        "exp": expires + 300,
+        "iat": expires - 10,
+        "vtm": 'https://auth.sandpit.signin.nhs.uk/trustmark/auth.sandpit.signin.nhs.uk',
+        "jti": str(uuid4()),
+        "identity_proofing_level": proofing_level,
+        "birthdate": "1939-09-26",
+        "nhs_number": nhs_number,
+        "nonce": "randomnonce",
+        "surname": "CARTHY",
+        "vot": f"{proofing_level}.Cp.Cd",
+        "family_name": "CARTHY"
+    }
+    additional_headers = {
+        "kid": "nhs-login",
+        "typ": "JWT",
+        "alg": "RS512"
+    }
+
+    jwt_private_key = _get_nhs_login_private_key()
+
+    return jwt.encode(
+        payload, jwt_private_key, algorithm="RS512", headers=additional_headers
+    )
 
 
 @logging(teaser="Getting OAuth token")
-def get_oauth_app_restricted_token(base_url: str, app_key: str, jwt_key_pair) -> str:
+def get_oauth_token(base_url: str, app_key: str, app_jwt_private_key: str, id_token: str = None) -> str:
     token = get_access_token_via_signed_jwt_flow(
         identity_service_base_url=f"{base_url}/oauth2",
         client_id=app_key,
-        jwt_private_key=jwt_key_pair["private_key_pem"],
-        jwt_kid="kid-1"
+        jwt_private_key=app_jwt_private_key,
+        jwt_kid="kid-1",
+        id_token=id_token
     )
     return token["access_token"]
-
-
-def get_oauth_token(base_url: str, app_key: str, app_secret: str, jwt_key_pair, app_restricted: bool) -> str:
-    if app_restricted:
-        return get_oauth_app_restricted_token(
-            base_url=base_url,
-            app_key=app_key,
-            jwt_key_pair=jwt_key_pair
-        )
-
-    return get_oauth_user_restricted_token(
-        base_url=base_url,
-        app_key=app_key,
-        app_secret=app_secret
-    )
