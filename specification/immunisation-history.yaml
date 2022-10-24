@@ -50,16 +50,11 @@ info:
     You must do this before you can go live (see ‘Onboarding’ below).
 
     ## API status and roadmap
+    This API is [in production](https://digital.nhs.uk/developer/guides-and-documentation/reference-guide#statuses).
 
-    ### Status
-    This API is [stable](https://digital.nhs.uk/developer/guides-and-documentation/reference-guide#api-status), meaning:
-    - there will be no breaking changes
-    - if we need to make breaking changes we'll publish a new version of the API
-
-    ### Roadmap
     To see our roadmap, or to suggest, comment or vote on features for this API, see our [interactive product backlog](https://nhs-digital-api-management.featureupvote.com/?tag=immunisation-history-api).
 
-    If you have any other queries, please [contact us](https://digital.nhs.uk/developer/help-and-support).
+    If you have any other queries, [contact us](https://digital.nhs.uk/developer/help-and-support).
 
     ## Service level
 
