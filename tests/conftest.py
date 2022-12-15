@@ -148,7 +148,6 @@ async def check_for_unauthorised_headers(client_app):
     )
     assert token_response["status_code"] == 401
     assert token_response["body"]["error"] == "unauthorized_client"
-    print(token_response["body"]["error_description"])
     assert (
         token_response["body"]["error_description"]
         == "you have tried to request authorization but your application is not configured to use this authorization grant type"
