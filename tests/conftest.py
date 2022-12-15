@@ -150,9 +150,7 @@ async def check_for_unauthorised_headers(client_app):
     assert token_response["body"]["error"] == "unauthorized_client"
     assert (
         token_response["body"]["error_description"]
-        == "you have tried to requests authorization but your "
-        "application is not configured to use this authorization "
-        "grant type"
+        == "you have tried to request authorization but your application is not configured to use this authorization grant type"
     )
 
 
@@ -237,8 +235,7 @@ async def check_for_unauthorised_token_exchange(
     assert token_resp["body"]["error"] == "unauthorized_client"
     assert (
         token_resp["body"]["error_description"]
-        == "you have tried to requests authorization but your application "
-        "is not configured to use this authorization grant type"
+        == "you have tried to request authorization but your application is not configured to use this authorization grant type"
     )
 
 
