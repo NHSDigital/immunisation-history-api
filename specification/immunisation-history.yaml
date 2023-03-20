@@ -39,15 +39,20 @@ info:
     In a very small number of cases, we are unable to verify the NHS number, and we do not make the immunisation record available at all.
 
     ## Who can use this API
-    This API:
-    - is only for use by patient-facing applications
-    - is only for non-clinical use
-    - can only be used where there is a legal basis to do so
+    This API can only be used where there is a legal basis to do so. Make sure you have a valid use case before you go too far with your development. 
+    
+    You must demonstrate you have a valid use case as part of digital onboarding.
 
-    Make sure you have a valid use case before you go too far with your development.
-    To do this, [contact us](https://digital.nhs.uk/developer/help-and-support).
+    You must do this before you can go live (see 'Onboarding' below).
 
-    You must do this before you can go live (see ‘Onboarding’ below).
+    ### Who can access immunisation history records
+    Health and care organisations in England and the Isle of Man can access immunisation history records. 
+    
+    Legitimate direct care examples include NHS organisations delivering healthcare, local authorities delivering care, third sector and private sector health and care organisations, and developers delivering systems to health and care organisations.
+    
+    Health and care organisations in Scotland, Northern Ireland and the Channel Islands access their own equivalents of this API.
+    
+    Patients who receive health and social care or make use of NHS services in England, Wales and the Isle of Man. 
 
     ## API status and roadmap
     This API is [in production](https://digital.nhs.uk/developer/guides-and-documentation/reference-guide#statuses).
