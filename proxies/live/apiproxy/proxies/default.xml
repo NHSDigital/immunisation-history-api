@@ -61,7 +61,7 @@
     <RouteRule name="NoRouteStatus">
         <Condition>(proxy.pathsuffix MatchesPath "/_status") and ((request.verb = "GET") or (request.verb = "HEAD"))</Condition>
     </RouteRule>
-    <RouteRule name="immunisation-history-target">
+    <!-- <RouteRule name="immunisation-history-target">
         <TargetEndpoint>immunisation-history-target</TargetEndpoint>
-    </RouteRule>
+    </RouteRule> -->
 </ProxyEndpoint>
