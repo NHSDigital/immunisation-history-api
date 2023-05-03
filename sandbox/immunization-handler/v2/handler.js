@@ -2,6 +2,7 @@ const { emptyImmunizationFhir } = require('./fhir-responses/empty-immunization.f
 const { SNOMED_PROCEDURE_CODES, IMMUNIZATION_TARGETS } = require('./constants');
 const { covidImmunizationFhir } = require('./fhir-responses/covid-immunization.fhir');
 const { hpvImmunizationFhir } = require('./fhir-responses/hpv-immunization.fhir');
+const { fluImmunizationFhir } = require('./fhir-responses/flu-immunization.fhir')
 const { parseDateRange, validateDateRange } = require('./date-range');
 const { writeLog } = require('../../logging');
 const { HTTP_STATUS, API_VERSIONS } = require('../constants');
@@ -30,6 +31,11 @@ function getImmunizationResponse(
   if (immunizationTarget === IMMUNIZATION_TARGETS.HPV) {
     return hpvImmunizationFhir(dateFrom, dateTo);
   }
+
+  if (fluImmunizationFhir === IMMUNIZATION_TARGETS.FLU) {
+    return fluImmunizationFhir(dateFrom, dateTo);
+  }
+
 }
 
 function getFhirResponse(
