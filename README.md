@@ -26,7 +26,7 @@ To test this locally you will need a local environment set up, please contact a 
 Successful deployment of consumer apps in production requires a custom attribute key-value pair with name `authorised_targets` and a value set to a comma-delimited list of target immunisations, e.g.
 
 ```yaml
-authorised_targets: COVID19,HPV
+authorised_targets: COVID19,HPV,FLU
 ```
 
 or for a single immunisation target, e.g.:

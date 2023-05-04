@@ -2,7 +2,8 @@ const moment = require('moment');
 
 const IMMUNIZATION_TARGETS = {
   HPV: 'HPV',
-  COVID19: 'COVID19'
+  COVID19: 'COVID19',
+  FLU: 'FLU'
 };
 
 const SNOMED_PROCEDURE_CODES = {
