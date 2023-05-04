@@ -232,6 +232,7 @@ paths:
             enum:
             - COVID19
             - HPV
+            - FLU
         - name: date.from
           in: query
           description: |
