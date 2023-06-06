@@ -38,3 +38,7 @@ pytest-nhsd-apim = "^2.0.6"
 behave = "^1.2.6"
 
 [tool.poetry.scripts]
+
+[tool.poetry.group.dev.dependencies]
+pytest-nhsd-apim = "^3.3.1"
+

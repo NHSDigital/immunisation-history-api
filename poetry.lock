@@ -150,6 +150,7 @@ selenium = ">=4.0.0,<5.0.0"
 [package.source]
 type = "url"
 url = "https://github.com/NHSDigital/apim-test-utils/releases/download/v1.1.35-alpha/api_test_utils-1.1.35a0-py3-none-any.whl"
+
 [[package]]
 name = "async-generator"
 version = "1.10"
@@ -1534,14 +1535,14 @@ tests = ["pytest-pycodestyle (>=2.0.0,<3.0)", "pytest-pylint (>=0.14.1,<1.0)", "
 
 [[package]]
 name = "pytest-nhsd-apim"
-version = "2.0.8"
+version = "3.3.1"
 description = "Pytest plugin accessing NHSDigital's APIM proxies"
 category = "dev"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "pytest-nhsd-apim-2.0.8.tar.gz", hash = "sha256:202164b113ca1773e5c5391d1cca62d2d01f11ae8fa7566e4c44dc928e8964eb"},
-    {file = "pytest_nhsd_apim-2.0.8-py3-none-any.whl", hash = "sha256:2d94fcf60d43b0bec816e06b42a7275d1bc26e1acbeacf10fff301db1202acb9"},
+    {file = "pytest-nhsd-apim-3.3.1.tar.gz", hash = "sha256:5d2b69eadb36a26957bd13017cbe6529f9f748114b36cbdb8a91ff73abcb9dd9"},
+    {file = "pytest_nhsd_apim-3.3.1-py3-none-any.whl", hash = "sha256:bb6b73989bc31a71d62fd4d6b99116bdf83996710a0deab55e4e1ebc028475bc"},
 ]
 
 [package.dependencies]
@@ -2010,4 +2011,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "5e0c17e28d89f620f4c5b2ee88081e335f9c15268ef8c5b1b5744eb15115641d"
+content-hash = "511d96c36a7867ea13a6c5607856c2e44e90505ce238c8eb213f56912555d327"
