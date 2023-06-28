@@ -31,7 +31,7 @@ info:
     - immunisation event details
     - patient demographic details, as captured at the point of immunisation
 
-    The patient demographic details might differ from those held in the Personal Demographics Service (PDS). To get demographic details from PDS, use the Personal Demographics Service FHIR API.
+    The patient demographic details might differ from those held in the Personal Demographics Service (PDS). To get demographic details from PDS, use the [Personal Demographics FHIR API](https://digital.nhs.uk/developer/api-catalogue/personal-demographics-service-fhir).
 
     ### Data availability, timing and quality
     All immunisation records are verified to ensure the NHS number is correct before making them available via the API.
@@ -44,9 +44,9 @@ info:
 
     The `COVID-19` data store is limited to vaccinations from England, Wales and The Isle of Man for the last 4 years. It has been approved to be used for clinical use cases.
 
-    The `FLU` data store is not yet populate and is planned to contain vaccination events captured through a point of care system in England for the last year. It has been approved to be used for clinical use cases.
+    The `FLU` data store is not yet populated and is planned to contain vaccination events captured through a point of care system in England for the last year. It has been approved to be used for clinical use cases.
 
-    The `HPV` data store is not yet populated and is planned to be limited at first  to vaccinations captured by the NHAIS system and in England only. It has been approved for use in clinical use cases.
+    The `HPV` data store is not yet populated and is planned to be limited at first with vaccinations captured by the NHAIS system and in England only. It has been approved for use in clinical use cases.
 
     ## Who can use this API
     This API can only be used where there is a legal basis to do so. Make sure you have a valid use case before you go too far with your development. 
