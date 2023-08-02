@@ -6,6 +6,7 @@
     {
       "fullUrl": "urn:uuid:d11c69d8-7a50-4a54-a848-7648121e995f",
       "resource": {
+        "id": "90640007.747583-127",
         "resourceType": "Immunization",
         "extension": [
           {
@@ -29,15 +30,6 @@
           }
         ],
         "status": "completed",
-        "statusReason": [
-          {
-            "coding": [
-              {
-                "system": "http://snomed.info/sct"
-              }
-            ]
-          }
-        ],
         "vaccineCode": {
           "coding": [
             {
@@ -55,8 +47,8 @@
             "value": "9000000009"
           }
         },
-        "occurrenceDateTime": "2020-12-10T13:00:08.476+00:00",
-        "recorded": "2020-12-10",
+        "occurrenceDateTime": "2020-12-10T13:00:08.476Z",
+        "recorded": "2020-12-10T00:00:00.000Z",
         "primarySource": true,
         "manufacturer": {
           "display": "AstraZeneca Ltd"
@@ -87,7 +79,6 @@
           "unit": "pre-filled disposable injection",
           "code": "3318611000001103"
         },
-        "reportOrigin": {},
         "performer": [
           {
             "actor": {
@@ -115,7 +106,13 @@
           {
             "doseNumberPositiveInt": 1
           }
-        ]
+        ],
+        "location": {
+          "identifier": {
+            "system": "urn:iso:std:iso:3166",
+            "value": "GB"
+          }
+        }
       },
       "search": {
         "mode": "match"
@@ -124,6 +121,7 @@
     {
       "fullUrl": "urn:uuid:8da02505-db94-40b6-a8ed-d5af5628e28c",
       "resource": {
+        "id": "90640007.747583-128",
         "resourceType": "Immunization",
         "extension": [
           {
@@ -147,15 +145,6 @@
           }
         ],
         "status": "completed",
-        "statusReason": [
-          {
-            "coding": [
-              {
-                "system": "http://snomed.info/sct"
-              }
-            ]
-          }
-        ],
         "vaccineCode": {
           "coding": [
             {
@@ -173,8 +162,8 @@
             "value": "9000000009"
           }
         },
-        "occurrenceDateTime": "2020-12-31T13:00:08.476+00:00",
-        "recorded": "2020-12-31",
+        "occurrenceDateTime": "2020-12-31T13:00:08.476Z",
+        "recorded": "2020-12-31T00:00:00.000Z",
         "primarySource": true,
         "manufacturer": {
           "display": "AstraZeneca Ltd"
@@ -205,7 +194,6 @@
           "unit": "pre-filled disposable injection",
           "code": "3318611000001103"
         },
-        "reportOrigin": {},
         "performer": [
           {
             "actor": {
@@ -233,7 +221,13 @@
           {
             "doseNumberPositiveInt": 1
           }
-        ]
+        ],
+        "location": {
+          "identifier": {
+            "system": "urn:iso:std:iso:3166",
+            "value": "GB"
+          }
+        }
       },
       "search": {
         "mode": "match"
@@ -242,6 +236,7 @@
     {
       "fullUrl": "urn:uuid:124fcb63-669c-4a3c-af2b-caf55de167ec",
       "resource": {
+        "id": "9000000009",
         "resourceType": "Patient",
         "identifier": [
           {

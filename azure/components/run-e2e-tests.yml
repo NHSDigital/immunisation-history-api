@@ -1,4 +1,4 @@
-steps: 
+steps:
   - bash: |
       export RELEASE_RELEASEID=$(Build.BuildId)
       export SOURCE_COMMIT_ID=$(Build.SourceVersion)
@@ -11,6 +11,9 @@ steps:
       export JWT_PRIVATE_KEY_ABSOLUTE_PATH="$(Pipeline.Workspace)/secrets/$(JWT_TESTING_PRIVATE_KEY)"
       export ID_TOKEN_NHS_LOGIN_PRIVATE_KEY_ABSOLUTE_PATH="$(Pipeline.Workspace)/secrets/$(ID_TOKEN_NHS_LOGIN_PRIVATE_KEY)"
       export APIGEE_API_TOKEN="$(secret.AccessToken)"
+      export PROXY_NAME="$(FULLY_QUALIFIED_SERVICE_NAME)"
+      export API_NAME="$(SERVICE_NAME)"
+      export APIGEE_ACCESS_TOKEN="$(secret.AccessToken)"
       make e2etest
     workingDirectory: $(Pipeline.Workspace)/s/$(SERVICE_NAME)/$(SERVICE_ARTIFACT_NAME)
     displayName: run e2e tests

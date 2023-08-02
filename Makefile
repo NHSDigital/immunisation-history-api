@@ -68,4 +68,4 @@ smoketest: pytest-guards
 	poetry run pytest -v --junitxml=smoketest-report.xml -s -m smoketest
 
 e2etest: pytest-guards
-	poetry run pytest -v --junitxml=e2e-report.xml -s -m e2e
+	poetry run pytest -v --junitxml=e2e-report.xml -s -m e2e --api-name=$$API_NAME --proxy-name=$$PROXY_NAME
