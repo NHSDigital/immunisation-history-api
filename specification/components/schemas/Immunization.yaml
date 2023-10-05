@@ -228,14 +228,13 @@ properties:
     description: The quantity of vaccine product that was administered.
     type: object
     required:
-      - value
       - unit
       - system
       - code
     properties:
       value:
         description: Number of units administered.
-        type: integer
+        type: number
         example: 1
       unit:
         description: Description of unit.
