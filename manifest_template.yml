@@ -4,6 +4,7 @@ DESCRIPTION: Immunisation history API
 APIGEE_ENVIRONMENTS:
   - name: internal-dev
     display_name: Internal Development
+    has_mock_auth: true
   - name: internal-dev-sandbox
     display_name: Internal Development Sandbox
   - name: internal-qa
@@ -71,6 +72,9 @@ apigee:
         proxies:
           - immunisation-history-{{ ENV.name }}
           - identity-service-{{ ENV.name }}
+{% if ENV.has_mock_auth | default(false) %}
+          - identity-service-mock-{{ ENV.name }}
+{% endif %}
         scopes: {{ MODE.scopes }}
         quota: {{ ENV.quota | default('300') }}
         quotaInterval: '1'

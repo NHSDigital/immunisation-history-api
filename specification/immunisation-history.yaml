@@ -294,7 +294,7 @@ paths:
             Optional header to select the version of the api. Version number will follow semver.
           schema:
             type: string
-            example: version=1.0
+            example: version=1.0, version=2.0
       responses:
         '200':
           description: |

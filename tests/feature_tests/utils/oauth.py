@@ -50,6 +50,9 @@ def get_nhs_login_id_token(nhs_number: str, proofing_level: str):
     )
 
 
+# This method from pytest-nhsd-apim has changed in later versions of the library so will need updating if these tests
+# are required, however given the PR for this https://github.com/NHSDigital/immunisation-history-api/pull/157/files
+# states that they did not run at the time of the commit, it is not being updated with the library update.
 @logging(teaser="Getting OAuth token")
 def get_oauth_token(base_url: str, app_key: str, app_jwt_private_key: str, id_token: str = None) -> str:
     token = get_access_token_via_signed_jwt_flow(
