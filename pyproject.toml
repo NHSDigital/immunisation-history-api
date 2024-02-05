@@ -9,7 +9,6 @@ authors = []
 readme = 'README.md'
 license = "MIT"
 repository = "https://github.com/NHSDigital/immunisation-history-api"
-homepage = ""
 keywords = ["healthcare", "uk", "nhs"]
 
 
@@ -20,12 +19,12 @@ python = "^3.8"
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
 coverage = "^5.5"
-aiohttp = "^3.7.3"
+aiohttp = "^3.9.3"
 pytest-asyncio = "^0.14.0"
 flake8 = "^3.7.9"
 pip-licenses = "^3.3.1"
 jinja2 = "^2.11.1"
-pyyaml = "^5.2"
+pyyaml = "^6.0"
 docopt = "^0.6.2"
 jsonpath-rw = "^1.4.0"
 semver = "^2.9.0"
@@ -33,7 +32,7 @@ gitpython = "^3.1.30"
 requests = "^2.31.0"
 sh = "^1.14.3"
 fire = "^0.4.0"
-pytest-nhsd-apim = "^3.3.9"
+pytest-nhsd-apim = "^3.3.11"
 behave = "^1.2.6"
 
 [tool.poetry.scripts]
